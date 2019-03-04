@@ -174,12 +174,12 @@
 				<div class="cata-nav" id="cata-nav">
 				<volist name="goods_category_tree" id="v" key="kr">
 					<div class="item">
-						<if condition="$v[level] eq 1">
+						<if condition="$v['level'] eq 1">
 						<div class="item-left">
 							<h3 class="cata-nav-name">
 								<div class="cata-nav-wrap">
 									<i class="ico ico-nav-{$kr-1}"></i>
-									<a href="{:U('Home/Goods/goodsList',array('id'=>$v[id]))}" title="{$v[name]}">{$v[mobile_name]}</a>
+									<a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}" title="{$v['name']}">{$v['mobile_name']}</a>
 								</div>
 								<!--<a href="" >手机店</a>-->
 							</h3>
@@ -239,7 +239,7 @@
 			<li <if condition=" CONTROLLER_NAME eq 'Index' ">class="selected"</if>><a href="{:U('Index/index')}">首页</a></li>
 			<tpshop sql="SELECT * FROM `__PREFIX__navigation` where is_show = 1 ORDER BY `sort` DESC" key="k" item='v'>
 			<li <?php if($_SERVER['REQUEST_URI']==str_replace('&amp;','&',$v[url])){ echo "class='selected'";}?>>
-       			<a href="{$v[url]}" <if condition="$v[is_new] eq 1">target="_blank" </if> >{$v[name]}</a>
+       			<a href="{$v[url]}" <if condition="$v[is_new] eq 1">target="_blank" </if> >{$v['name']}</a>
        		</li>
 			</tpshop>
 		</ul>

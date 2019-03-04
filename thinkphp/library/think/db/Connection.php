@@ -969,7 +969,14 @@ abstract class Connection
                 $r = $this->config['slave_no'];
             } else {
                 // 读操作连接从服务器 每次随机连接的数据库
-                $r = floor(mt_rand($this->config['master_num'], count($_config['hostname']) - 1));
+
+                if ( $this->config['master_num'] < count($_config['hostname']) - 1 ) {
+                    $rnd = mt_rand($this->config['master_num'], count($_config['hostname']) - 1 );
+                } else {
+                    $rnd = mt_rand(count($_config['hostname']) - 1 , $this->config['master_num']);
+                }
+
+                $r = floor($rnd);
             }
         } else {
             // 读写操作不区分服务器 每次随机连接的数据库

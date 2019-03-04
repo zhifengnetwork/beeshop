@@ -39,7 +39,7 @@
 						<ul>
 							<foreach name="goods_category" item="v" key="k">
 								<if condition="($v[parent_id] eq $goods_category[$goodsCate[parent_id]][parent_id])">
-									<li><a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}">{$v[name]}</a></li>
+									<li><a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}">{$v['name']}</a></li>
 								</if>
 							</foreach>
 						</ul>
@@ -55,7 +55,7 @@
                             </empty>
                             <foreach name="goods_category" item="v" key="k">
                                 <if condition="($v[level] eq $goodsCate[level]) AND ($v[parent_id] eq $goodsCate[parent_id])">
-                                    <li><a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}">{$v[name]}</a></li>
+                                    <li><a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}">{$v['name']}</a></li>
                                 </if>
                             </foreach>
                         </ul>
@@ -71,7 +71,7 @@
 						<ul>
 							<foreach name="goods_category" item="v" key="k">
 								<if condition="($v[parent_id] eq $goodsCate[parent_id])">
-									<li><a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}">{$v[name]}</a></li>
+									<li><a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}">{$v['name']}</a></li>
 								</if>
 							</foreach>
 						</ul>
@@ -86,7 +86,7 @@
 					<div class="hovshz">
 						<ul>
 							<foreach name="cateArr" item="v" key="k">
-								<li><a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}">{$v[name]}</a></li>
+								<li><a href="{:U('Home/Goods/goodsList',array('id'=>$v['id']))}">{$v['name']}</a></li>
 							</foreach>
 						</ul>
 					</div>
@@ -115,10 +115,10 @@
                             <div class="brand-box brand-list">
                                 <div class="clearfix p">
                                     <foreach name="filter_brand" item="v" key="k">
-                                        <a href="{$v[href]}" data-href="{$v[href]}"  data-key='brand' data-val='{$v[id]}'>
+                                        <a href="{$v[href]}" data-href="{$v[href]}"  data-key='brand' data-val='{$v['id']}'>
                                             <i class="litt-zd"></i>
                                             <img src="{$v[logo]}"/>
-                                            <span>品牌-{$v[name]}</span>
+                                            <span>品牌-{$v['name']}</span>
                                         </a>
                                     </foreach>
                                 </div>

@@ -330,7 +330,7 @@
             }
             case 3:{
                 expression = '<dt class="tit"><label><em>*</em>代金券</label></dt><dd class="opt"><select name="expression"><option value="0">请选择</option>'
-                        + '<foreach name="coupon_list" item="v"><option value="{$v.id}" <if condition="$v[id] eq $info[expression]">selected</if>>{$v.name}</option></foreach></select>'
+                        + '<foreach name="coupon_list" item="v"><option value="{$v.id}" <if condition="$v['id'] eq $info[expression]">selected</if>>{$v.name}</option></foreach></select>'
                         + '<span class="err" id="err_expression"></span><p class="notic">请选择代金券</p></dd>';
                 break;
             }
