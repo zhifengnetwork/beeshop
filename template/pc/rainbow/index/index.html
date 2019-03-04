@@ -139,7 +139,7 @@
 <foreach name="cateList" item="v" key="k">
 <div class="floor floor{$k+1} w1224">
 	<div class="floor-top">
-		<h3 class="floor-title">{$v[name]}</h3>
+		<h3 class="floor-title">{$v['name']}</h3>
 		<div class="floor-nav-list clearfix">
 			<foreach name="v[tmenu]" item="v2" key="k2">
 			<a class="floor-nav-item" href="{:U('Home/Goods/goodsList',array('id'=>$v2[id]))}">{$v2[name]}</a>
