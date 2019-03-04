@@ -1,0 +1,66 @@
+#wrapper {
+	width: 100%;
+}
+#wrapper .head {
+	position: relative;
+	height: 13.34rem;
+	background: url(/template/mobile/new2/static/images/imge/v2_plq8d8.png) no-repeat;
+	background-size: 100% 100%;
+}
+#wrapper .head .userName {
+	position: absolute;
+	top: 20%;
+	right: 12%;
+	width: 18%;
+	font-size: .25rem;
+}
+#wrapper .head .userName a {
+	display: block;
+	font-size: 0;
+	margin-bottom: 5%;
+}
+#wrapper .head .userName p {
+	font-weight: 900;
+	text-align: center;
+}
+img {
+	width: 100%;
+}
+
+#wrapper .head .sidebar {
+	position: absolute;
+	top: 35%;
+	right: 4%;
+	width: 35%;
+}
+#wrapper .head .sidebar .notice {
+	/*margin: 0 0 1% 73%;*/
+	width: 100%;
+	font-size: 0;
+}
+/*.back a {
+	position: absolute;
+	top: 2%;
+	left: 2%;
+	width: 10%;
+	height: .4rem;
+	background: url(/template/mobile/new2/static/images/imge/fh.png) no-repeat;
+	background-size: 100% 100%;
+}*/
+
+.noticeTextWrap {
+	position: absolute;
+	right: 0;
+	bottom: 4%;
+	left: 0;
+	margin: 0 auto;
+	z-index: 1;
+	width: 80%;
+	font: .26rem/.42rem "微软雅黑";
+	font-weight: bold;
+	letter-spacing: .01rem;
+}
+.noticeTWTitle {
+	font-size: .3rem;
+	text-align: center;
+}

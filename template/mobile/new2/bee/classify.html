@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width user-scalable=no initial-scale=1.0 maximum-scale=1.0 minimum-scale=1.0">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_style.css"/>
+		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_classify.css"/>
+	</head>
+	<body>
+		<div id="container">
+			<div class="wrap">
+				<div class="head">
+					<p>蜜蜂种类</p>
+					<a href="javascript:history.back(-1)"><!--返回上一层-->
+						<img src="__STATIC__/images/imge/fh.png" />
+					</a>
+				</div>
+				
+				<!--工蜂-->
+				<div class="wasp">
+					<div class="tu">
+						<img src="__STATIC__/images/imge/f_2.png" />
+					</div>
+					<div class="skill">工蜂</div>
+					<div class="skill"><if condition="$categoryData[0]['worker_bee'] gt 0"> {$categoryData[0]['worker_bee']}<else> 0 </if>只</div>
+					<!-- 蜜蜂数量大于0和在采蜜中时不显示采蜜按钮 -->
+					<if condition="$categoryData[0]['worker_bee'] gt 0 and $flag neq 1">	
+						<div class="cai caiM" id="cai">
+							<img src="__STATIC__/images/imge/7.png" />
+						</div>
+					</if>
+					<div class="surplus hms" id="sur"></div>
+				</div>
+				
+				<!--侦查蜂-->
+				<div class="wasp">
+					<div class="tu">
+						<img src="__STATIC__/images/imge/fl_1.png" />
+					</div>
+					<div class="skill">侦查蜂</div>
+					<div class="skill"><if condition="$categoryData[0]['scout_bee'] gt 0"> {$categoryData[0]['scout_bee']}<else> 0 </if>只</div>
+					<div class="cai" id="spyOn">
+						<img src="__STATIC__/images/imge/8.png" />
+					</div>
+					<!-- <div class="surplus" id="sur_1">剩余xx分xx秒</div> -->
+				</div>
+				
+				<!--安保蜂-->
+				<div class="wasp">
+					<div class="tu">
+						<img src="__STATIC__/images/imge/f_4.png" />
+					</div>
+					<div class="skill">安保蜂</div>
+					<div class="skill"><if condition="$categoryData[0]['security_bee'] gt 0"> {$categoryData[0]['security_bee']}<else> 0 </if>只</div>
+					<div class="cai" id="securityID">
+						<img src="__STATIC__/images/imge/8.png" />
+					</div>
+				</div>
+				
+				<!--内勤蜂-->
+				<div class="wasp">
+					<div class="tu">
+						<img src="__STATIC__/images/imge/f_3.png" />
+					</div>
+					<div class="skill">内勤蜂</div>
+					<div class="skill"><if condition="$categoryData[0]['house_bee'] gt 0"> {$categoryData[0]['house_bee']}<else> 0 </if>只</div>
+					<div class="cai" id="houseID">
+						<img src="__STATIC__/images/imge/8.png" />
+					</div>
+				</div>
+				
+				<!--采蜜弹框-->
+				<div class="star" id="star">
+					<div class="case">
+						<div class="what">
+							<h2>采蜜</h2>
+							<p>您是否派出工蜂去采蜜?(工蜂派出采蜜和回巢酿蜜时间,所需要时间60分钟)</p>
+						</div>
+					</div>
+					<div class="x-btn"></div>
+					<!--确定-->
+					<div class="q-btn" id="qbtn"></div>
+				</div>
+				
+				<!--侦查弹框-->
+				<div class="star" id="scout">
+					<div class="case">
+						<div class="what">
+							<h2>侦查</h2>
+							<p>您是否派出侦查蜂去侦查?</p>
+						</div>
+					</div>
+					<div class="x-btn"></div>
+					<!--确定-->
+					<div class="q-btn" id="zbtn"></div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
+<script src="__STATIC__/js/rem.js"></script>
+<script src="__STATIC__/js/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
+<!--<script type="text/javascript" src="__STATIC__/js/mi_classify.js" ></script>-->
+<script type="text/javascript" src="__STATIC__/js/layer/layer.js" ></script>
+
+<script type="text/javascript">
+
+window.onload = function () {
+	getDown(); // 加载采蜜倒计时
+	var Cai = document.getElementById('cai');
+//	var Star = document.getElementsByClassName('star');
+	var Work = document.getElementById('star');
+//	var Xbtn = document.getElementsByClassName('x-btn');
+	var Qbtn = document.getElementById('qbtn');
+	var Zbtn = document.getElementById('zbtn');
+	var Sur = document.getElementById('sur');
+	// var Sur01 = document.getElementById('sur_1');
+	var SpyOn = document.getElementById('spyOn');
+	var Scout = document.getElementById('scout');
+
+	var securityID = document.getElementById('securityID');
+
+	// Cai.onclick = function() {
+	// 	Work.style.display = 'block';
+	// }
+	// SpyOn.onclick = function() {
+	// 	Scout.style.display = 'block';
+	// }
+	
+	// for(var i=0;i<Xbtn.length;i++) {
+	// 	Xbtn[i].onclick = function() {
+	// 		for(var i=0;i<Star.length;i++) {
+	// 			Star[i].style.display = 'none';
+	// 		}
+	// 	}
+	// }
+	// 确定按钮
+//	 Qbtn.onclick = function() {
+//	 	for(var i=0;i<Star.length;i++) {
+//	 		Star[i].style.display = 'none';
+//	 	}
+//	 	Sur.style.display = 'block';
+//	 	Cai.style.display = 'none';
+//	 }
+	
+	// Zbtn.onclick = function() {
+	// 	for(var i=0;i<Star.length;i++) {
+	// 		Star[i].style.display = 'none';
+	// 	}
+	// 	// Sur01.style.display = 'block';
+	// 	SpyOn.style.display = 'block';
+	// }
+	
+	/*弹窗-(公共)关闭按钮*/
+	$(function(){
+		$('.x-btn').on('click',function(){
+			$('.star').hide();
+		})
+	})
+	 caiMBtn = '';
+	// 1、点击采蜜
+	$(".caiM").click(function(){
+		caiMBtn = this;
+		$.ajax({
+          type:"post",
+          url:"{:url('BeeCategory/gatherHoney')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(data){
+			if(data.code=200){
+				Work.style.display = 'block';
+			}else{
+				Work.style.display = 'none';
+				layer.msg('暂无可采蜜的工蜂');
+	 			return false;
+			}
+          }
+        });
+	});
+
+	//点击确认采蜜
+	$("#qbtn").click(function(){
+		$.ajax({
+          type:"post",
+          url:"{:url('BeeCategory/confirmHoney')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(data){
+			if(data.code==200){
+				Work.style.display = 'none';
+				caiMBtn.style.display = 'none';
+	 			layer.msg(data.msg);
+	 			getDown();
+			}else{
+				console.log(data);
+				// Work.style.display = 'none';
+				layer.msg(data.msg);
+	 			return false;
+			}
+          }
+        });
+	});
+
+	downTime = '';
+	// 获取倒计时时间
+	function getDown(){
+		$.ajax({
+          type:"post",
+          url:"{:url('BeeCategory/getDownTime')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(data){
+			if(data.flag==1){
+				downTime = data.times;
+	 			GetRTime(data.times);
+				// downTime = 60;
+	 		// 	GetRTime(60);
+			    setInterval(GetRTime2,1000);
+			}else{
+				// console.log(data);
+			}
+          }
+        });
+	}
+	/**
+	 * 采蜜倒计时
+	 * */
+	i = 1;
+	function GetRTime(end_time){
+		var NowTime = new Date();
+		// var t = (end_time*1000) - NowTime.getTime();
+		var t = (end_time*1000)-i;
+		var d=Math.floor(t/1000/60/60/24);
+		var h=Math.floor(t/1000/60/60%24);
+		var m=Math.floor(t/1000/60%60);
+		var s=Math.floor(t/1000%60);
+		if(s >= 0){
+			return '剩余' + (d * 24 + h) + '时' + m + '分' +s+'秒';
+		}		
+	}
+	function GetRTime2(){
+		nowDownTime = downTime-i;
+		var text = GetRTime(nowDownTime);
+		i++;
+		if (nowDownTime<0){
+			// caiMBtn.style.display = 'block';
+			$("#sur").html('采蜜结束');
+		}else{
+			$("#sur").html(text);
+		}
+	}
+
+	// 侦查蜂侦查
+	$("#spyOn").click(function(){
+		$.ajax({
+          type:"post",
+          url:"{:url('BeeCategory/checkBeeAction')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(msg){
+			if(msg.code==200){
+				Scout.style.display = 'none';
+	 			layer.msg(msg.msg);
+			}else{
+				// console.log(msg);
+				layer.msg(msg.msg);
+	 			return false;
+			}
+          }
+        });
+	});
+
+	// 安保蜂侦查
+	$("#securityID").click(function(){
+		$.ajax({
+          type:"post",
+          url:"{:url('BeeCategory/securityBeeAction')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(msg){
+			if(msg.code==200){
+				securityID.style.display = 'none';
+	 			layer.msg(msg.msg);
+			}else{
+				// console.log(msg);
+				layer.msg(msg.msg);
+	 			return false;
+			}
+          }
+        });
+	});
+
+	// 内勤蜂操作
+	$("#houseID").click(function(){
+		$.ajax({
+          type:"post",
+          url:"{:url('BeeCategory/houseBeeAction')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(msg){
+			if(msg.code==200){
+				securityID.style.display = 'none';
+	 			layer.msg(msg.msg);
+			}else{
+				// console.log(msg);
+				layer.msg(msg.msg);
+	 			return false;
+			}
+          }
+        });
+	});
+}
+</script>

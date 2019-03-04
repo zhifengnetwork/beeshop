@@ -1,0 +1,165 @@
+#container {
+	width: 100%;
+	background: #92e0ec;
+}
+#container .wrap {
+	position: relative;
+	height: 13.34rem;
+}
+
+/* 添加 */
+#container .wrap .code{
+	width: 100%;
+	text-align: center;
+}
+#container .wrap .code label{
+	font-size: .35rem;
+}
+#container .wrap .code input{
+	border:none;
+	outline: none;
+	background: none;
+	border-bottom:3px solid #000; 
+}
+#container .wrap .code img{
+	width:45%;
+	margin: 25% 0 15% 28%;
+}
+#container .wrap .code div:nth-child(2){
+	margin: 1.25rem 0;
+}
+/* 添加 */
+#container .wrap .code p{
+	width: 3.5rem;
+	background-color: #f6ee0e;
+	border-radius: .4rem;
+	font-size: .5rem;
+	margin: 0 auto;
+}
+
+#container .wrap .header .banner {
+	margin-left: 5%;
+	width: 90%;
+	height: .75rem;
+	background: #f6ee0e;
+	font-size: .25rem;
+	text-align: center;
+	line-height: .75rem;
+	border-radius: 50px;
+}
+
+h2 {
+	float: left;
+	width: 75%;
+}
+#container .wrap .header .banner .back {
+	float: left;
+	width: 12%;
+	height: .45rem;
+}
+#container .wrap .header .banner .back a {
+	display: block;
+	height: .45rem;
+	font-size: 0;
+	float: left;
+}
+#container .wrap .header .banner .share {
+	margin: 0.5% 0 0;
+	float: right;
+	width: 11%;
+	height: .45rem;
+}
+img {
+	width: 100%;
+}
+
+
+#container .wrap .main {
+	display: none;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 3rem;
+	background: #fff;
+	font-size: .2rem;
+}
+#container .wrap .main ul li {
+	margin: 5% 0 0 15%;
+	float: left;
+	width: 12%;
+	text-align: center;
+	font-weight: 600;
+}
+#container .wrap .main ul .alipay {
+	margin-top: 6%;
+}
+#container .wrap .main .cancel {
+	margin-top: 26%;
+	clear: both;
+	width: 100%;
+	height: .35rem;
+	background: #fff;
+	border-top: 1px solid #000;
+	text-align: center;
+	line-height: .95rem;
+	letter-spacing:8px;
+	font-weight: 600;
+}
+
+
+#container .wrap .star {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+	z-index: 1;
+}
+#container .wrap .star .case {
+	position: absolute;
+	top: 20%;
+	left: 13%;
+	width: 75%;
+	height: 5rem;
+	background: url(/template/mobile/new2/static/images/imge/f_9.png) no-repeat;
+	background-size: 100% 100%;
+	font-size: .14rem;
+}
+#container .wrap .star .case .what {
+	position: absolute;
+	top: 30%;
+	left: 10%;
+	width: 76%;
+	height: 5rem;
+	font-size: .35rem;
+	font-weight: 600;
+}
+#container .wrap .star .case .what p {
+	line-height: 1.95rem;
+	text-align: center;
+}
+
+.x-btn {
+	position: absolute;
+	top: 25%;
+	right: 11%;
+	width: 11%;
+	height: .8rem;
+	background: url(/template/mobile/new2/static/images/imge/f_7.png) no-repeat;
+	background-size: 100% 100%;
+}
+.q-btn {
+	position: absolute;
+	top: 49%;
+	left: 34%;
+	width: 30%;
+	height: .95rem;
+	background: url(/template/mobile/new2/static/images/imge/f_8.png) no-repeat;
+	background-size: 100% 100%;
+}
+#defeat {
+	display: none;
+}

@@ -1,0 +1,60 @@
+#container {
+    width: 100%;
+}
+#container .wrap {
+	position: relative;
+	height: 13.34rem;
+	background: url(/template/mobile/new2/static/images/imge/f_1.png) no-repeat;
+	background-size: 100% 100%;
+}
+#container .wrap .plan {
+	position: absolute;
+	top: 48%;
+	left: 10%;
+	width: 80%;
+	height: .45rem;
+	background: #eaf3f8;
+	border: 1px solid #6d7c82;
+	border-radius: .35rem;
+}
+#container .wrap .plan .inner {
+	height: .45rem;
+	background: #6bf480;
+	border-radius: .35rem;
+	font-size: 16px;
+	line-height: .45rem;
+	font-weight: 900;
+	color: #363c3d;
+	text-align:center;	
+}
+
+p {
+	width: 100%;
+	text-align: center;
+}
+#container .wrap .item {
+	position: absolute;
+	top: 52%;
+	font-size: .3rem;
+	font-weight: 900;
+	color: #363c3d;
+}
+#container .wrap .item_1,.item_2 {
+	font-size: .3rem;
+	font-weight: 900;
+}
+.item_2 {
+	position: absolute;
+	bottom: 8.5%;
+}
+.textWrap {
+	position: absolute;
+	top: 60%;
+	left: 0;
+	width: 100%;
+	height: auto;
+	font: .26rem/.50rem "微软雅黑";
+	font-weight: bold;
+	letter-spacing: .01rem;
+	text-align: center;
+}

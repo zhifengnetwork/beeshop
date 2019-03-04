@@ -1,0 +1,251 @@
+<include file="public/layout" />
+<body style="background-color: #FFF; overflow: auto;">
+	<div id="append_parent"></div>
+	<div id="ajaxwaitid"></div>
+	<div class="page">
+		<div class="fixed-bar">
+			<div class="item-title">
+				<div class="subject">
+					<h3>商城设置</h3>
+					<h5>网站全局内容基本选项设置</h5>
+				</div>
+				<ul class="tab-base nc-row">
+					<foreach name="group_list" item="v" key="k">
+						<li><a href="{:U('System/index',['inc_type'=> $k])}" <if condition="$k==$inc_type">class="current"</if>><span>{$v}</span></a></li>
+					</foreach>
+				</ul>
+			</div>
+		</div>
+		<!-- 操作说明 -->
+		<div class="explanation" id="explanation">
+			<div class="title" id="checkZoom"><i class="fa fa-lightbulb-o"></i>
+				<h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+				<span id="explanationZoom" title="收起提示"></span>
+			</div>
+			<ul>
+				<li>九九蜂王游戏设置规则</li>
+			</ul>
+		</div>
+		<form method="post" id="handlepost" action="{:U('System/handle')}" enctype="multipart/form-data" name="form1">
+			<input type="hidden" name="form_submit" value="ok" />
+			<div class="ncap-form-default">
+				<dl class="row">
+					<dt class="tit">
+						<label for="record_no">1.</label>
+					</dt>
+					<dd class="opt">
+						<input name="one_bee_money" value="99" type="text" /><span>元认养1只蜂王;
+							<p style="margin-top: 5px;">平台赠送<input name="one_give_hive" value="{$config.one_give_hive}" type="text" /><span>个(蜂箱)，</span></span><input name="one_bee_milk" value="{$config.one_bee_milk}" type="text" /><span>滴(蜂王浆)，</span>
+						<input name="one_water" value="{$config.one_water}" type="text" /><span>滴(水)</span>，
+						<input name="one_sum" value="{$config.one_sum}" type="text" /><span>克(阳光)</span></p>
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="record_no">2.</label>
+					</dt>
+					<dd class="opt">
+						<span>蜂王幼蜂喂养</span><input name="two_fee_bee_milk" value="{$config.two_fee_bee_milk}" type="text" /><span style="margin-right:20px;">滴(蜂王浆)，</span>
+						<input name="two_fee_water" value="{$config.two_fee_water}" type="text" /><span style="margin-right:20px;">滴(水)，</span>
+						<input name="two_fee_sun" value="{$config.two_fee_sun}" type="text" /><span style="margin-right:20px;">克(阳光)，幼蜂成长为蜂王</span>
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="record_no">3.</label>
+					</dt>
+					<dd class="opt">
+						<input name="three_drip_bee_milk" value="{$config.three_drip_bee_milk}" type="text" /><span>滴(蜂王浆)兑换</span>一只(雄峰)，</span>
+						<span>蜂王一次性产卵</span><input name="three_oviposition" value="{$config.three_oviposition}" type="text" /><span style="margin-right:20px;">只</span>
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="record_no">4.</label>
+					</dt>
+					<dd class="opt">
+						<span>幼卵孵化成</span>
+						<input name="four_hatch" value="{$config.four_hatch}" type="text" />
+						<span>只蜜蜂;</span>
+						<p style="margin-top: 5px;">
+							<span>工蜂</span>
+							<input name="four_worker_bee" value="{$config.four_worker_bee}" type="text" /><span style="margin-right:5px;">只,
+							</span>
+							<span>侦查蜂</span>
+							<input name="four_scouts" value="{$config.four_scouts}" type="text" />
+							<span style="margin-right:5px;">只,</span>
+							<span>内勤蜂</span>
+							<input name="four_house_bee" value="{$config.four_house_bee}" type="text" />
+							<span style="margin-right:5px;">只,</span>
+							<span>安保蜂</span>
+							<input name="four_security_bee" value="{$config.four_security_bee}" type="text" />
+							<span style="margin-right:5px;">只</span>
+						</p>
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="five_get_gooey">5.</label>
+					</dt>
+					<dd class="opt">
+						<span>工蜂外出采蜜</span>
+						<input name="five_get_gooey" value="{$config.five_get_gooey}" type="text" />
+						<span>分钟,</span>
+						<span>工蜂回巢酿蜜</span>
+						<input name="five_get_make" value="{$config.five_get_make}" type="text" />
+						<span style="margin-right:5px;">分钟，一天酿蜜任务结束。</span>
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="six_worker_bee_days">6.</label>
+					</dt>
+					<dd class="opt">
+						<!-- <p class="">蜜糖产出：</p> -->
+						<span>工蜂采蜜每天产</span>
+						<input name="six_worker_bee_days" value="{$config.six_worker_bee_days}" type="text" />
+						<span style="margin-right:20px;">克蜜糖，60天共采蜜18600克(=372滴蜂王浆)</span>
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="seven_bee_milk_days">7.</label>
+					</dt>
+					<dd class="opt">
+						<p>
+							<span>蜂王每天喂食</span>
+							<input name="seven_bee_milk_days" value="{$config.seven_bee_milk_days}" type="text" />
+							<span style="margin-right:20px;">滴蜂王浆(=50克蜜糖)</span>
+						</p>
+						<p style="margin-top: 5px;">
+							<span>工蜂每天喂食</span>
+							<input name="seven_gooey_days" value="{$config.seven_gooey_days}" type="text" />
+							<span style="margin-right:20px;">克(蜜糖)</span>
+						</p>
+						<p style="margin-top: 5px;">
+							<span>蜂箱每天消耗</span>
+							<input name="seven_sun_days" value="{$config.seven_sun_days}" type="text" />
+							<span style="margin-right:20px;">克(阳光值)(=50克蜜糖)</span>
+						</p>
+						<p style="margin-top: 5px;">
+							<span>蜜蜂每天消耗</span>
+							<input name="seven_water_days" value="{$config.seven_water_days}" type="text" />
+							<span style="margin-right:20px;">滴(露水)(=50克蜜糖)</span>
+						</p>
+
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="record_no">8.</label>
+					</dt>
+					<dd class="opt">
+						<p style="margin-top: 5px;">
+							<input name="eight_one_gooey" value="{$config.eight_one_gooey}" type="text" />
+							<span>克(蜜糖)兑换</span>
+							<input name="eight_exchange_bee_milk" value="{$config.eight_exchange_bee_milk}" type="text" />
+							<span style="margin-right: 5px;">滴(蜂王浆)</span>
+						</p>
+						<p style="margin-top: 5px;">
+							<input name="eight_two_gooey" value="{$config.eight_two_gooey}" type="text" />
+							<span>克(蜜糖)兑换</span>
+							<input name="eight_exchange_water" value="{$config.eight_exchange_water}" type="text" />
+							<span style="margin-right: 5px;">滴(水)</span>
+						</p>
+						<p style="margin-top: 5px;">
+							<input name="eight_three_gooey" value="{$config.eight_three_gooey}" type="text" />
+							<span>克(蜜糖)兑换</span>
+							<input name="eight_exchange_sun" value="{$config.eight_exchange_sun}" type="text" />
+							<span style="margin-right: 5px;">克(阳光值)</span>
+						</p>
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="nine_rec_player">9.</label>
+					</dt>
+					<dd class="opt">
+						<span>推荐</span>
+						<input name="nine_rec_player" value="{$config.nine_rec_player}" type="text" />
+						<span>名(玩家)可获得</span>
+						<input name="nine_give_bee_milk" value="{$config.nine_give_bee_milk}" type="text" />
+						<span style="margin-right: 20px;">滴(蜂王浆),</span>
+						并随机派发<input name="nine_random_sun" value="{$config.nine_random_sun}" type="text" />克(阳光值)和
+						<input name="nine_random_water" value="5" type="text" />滴(露水)
+					</dd>
+				</dl>
+				<dl class="row">
+					<dt class="tit">
+						<label for="nine_rec_player">10.</label>
+					</dt>
+					<dd class="opt">
+						<span>一天抽奖</span>
+						<input name="prize_count" value="{$config.prize_count|default=1}" type="text" placeholder="1" />
+						<span>次</span>
+						<br/>
+						<p style="margin-top: 5px;">
+							<input name="prize_bee_milk1" value="{$config.prize_bee_milk1|default=10}" type="text" placeholder="10"/>
+							<span>滴(蜂王浆),</span>
+							<span style="margin-right: 5px;">中奖概率(整型)</span>
+							<input name="prize_rate1" value="{$config.prize_rate1|default=1}" type="text" placeholder="1"/>
+						</p>
+						<p style="margin-top: 5px;">
+							<input name="prize_bee_milk2" value="{$config.prize_bee_milk2|default=5}" type="text" placeholder="5"/>
+							<span>滴(蜂王浆),</span>
+							<span style="margin-right: 5px;">中奖概率(整型)</span>
+							<input name="prize_rate2" value="{$config.prize_rate2|default=2}" type="text" placeholder="2"/>
+						</p>
+						<p style="margin-top: 5px;">
+							<input name="prize_bee_milk3" value="{$config.prize_bee_milk3|default=3}" type="text" placeholder="3"/>
+							<span>滴(蜂王浆),</span>
+							<span style="margin-right: 5px;">中奖概率(整型)</span>
+							<input name="prize_rate3" value="{$config.prize_rate3|default=3}" type="text" placeholder="3"/>
+						</p>
+						<p style="margin-top: 5px;">
+							<input name="prize_bee_milk4" value="{$config.prize_bee_milk4|default=2}" type="text" placeholder="2"/>
+							<span>滴(蜂王浆),</span>
+							<span style="margin-right: 5px;">中奖概率(整型)</span>
+							<input name="prize_rate4" value="{$config.prize_rate4|default=5}" type="text" placeholder="5"/>
+						</p>
+						<p style="margin-top: 5px;">
+							<input name="prize_bee_milk5" value="{$config.prize_bee_milk5|default=1}" type="text" placeholder="1"/>
+							<span>滴(蜂王浆),</span>
+							<span style="margin-right: 5px;">中奖概率(整型)</span>
+							<input name="prize_rate5" value="{$config.prize_rate5|default=10}" type="text" placeholder="10"/>
+						</p>
+						<p style="margin-top: 5px;">
+							<span>没有中奖,</span>
+							<span style="margin-right: 5px;">中奖概率(整型)</span>
+							<input name="prize_rate6" value="{$config.prize_rate6|default=50}" type="text" placeholder="50"/>
+						</p>
+					</dd>
+				</dl>
+				<div class="bot">
+                <input type="hidden" name="inc_type" value="{$inc_type}">
+                <a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()">确认提交</a>
+            </div>
+				<!-- <div class="bot">
+					<input type="hidden" name="inc_type" value="{$inc_type}">
+					<a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green">确认提交</a>
+				</div> -->
+			</div>
+		</form>
+	</div>
+	<div id="goTop"> <a href="JavaScript:void(0);" id="btntop"><i class="fa fa-angle-up"></i></a><a href="JavaScript:void(0);"
+		 id="btnbottom"><i class="fa fa-angle-down"></i></a></div>
+</body>
+<script type="text/javascript">
+	//网站首页logo
+	function img_call_back(fileurl_tmp) {
+		$("#store_logo").val(fileurl_tmp);
+		$("#img_a").attr('href', fileurl_tmp);
+		$("#img_i").attr('onmouseover', "layer.tips('<img src=" + fileurl_tmp + ">',this,{tips: [1, '#fff']});");
+	}
+	//网站用户中心logo
+	function user_img_call_back(fileurl_tmp) {
+		$("#store_user_logo").val(fileurl_tmp);
+		$("#userimg_a").attr('href', fileurl_tmp);
+		$("#userimg_i").attr('onmouseover', "layer.tips('<img src=" + fileurl_tmp + ">',this,{tips: [1, '#fff']});");
+	}
+</script>
+</html>

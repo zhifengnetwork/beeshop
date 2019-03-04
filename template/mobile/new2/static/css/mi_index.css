@@ -1,0 +1,531 @@
+#container {
+	position: relative;
+	width: 100%;
+    height: 13.34rem;
+    overflow: hidden;
+}
+#container .wrap {
+	position: relative;
+	height: 100%;
+	background: url(/template/mobile/new2/static/images/imge/bj01.png) no-repeat;
+	background-size: 100% 100%;
+}
+/*头像*/
+#container .wrap .head .via {
+	position: absolute;
+	top: 2%;
+	left: 5%;
+	width: 15%;
+	font-size: 0;
+	border-radius: 50%;
+}
+#container .wrap .head .suffer {
+	position: absolute;
+	top: 3%;
+	left: 17%;
+	display: inline-block;
+	width: 8%;
+	height: .25rem;
+	background: #2e160a;
+	font-size: 12px;
+	border-radius: .2rem;
+	color: #fff;
+	text-align: center;
+	line-height: .25rem;
+}
+/*经验值*/
+#container .wrap .head .cost {
+	position: absolute;
+	top: 4%;
+	left: 24%;
+	width: 81%;
+}
+#container .wrap .head .cost li {
+	position: relative;
+	margin: 0 .2rem 0 0;
+	float: left;
+	line-height: .75rem;
+	width: 29%;
+}
+#container .wrap .head .cost li div {
+	width: 100%;
+	height: .75rem;
+}
+#container .wrap .head .cost li span {
+	font-size: 14px;
+	color: #fff;
+}
+#container .wrap .head .cost li .num {
+	position: absolute;
+	top: 5%;
+	left: 41%;
+}
+#container .wrap .head .cost li .tu_1 {
+	background: url(/template/mobile/new2/static/images/imge/zj.png) no-repeat;
+	background-size: 100% 100%;
+}
+#container .wrap .head .cost li .tu_2 {
+	background: url(/template/mobile/new2/static/images/imge/sf_1.png) no-repeat;
+	background-size: 100% 100%;
+}
+#container .wrap .head .cost li .tu_3 {
+	background: url(/template/mobile/new2/static/images/imge/yg.png) no-repeat;
+	background-size: 100% 100%;
+}
+/*用户资料*/
+#container .wrap .next {
+	font-size: 0;
+	position: absolute;
+	top: 13%;
+	left: 1%;
+	width: 12%;
+}
+#container .wrap .next .icon {
+	display: block;
+	font-size: 0;
+}
+
+/*活动*/
+#container .wrap .hot {
+	position: absolute;
+	top: 10.5%;
+	left: 20%;
+	width: 12%;
+}
+#container .wrap .ht a {
+	display: block;
+	font-size: 0;
+}
+/*礼包*/
+#container .wrap .hot_1 {
+	position: absolute;
+	top: 10.5%;
+	left: 40%;
+	width: 12%;
+}
+/*邀请好友*/
+#container .wrap .hot_2 {
+	position: absolute;
+	top: 10%;
+	left: 59%;
+	width: 18%;
+}
+
+/*好友，打扫，守卫，地图，转盘*/
+#container .wrap .sidebar {
+	position: absolute;
+	top: 16%;
+	right: 6%;
+	width: 13%;
+}
+#container .wrap .sidebar a {
+	display: block;
+	font-size: 0;
+}
+#container .wrap .sidebar .iv {
+	margin: 0 0 .5rem 0;
+}
+img {
+	width: 100%;
+}
+/*峰箱*/
+.tank {
+	display: none;
+	position: absolute;
+	top: 55%;
+	left: 43%;
+	width: 10%;
+	font-size: 0;
+}
+.tank_1 {
+	display: none;
+	position: absolute;
+	top: 55%;
+	left: 39%;
+	width: 18%;
+	font-size: 0;
+}
+.tank_2 {
+	display: none;
+	position: absolute;
+	top: 55%;
+	left: 39%;
+	width: 18%;
+	font-size: 0;
+}
+
+/*提示框*/
+#container .wrap .hint-wrap {
+	display: none;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+	z-index: 1;
+}
+#container .wrap .hint-wrap .hint {
+	position: absolute;
+	top: 25%;
+	left: 13%;
+	width: 75%;
+	height: 5rem;
+	background: url(/template/mobile/new2/static/images/imge/f_95.png) no-repeat;
+	background-size: 100% 100%;
+	font-size: .14rem;
+}
+#container .wrap .hint-wrap .hint p {
+	margin: 85px 0 0 23px;
+	width: 80%;
+}
+#container .wrap .hint-wrap .x-tn {
+	position: absolute;
+	top: 30%;
+	right: 11%;
+	width: 11%;
+	height: .8rem;
+	background: url(/template/mobile/new2/static/images/imge/f_7.png) no-repeat;
+	background-size: 100% 100%;
+}
+#container .wrap .hint-wrap .q-tn {
+	position: absolute;
+	top: 54%;
+	left: 34%;
+	width: 30%;
+	height: .95rem;
+	background: url(/template/mobile/new2/static/images/imge/f_8.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+#container .wrap #hin {
+	background: url(/template/mobile/new2/static/images/imge/f_91.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+#container .wrap #hw {
+	background: url(/template/mobile/new2/static/images/imge/f_92.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+/*扩建*/
+#container .wrap .extend {
+	position: absolute;
+	bottom: 20%;
+	right: 20%;
+	width: 16%;
+	font-size: 0;
+}
+
+/*合成*/
+/*#container .wrap .synth {
+	position: absolute;
+	bottom: 10%;
+	left: 35%;
+	width: 16%;
+}
+#container .wrap .synth a {
+	display: block;
+	font-size: 0;
+}*/
+
+/*商店*/
+#container .wrap .shop {
+	position: absolute;
+	bottom: 10%;
+	right: 25%;
+	width: 17%;
+}
+#container .wrap .shop a {
+	display: block;
+	font-size: 0;
+}
+/*商店弹框*/
+#container .wrap .storeList {
+	width: 100%;
+	display: none;
+}
+#container .wrap .storeList .tier {
+	position: relative;
+	width: 100%;
+	height: 13.34rem;
+	background: rgba(0,0,0,0.4);
+	z-index: 1;
+}
+#container .wrap .storeList .tier .list {
+	position: absolute;
+	top: 15%;
+	left: 0;
+}
+#container .wrap .storeList .tier .list-wrap {
+	position: absolute;
+	margin: 30% 0 0 15%;
+	z-index: 5;
+	width: 70%;
+	height: 9.25rem;
+	background: url(/template/mobile/new2/static/images/imge/bj_1.png) no-repeat;
+	background-size: 100% 100%;
+}
+#container .wrap .storeList .tier .list-wrap .you {
+	margin: 0 0 .15rem;
+	position: relative;
+	top: 15%;
+	left: 8%;
+	width: 85%;
+	height: .85rem;
+	font-size: 0;
+}
+.g_btn {
+	position: absolute;
+	top: 17%;
+	right: 5%;
+	width: 25%;
+	font-size: 0;
+}
+/*雄蜂-兑换*/
+.droneExchange {
+	right: 32%;
+}
+#container .wrap .storeList .tier .list-wrap .list .trait {
+	margin: 0 0 .15rem;
+	position: relative;
+	top: 15%;
+	left: 8%;
+	width: 85%;
+	height: .45rem;
+	font-size: 0;
+}
+#container .wrap .storeList .tier .list-wrap .list .trait a {
+	display: block;
+	font-size: 0;
+}
+.d_btn {
+	position: absolute;
+	top: 40%;
+	right: 3%;
+	width: 22%;
+	font-size: 0;
+}
+
+#container .wrap .storeList .none {
+	font-size: 0;
+	width: 6%;
+	position: absolute;
+	top: 21%;
+	right: 13%;	
+	z-index: 5;
+}
+
+/*认养弹框*/
+#container .wrap .star {
+	display: none;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+	z-index: 1;
+}
+#container .wrap .star .case {
+	position: absolute;
+	top: 25%;
+	left: 13%;
+	width: 75%;
+	height: 5rem;
+	background: url(/template/mobile/new2/static/images/imge/f_91.png) no-repeat;
+	background-size: 100% 100%;
+	font-size: .14rem;
+}
+
+#container .wrap .star .gouMai {
+	background: url(/template/mobile/new2/static/images/imge/k_ga.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+#container .wrap .star .case .what {
+	position: absolute;
+	top: 30%;
+	left: 10%;
+	width: 76%;
+	height: .75rem;
+	font-size: 16px;
+}
+#container .wrap .star .case .what .price {
+	/*position: absolute;
+	top: 0;
+	right: 6%;*/
+	width: 20%;
+	background: transparent;
+	border: none;
+	outline: none;
+	border-bottom: 1px solid black;
+	-webkit-appearance: none;
+	border-radius: 0;
+}
+
+
+.x-btn {
+	position: absolute;
+	top: 30%;
+	right: 11%;
+	width: 11%;
+	height: .8rem;
+	background: url(/template/mobile/new2/static/images/imge/f_7.png) no-repeat;
+	background-size: 100% 100%;
+}
+.q-btn {
+	position: absolute;
+	top: 54%;
+	left: 34%;
+	width: 30%;
+	height: .95rem;
+	background: url(/template/mobile/new2/static/images/imge/f_8.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+#container .wrap #cts {
+	width: 100%;
+	margin:125px 0 0;
+	text-align: center;
+	font-size: .2rem;
+	font-weight: 550;
+}
+#container .wrap #scan {
+	background: url(/template/mobile/new2/static/images/imge/f_9.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+/*moudel添加*/
+.bgColor{
+	width: 100%;
+	height:100%;
+	background-color: rgba(0,0,0,0.4);
+	position: absolute;
+	top: 0;
+	z-index: 2;
+	display: none;
+}
+
+.newShow{
+	width: 80%;
+	position: absolute;
+	top: 0;
+	left: -80%;
+	z-index: 66;
+}
+
+/* 右弹出 */
+.activity{
+	width: 80%;
+	position: absolute;
+	top: 10%;
+	right: -86%;
+	background:url('/template/mobile/new2/static/images/imge/ditu.png')no-repeat;
+	background-size: cover;
+	z-index: 999;
+}
+.activity div{
+	width: 95%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: .3rem 0;
+	position: relative;
+	left: 3%;
+}
+.activity div img{
+	width: 100%;
+}
+.activity .back{
+	width: .6rem;
+	height: .6rem;
+	position: absolute;
+	top: 50%;
+	left: -.4rem;
+	z-index: 1;
+	background: url('/template/mobile/new2/static/images/imge/jian.png') no-repeat;
+	background-size: cover;
+}
+.activity div p{
+	font-size: .2rem;
+	font-weight: bold;
+	color: #fff;
+	position: absolute;
+	margin-top:-.26rem;
+	left: 60%;
+	top: 35%;
+
+}
+.activity div span{
+	font-size: .2rem;
+	position: absolute;
+	right:.2rem;
+	margin-top: .2rem;
+	background:rgba(0,0,0,0.4); 
+	color: #fff;
+}
+
+/*礼包弹窗*/
+.event {
+	display: none;
+	z-index: 6;
+	position: absolute;
+	top: 20%;
+	left: 10%;
+	width: 80%;
+	height: 8rem;
+	background:url('/template/mobile/new2/static/images/imge/h_z.png')no-repeat;
+	background-size: 100% 100%;
+}
+.event div .yan {
+	position: absolute;
+	top: 20%;
+	left: 5%;
+	width: 90%;
+	height: .95rem;
+	background: url(/template/mobile/new2/static/images/imge/h_y.png) no-repeat;
+	background-size: 100% 100%;
+	font-size: .18rem;
+	line-height: .95rem;
+	text-align: center;
+	color: #fff;
+}
+.event div .yan .get {
+	position: absolute;
+	top: 20%;
+	right: 3%;
+	width: 20%;
+	height: .5rem;
+	background: url(/template/mobile/new2/static/images/imge/h_l.png) no-repeat;
+	background-size: 100% 100%;
+}
+.event div .shui {
+	position: absolute;
+	top: 35%;
+	left: 5%;
+	width: 90%;
+	height: .95rem;
+	background: url(/template/mobile/new2/static/images/imge/h_s.png) no-repeat;
+	background-size: 100% 100%;
+	font-size: .18rem;
+	line-height: .95rem;
+	text-align: center;
+	color: #fff;
+}
+.event div .shui .get_1 {
+	position: absolute;
+	top: 20%;
+	right: 3%;
+	width: 20%;
+	height: .5rem;
+	background: url(/template/mobile/new2/static/images/imge/h_l.png) no-repeat;
+	background-size: 100% 100%;
+}
+/*背影*/
+.view {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 0;
+	width: 100%;
+	height: 13.34rem;
+	background: rgba(0,0,0,0.4);
+}

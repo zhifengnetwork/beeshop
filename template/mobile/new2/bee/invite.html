@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width user-scalable=no initial-scale=1.0 maximum-scale=1.0 minimum-scale=1.0">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_style.css"/>
+		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_invite.css"/>
+	</head>
+	<body>
+		<div id="container">
+			<div class="wrap">
+				<div class="header">
+					<div class="banner">
+						<div class="back">
+							<a href="javascript:history.back(-1)"><!--返回上一层-->
+								<img src="__STATIC__/images/imge/fh.png" />
+							</a>
+						</div>
+						<h2>邀请一起</h2>
+						<div class="share" id="share">
+							<img src="__STATIC__/images/imge/15.png" />
+						</div>
+					</div>
+				</div>
+				
+				<!--二维码-->
+				<div class="code">
+					<!-- 添加 -->
+					<!--<div>
+						<label for="my">我</label>
+						<input id="my" type="text">
+					</div>-->
+					<div>
+						<!-- <img src="__STATIC__/images/imge/timg.jpg" alt=""> -->
+						<div id="qrcode"></div>
+					</div>
+					<p>邀请一起</p>
+					<!-- 添加 -->
+				</div>
+				
+				<!--分享选择-->
+				<div class="main" id="main">
+					<ul>
+						<li class="weChat info">
+							<div>
+								<img src="__STATIC__/images/imge/4.png"/>
+							</div>
+							<p>微信</p>
+						</li>
+						<li class="pen info">
+							<div>
+								<img src="__STATIC__/images/imge/14.png"/>
+							</div>
+							<p>朋友圈</p>
+						</li>
+						<li class="alipay info">
+							<div>
+								<img src="__STATIC__/images/imge/1.png"/>
+							</div>
+							<p>支付宝</p>
+						</li>
+					</ul>
+					<div class="cancel" id="cancel">取消</div>
+				</div>
+				
+				<!--分享成功-->
+				<div class="star" id="star">
+					<div class="case">
+						<div class="what">
+							<p>分享成功</p>
+						</div>
+					</div>
+					<div class="x-btn" id="xbtn"></div>
+					<div class="q-btn" id="qbtn"></div>
+				</div>
+				<!--分享失败-->
+				<div class="star" id="defeat">
+					<div class="case">
+						<div class="what">
+							<p>分享失败</p>
+						</div>
+					</div>
+					<div class="x-btn" id="on"></div>
+					<div class="q-btn" id="in"></div>
+				</div>
+				
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="__STATIC__/js/rem.js" ></script>
+<script type="text/javascript" src="__STATIC__/js/mi_invite.js" >
+</script><script type="text/javascript" src="__STATIC__/js/qrcode.js"></script>
+
+<script type="text/javascript">
+	var url = "{$url}";
+	new QRCode(document.getElementById("qrcode"),url);
+</script>
