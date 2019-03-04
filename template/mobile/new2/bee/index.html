@@ -19,22 +19,22 @@
 				<div class="head">
 					<!--头像-->
 					<div class="via">
-						<img src="__STATIC__/images/imge/tx.png" />
+						<img src="{$user.head_pic}" />
 					</div>
-					<span class="suffer">60</span>
+					<span class="suffer">0</span>
 					<!--经验值-->
 					<ul class="cost">
 						<li>
 							<div class="tu_1"></div>
-							<span class="num">999999</span>
+							<span class="num">{$user_prop.bee_milk ? $user_prop.bee_milk : 0 }</span>
 						</li>
 						<li>
 							<div class="tu_2"></div>
-							<span class="num">999999</span>
+							<span class="num">{$user_prop.water ? $user_prop.water : 0 }</span>
 						</li>
 						<li>
 							<div class="tu_3"></div>
-							<span class="num">999999</span>
+							<span class="num">{$user_prop.sun_value ? $user_prop.sun_value : 0 }</span>
 						</li>
 					</ul>
 				</div>

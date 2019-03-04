@@ -199,7 +199,7 @@
                                 <div style="text-align: center; width: 170px; max-width:250px;">
                                     <a href="{:U('editWithdrawals',array('id'=>$v['id'],'p'=>$_GET[p]))}" class="btn blue"><i class="fa fa-pencil-square-o"></i>查看</a>
                                     <if condition="$v[status] elt -1">
-                                        <a class="btn red"  href="javascript:void(0)" data-id="{$v[id]}" onclick="delfunc(this)" data-url="{:U('delWithdrawals')}"><i class="fa fa-trash-o"></i>删除</a>
+                                        <a class="btn red"  href="javascript:void(0)" data-id="{$v['id']}" onclick="delfunc(this)" data-url="{:U('delWithdrawals')}"><i class="fa fa-trash-o"></i>删除</a>
                                     </if>
                                 </div>
                             </td>

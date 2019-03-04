@@ -121,7 +121,6 @@ $(document).ready(function(){
     //获取奖项名称
     document.getElementById('prize').addEventListener('click', function(){
         var id = 1;
-
         $.ajax({
             type:"POST",
             url:"getPrizeText",
