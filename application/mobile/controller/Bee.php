@@ -108,9 +108,57 @@ class Bee extends MobileBase {
     * 好友
     */ 
     public function beeFriend(){
+        $user_id = session('user.user_id');
+        $user = M('users')->where('first_leader',$user_id)->select();
+        if ($user){
+            $this->assign("users",$user);
+        }
         return $this->fetch('/bee/friend');
     }
 
+    /*
+     * 赠送好友蜂王浆
+     */
+    public function give_money()
+    {
+        if ($_POST){
+            $user_id = session('user.user_id');
+            //赠送人id
+            $first_leader = $_POST['user_id'];
+            //赠送多少蜂王浆
+            $money_nums = $_POST['money'];
+
+            $user = M("user_bee_account")->where('uid',$user_id)->find();
+            if($user['bee_milk']>=$money_nums)
+            {
+                //减少
+                $data_user = array(
+                    "bee_milk" => $user['bee_milk']-$money_nums,
+                    "update_time" => time()
+                );
+                $js_bee = M("user_bee_account")->insert($data_user);
+                //增加
+                $leader_user = M("user_bee_account")->where('uid',$first_leader)->find();
+                if ($first_leader)
+                {
+                    $leader_data = array(
+                        "bee_milk" => $user['bee_milk']+$money_nums,
+                        "update_time" => time()
+                    );
+                    $zj_bee = M("user_bee_account")->insert($leader_data);
+
+                }else{
+                    $data = array(
+                        "uid" => $first_leader,
+                        "bee_milk" =>$money_nums,
+                        "status" =>1,
+                        "create_time" =>time()
+                    );
+                    
+                }
+            }
+        }
+    }
      
     /*
     * 邀请好友
@@ -132,7 +180,7 @@ class Bee extends MobileBase {
     {
         $this->config = tpCache('game'); //配置信息
         //兑换所需蜜糖
-        $bee_num = $_POST['bee_num'];
+//        $bee_num = $_POST['bee_num'];
 
         if ($_POST['exchange_nums'] == null){
             $_POST['exchange_nums'] =1;
@@ -202,7 +250,7 @@ class Bee extends MobileBase {
                     "gooey"=>$gooey,
                     "bee_milk" =>$bee_milk['bee_milk']+$_POST['exchange_nums']
                 );
-                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
+//                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
                 $msg = "恭喜您，".$nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
                 if ($update)
@@ -225,7 +273,7 @@ class Bee extends MobileBase {
                     "gooey"=>$gooey,
                     "water" =>$bee_milk['water']+$_POST['exchange_nums']
                 );
-                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_water']*$_POST['exchange_nums']."露水成功";
+//                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_water']*$_POST['exchange_nums']."露水成功";
                 $msg = "恭喜您，".$nums."克蜜糖浆兑".$this->config['eight_exchange_water']*$_POST['exchange_nums']."露水成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
                 if ($update)
@@ -248,7 +296,7 @@ class Bee extends MobileBase {
                     "gooey"=>$gooey,
                     "sun_value" =>$bee_milk['sun_value']+$_POST['exchange_nums']
                 );
-                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_sun']*$_POST['exchange_nums']."阳光值成功";
+//                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_sun']*$_POST['exchange_nums']."阳光值成功";
                 $msg = "恭喜您，".$nums."克蜜糖浆兑".$this->config['eight_exchange_sun']*$_POST['exchange_nums']."阳光值成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
                 if ($update)

@@ -18,72 +18,100 @@
 				</div>
 				
 				<!--用户栏-->
-				<div class="user-list">
-					<a class="via">
-						<img src="__STATIC__/images/imge/6.png" />
-					</a>
-					<p class="name">用户名</p>
-					<div class="btn">
-						<img src="__STATIC__/images/imge/5.png" />
-					</div>
-				</div>
-				
-				<div class="user-list">
-					<a class="via">
-						<img src="__STATIC__/images/imge/6.png" />
-					</a>
-					<p class="name">用户名</p>
-					<div class="btn">
-						<img src="__STATIC__/images/imge/5.png" />
-					</div>
-				</div>
-				
-				<div class="user-list">
-					<a class="via">
-						<img src="__STATIC__/images/imge/6.png" />
-					</a>
-					<p class="name">用户名</p>
-					<div class="btn">
-						<img src="__STATIC__/images/imge/5.png" />
-					</div>
-				</div>
-				
-				<div class="user-list">
-					<a class="via">
-						<img src="__STATIC__/images/imge/6.png" />
-					</a>
-					<p class="name">用户名</p>
-					<div class="btn">
-						<img src="__STATIC__/images/imge/5.png" />
-					</div>
-				</div>
-				
-				
-				<div class="user-list">
-					<a class="via">
-						<img src="__STATIC__/images/imge/6.png" />
-					</a>
-					<p class="name">用户名</p>
-					<div class="btn">
-						<img src="__STATIC__/images/imge/5.png" />
-					</div>
-				</div>
-				
-				<!--弹框-->
-				<div class="popup-wrap">
-					<div class="popup">
-						<div class="x-btn" id="x-btn">
-							<img src="__STATIC__/images/imge/f_7.png" />
+				<foreach name="users" item="good">
+					<div class="giveAlertWrap">
+						<div class="user-list" all="1111">
+							<a class="via">
+								<img src="__STATIC__/images/imge/6.png" />
+							</a>
+							<p class="name">{$good['mobile']}</p>
+							<div class="btn" onclick="alertBut(this)">
+								<img src="__STATIC__/images/imge/5.png" />
+							</div>
 						</div>
-						<div class="q-btn" id="q-btn">
-							<img src="__STATIC__/images/imge/f_8.png" />
+
+						<!--弹框-->
+						<div class="popup-wrap">
+							<div class="popup">
+								<!--<div class="x-btn" id="x-btn">-->
+								<div class="x-btn" onclick="hideGiceALert(this)">
+									<img src="__STATIC__/images/imge/f_7.png"/>
+								</div>
+								<p class="count">您要赠送的蜂王浆数量为 <input type="text" class="inp" name="money" /></p>
+								<input type="text" name="user_id" value="{$good['user_id']}" style="display: none;">
+								<!--<div class="q-btn" id="q-btn">-->
+								<div class="q-btn" onclick="giveAjax(this,{$good['user_id']})">
+									<!--<img src="__STATIC__/images/imge/f_8.png" onclick="ajaxPost()"/>-->
+									<img src="__STATIC__/images/imge/f_8.png" />
+								</div>
+							</div>
 						</div>
-						<p class="count">您要赠送的蜂王浆数量为<input class="inp" type="text"/></p>
 					</div>
-				</div>
+
+				</foreach>
+
 			</div>
 		</div>
 	</body>
 </html>
+<script src="__STATIC__/js/jquery-3.1.1.min.js" ></script>
+<script>
+	/*弹框-确定按钮*/
+	function giveAjax(_this,_id){
+		// console.log(_id,$(_this).siblings('.count').find('.inp').val(),99999999);
+		$.ajax({
+			type:"post",
+			url:"{:url('give_money')}",
+			data:{
+				"money":$(_this).siblings('.count').find('.inp').val(),
+				"user_id":_id
+			},
+			success:function(data){
+				if (data.type==0) {
+					layer.msg(data.msg);
+				}else{
+					layer.msg(data.msg);
+				}
+			}
+		});
+		$(_this).siblings('.count').find('.inp').val('');
+		$(_this).parent().parent().hide();
+		return false;
+//	console.log(_id);
+	}
+	/*弹框-关闭弹窗*/
+	function hideGiceALert(_this){
+		$(_this).parent().parent().hide();
+		console.log("关闭弹框");
+		return false;
+	}
+	function alertBut(_this){
+		// console.log(6666,$(_that).parent().attr('all'));
+		// $(_this).parent().parent().siblings('popup-wrap').show();
+		$(_this).parent().siblings('.popup-wrap').eq(0).show();
+	}
+	// function ajaxPost(user_id){
+	// 	var user_id = $("input[name='user_id']").val();
+	// 	var money = $("input[name='money']").val();
+	// 	console.log(money);
+	// 	console.log(user_id);
+	// 	$.ajax({
+	// 		type:"post",
+	// 		url:"{:url('give_money')}",
+	// 		data:{
+	// 			"value":value,
+	// 			"user_id":user_id
+	// 		},
+	// 		success:function(data){
+	// 			if (data.type==0) {
+	// 				layer.msg(data.msg);
+	// 			}else{
+	// 				layer.msg(data.msg);
+	// 			}
+	// 		}
+	// 	});
+	// }
+</script>
 <script type="text/javascript" src="__STATIC__/js/rem.js" ></script>
-<script type="text/javascript" src="__STATIC__/js/mi_friend.js" ></script>
+<script type="text/javascript" src="__STATIC__/js/layer/layer.js" ></script>
+<!--<script type="text/javascript" src="__STATIC__/js/mi_friend.js" ></script>-->
