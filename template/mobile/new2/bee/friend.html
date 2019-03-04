@@ -86,4 +86,19 @@
 	</body>
 </html>
 <script type="text/javascript" src="__STATIC__/js/rem.js" ></script>
+<script type="text/javascript" src="__STATIC__/js/mi_jquery.min.js" ></script>
 <script type="text/javascript" src="__STATIC__/js/mi_friend.js" ></script>
+<script>
+	$(".q-btn").on("click",function(){
+		var value = $(".inp").val()
+		console.log(value)
+		$.ajax({
+			url:"{:url('give_money')}",
+			type:'post',
+			data:{"value":value,id:"123"},
+			seccuss:function(res){
+				console.log(res)
+			}
+		})
+	})
+</script>

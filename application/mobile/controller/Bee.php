@@ -31,6 +31,7 @@ class Bee extends MobileBase {
     public function _initialize()
     {
         parent::_initialize();
+        $this->config = tpCache('game');
         if (session('?user')) {
             $user = session('user');
             $user = M('users')->where("user_id", $user['user_id'])->find();
@@ -65,6 +66,9 @@ class Bee extends MobileBase {
 	
     // 游戏加载页面
     public function index(){
+
+       
+
         return $this->fetch('/bee/greet');
     }
 
@@ -88,6 +92,11 @@ class Bee extends MobileBase {
         $user_prop['mating'] = $mating;
 //        dump($user_prop['bee_milk']);exit;
         $this->assign('user_prop', $user_prop);
+
+         //增加头像
+         $head_pic = session('user.head_pic');
+         $this->assign('head_pic',$head_pic);
+         
         return $this->fetch('/bee/index');
     }
     private function user_find($user_id)
@@ -298,38 +307,42 @@ class Bee extends MobileBase {
     * 点击转盘获取奖励
     * 
     */
-      public function rotate(){
+    public function rotate(){
         $type = 601;
         $userId = session('user.user_id');
+        $isPrize = 0;
         $prize_num = M('bee_flow')->where('uid', $userId)->where('type', $type)->whereTime('create_time', 'today')->count();
 
         //判断是否有抽奖机会
-        if ($prize_num>$this->config['prize_count']) {
-            $is_prize = 0;
+        if ($prize_num>=$this->config['prize_count']) {
             $msg = "你没有抽奖机会了哦";
-            return json(array('is_prize'=>$is_prize,'msg'=>$msg));
+            return json(array('is_prize'=>$isPrize,'msg'=>$msg));
         }
-        
+       
         $prize_arr = array();
+        $isConfig  = true;
 
         for ($i=0; $i < 5; $i++) { 
-            array_push($prize_arr, array('id'=>$i+1,'value'=>$this->config['prize_bee_milk'.($i+1)],'prize'=>$this->config['prize_bee_milk'.($i+1)].'滴蜂王浆','v'=>$this->config['prize_rate'.($i+1)]));
-        }
+            $prizeMilk = $this->config['prize_bee_milk'.($i+1)];
+            $rate = $this->config['prize_rate'.($i+1)];
 
-        array_push($prize_arr, array('id'=>6,'value'=>0,'prize'=>'下次没准就能中哦','v'=>$this->config['prize_rate6']));
-        $isConfig  = true;
-        foreach ($prize_arr as $key => $val) {
-            if ((!$val['prize'] && $val['prize'] !== 0) || (!$val['v'] && $val['v'] !== 0)) {
+            if ((!$prizeMilk && $prizeMilk !== 0) || (!$rate && $rate !== 0)) {
                 $isConfig = false;
-                $is_prize = 0;
                 break;
             }
 
+            array_push($prize_arr, array('id'=>$i+1,'value'=>$prizeMilk,'prize'=>$prizeMilk.'滴蜂王浆','v'=>$rate));
+        }
+
+        array_push($prize_arr, array('id'=>6,'value'=>0,'prize'=>'下次没准就能中哦','v'=>$this->config['prize_rate6']));
+        
+        foreach ($prize_arr as $key => $val) {
             $arr[$val['id']] = $val['v'];
         }
+        
         //判断后台是否设置奖项及设置是否完整
         if (!$isConfig || count($arr) < 1) {
-            return json(array('is_prize' => $is_prize,'msg' => "还没有设置奖项"));
+            return json(array('is_prize' => $isPrize,'msg' => "还没有设置奖项"));
         }
 
         $rid = $this->getRand($arr);   //根据概率获取奖项id
@@ -342,7 +355,8 @@ class Bee extends MobileBase {
         //     $pr[] = $prize_arr[$i]['prize'];
         // }
 
-        $result = array('prize' => $res['prize'],'id' => $rid);
+        $isPrize = 1;
+        $result = array('is_prize' => $isPrize,'prize' => $res['prize'],'id' => $rid);
         $bool   = true;
 
         if ($userId) {
@@ -359,15 +373,14 @@ class Bee extends MobileBase {
                 'create_time' => time(),
                 'note'        => "转盘抽奖"
             );
-
             $res = M('bee_flow')->insert($data);
-
             $bool = $res ? $bool : false;
         } else {
             $bool = false;
         }
 
         if (!$bool){
+            unset($result);
             $result['is_prize'] = 0;
             $result['msg'] = "抽奖失败";
         }
