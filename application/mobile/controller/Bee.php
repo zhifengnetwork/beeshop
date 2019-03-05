@@ -420,7 +420,7 @@ class Bee extends MobileBase {
                 'num'         => $prize_arr[$rid-1]['value'],
                 'status'      => 1,
                 'create_time' => time(),
-                'note'        => "转盘抽中".$prize_arr[$rid-1]['value']."蜂王浆"
+                'note'        => "转盘抽中".$prize_arr[$rid-1]['value']."滴蜂王浆"
             );
             $res = M('bee_flow')->insert($data);
             
