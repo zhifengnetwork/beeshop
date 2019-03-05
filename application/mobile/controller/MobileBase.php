@@ -52,8 +52,9 @@ class MobileBase extends Controller {
                     session('user', null);
                 }
             }
+            $op = session('openid');
            
-            if (empty(session('openid'))) {
+            if (empty($op)) {
                 $this->weixin_config = M('wx_user')->find(); //获取微信配置
                 $this->assign('wechat_config', $this->weixin_config);
              
