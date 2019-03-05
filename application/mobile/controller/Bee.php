@@ -21,8 +21,12 @@ use think\Page;
 use think\Verify;
 use think\Db;
 use think\Cookie;
+<<<<<<< HEAD
+use think\Exception;
+=======
 use app\mobile\controller\Code;
 
+>>>>>>> 03e0c10da0ecdb4c7271230790f53e4230424fdc
 class Bee extends MobileBase {
 
     public $user_id = 0;
@@ -433,32 +437,30 @@ class Bee extends MobileBase {
         $bool   = true;
 
         if ($userId) {
-            //统计抽了多少次奖
-            $count = M('bee_flow')->where('uid', $userId)->where('type', $type)->count();
-
             $data = array(
-                'bid'         => 1,
                 'uid'         => $userId,
                 'type'        => $type,
-                'inc_or_dec'  => $count+1,
+                'inc_or_dec'  => 1,
                 'num'         => $prize_arr[$rid-1]['value'],
                 'status'      => 1,
                 'create_time' => time(),
                 'note'        => "转盘抽中".$prize_arr[$rid-1]['value']."滴蜂王浆"
             );
+
             $res = M('bee_flow')->insert($data);
             
             //抽到蜂王浆计算到用户总蜂王浆数里
             if ($res) {
                 $userBeeMilk = M('user_bee_account')->where('uid',$userId)->field('bee_milk')->find();
-                if (!$userBeeMilk && $userBeeMilk !== 0) {
+
+                if (!$userBeeMilk['bee_milk'] && $userBeeMilk['bee_milk'] !== 0) {
                     M('user_bee_account')->insert(
                         ['uid'=>$userId, 'bee_milk'=>$prize_arr[$rid-1]['value'],
-                        'create_+ime'=>date('Y-m-d H:m:s',time()),
-                        'update'=>date('Y-m-d H:m:s',time())]
-                    );
+                        'create_time'=>time(),
+                        'update_time'=>time()]
+                    );   
                 } else {
-                    M('user_bee_account')->where('uid',$userId)->update(['bee_milk'=>($prize_arr[$rid-1]['value']+$userBeeMilk), 'update_time'=>date('Y-m-d H:m:s',time())]);
+                    M('user_bee_account')->where('uid',$userId)->update(['bee_milk'=>($prize_arr[$rid-1]['value']+$userBeeMilk['bee_milk']), 'update_time'=>time()]);
                 }
             } else {
                 $bool = false;

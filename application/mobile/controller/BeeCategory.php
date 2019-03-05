@@ -134,10 +134,10 @@ class BeeCategory extends MobileBase {
             $getHoeny = array(
                 'uid' => $this->user_id,
                 'bee_num' => $beeNum,
-                'total_honey_num' => $this->config['six_worker_bee_days']?$this->config['six_worker_bee_days']:310*$beeNum,
+                'total_honey_num' => $this->config['six_worker_bee_days']?$this->config['six_worker_bee_days']*$beeNum:310*$beeNum,
                 'create_time' => time()
             );
-            M('get_hoeny')->save($getHoeny); // 插入采蜜记录
+            M('get_gooey')->save($getHoeny); // 插入采蜜记录
             $this->insert_log($log);       
             return json(['code'=>200,'msg'=>'采蜜成功']);
         }else{
