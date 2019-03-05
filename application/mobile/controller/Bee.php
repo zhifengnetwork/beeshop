@@ -65,7 +65,6 @@ class Bee extends MobileBase {
         $this->assign('user', $user); //存储用户信息
         $this->assign('user_id', $this->user_id);
     }
-	
     // 游戏加载页面
     public function index(){
 
@@ -167,10 +166,10 @@ class Bee extends MobileBase {
                     $zj_bee = Db('user_bee_account')->insert($data);
                 }else{
                     $leader_data = array(
-                        "bee_milk" => $user['bee_milk']+$money_nums,
+                        "bee_milk" => $leader_user['bee_milk']+$money_nums,
                         "update_time" => time()
                     );
-                    $zj_bee = M("user_bee_account")->insert($leader_data);
+                    $zj_bee = M("user_bee_account")->where('uid',$first_leader)->update($leader_data);
                 }
 
                 if ($js_bee && $zj_bee){

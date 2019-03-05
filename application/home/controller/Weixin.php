@@ -22,9 +22,40 @@ class Weixin
      */
     public function index()
     {
-	exit($_GET['echostr']);
-        $logic = new WechatLogic;
-        $logic->handleMessage();
+    	$data = file_get_contents("php://input");
+    	if ($data) {
+    		$re = $this->xmlToArray($data);
+    		$this->write_log(json_encode($re));
+    		// if ($re['Event']=='subscribe' || $re['Event']=='SCAN') {
+	    		$url = SITE_URL.'/mobile/code/next?shangji='.$re['EventKey'].'&xiaji='.$re['FromUserName'].'&event='.$re['Event'];
+	    		httpRequest($url);
+    		// }
+    	}
+
+		exit($_GET['echostr']);
+	        $logic = new WechatLogic;
+	        $logic->handleMessage();
+    }
+
+    public function xmlToArray($xml)
+    {
+    	$obj = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
+		$json = json_encode($obj);
+		$arr = json_decode($json, true);  
+		return $arr;
+    }
+    public function write_log($content)
+    {
+        $content = "[".date('Y-m-d H:i:s')."]".$content."\r\n";
+        $dir = rtrim(str_replace('\\','/',$_SERVER['DOCUMENT_ROOT']),'/').'/logs';
+        if(!is_dir($dir)){
+            mkdir($dir,0777,true);
+        }
+        if(!is_dir($dir)){
+            mkdir($dir,0777,true);
+        }
+        $path = $dir.'/'.date('Ymd').'.txt';
+        file_put_contents($path,$content,FILE_APPEND);
     }
     
 }
