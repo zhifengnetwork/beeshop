@@ -3,6 +3,7 @@
 namespace app\mobile\controller;
 use think\Db;
 use app\common\model\UserCode;
+use app\common\model\Users;
 
 class Code extends MobileBase
 {
@@ -29,7 +30,7 @@ class Code extends MobileBase
             return $img;
         }
 
-        $access_token = httpRequest("http://www.jiusheyounong.com/mobile/api/access_token");
+        $access_token = httpRequest(SITE_URL."/mobile/api/access_token");
    
         $url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=".$access_token;
         $data['action_name'] = 'QR_LIMIT_STR_SCENE';
@@ -55,37 +56,51 @@ class Code extends MobileBase
 
     public function next()
     {
+
         $EventKey = $_GET['shangji'];
         $FromUserName = $_GET['xiaji'];
         $event = $_GET['event'];
         if ($event == 'subscribe') {
-            $arr = explode($EventKey, '_');
-            $EventKey = $arr[1];
+            $n = -1 * (count($EventKey) - 9);
+            $EventKey = substr($EventKey,$n);
         }
-        $shangji_user_noopenid = $this->users($EventKey)['first_leader'];
-        $xiaji_user_noopenid = $this->users($FromUserName)['first_leader'];
+        if($EventKey==$FromUserName) return false;
+        $this->register($EventKey);//上级
+        $this->register($FromUserName);//下级
 
-        if (empty($shangji_user_noopenid)) exit;
-        if (empty($xiaji_user_noopenid)) exit;
+        //写表
+        $user = new Users();
+        $user_id = $user->where(['openid'=>$EventKey])->value('user_id');
+        $this->write_log('EventKey:'.$EventKey);
+        $this->write_log('FromUserName:'.$FromUserName);
 
-        $this->write_log($FromUserName.'---'.$EventKey.'---------'.$event);
+        $user->where(['openid'=>$FromUserName])->save(['first_leader'=>$user_id]);
+
+        $this->write_log('user_id:'.$user_id);
+        $this->write_log('结束');
 
     }
     //查询users信息是否有注册
-    public function users($openid)
+    public function register($openid)
     {
+        $this->write_log("添加新用户");
         $user = M('users')->where("openid",$openid)->find();
         if (empty($user)) {
-            exit;
+            //通过  openid + access_token 获取 用户信息
+            $access_token = httpRequest(SITE_URL."/mobile/api/access_token");
+            $url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=".$access_token."&openid=".$openid."&lang=zh_CN";
+            //注册
+            $data = httpRequest($url);
+            // $this->write_log($data);
+            $data = json_decode($data,true);
+
+            $user = new Users();
+            $user->openid = $data['openid'];
+            $user->nickname = $data['nickname'];
+            $user->sex = $data['sex'];
+            $user->head_pic = $data['headimgurl'];
+            $user->save();
         }
-        return $user;
-    }
-
-    //
-    public function user_update()
-    {
-
-        # code...
     }
 
     public function write_log($content)

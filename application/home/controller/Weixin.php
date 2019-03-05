@@ -25,11 +25,12 @@ class Weixin
     	$data = file_get_contents("php://input");
     	if ($data) {
     		$re = $this->xmlToArray($data);
-    		$this->write_log(json_encode($re));
-    		// if ($re['Event']=='subscribe' || $re['Event']=='SCAN') {
+            
+    		if ($re['Event']=='subscribe' || $re['Event']=='SCAN') {
 	    		$url = SITE_URL.'/mobile/code/next?shangji='.$re['EventKey'].'&xiaji='.$re['FromUserName'].'&event='.$re['Event'];
 	    		httpRequest($url);
-    		// }
+            }
+            
     	}
 
 		exit($_GET['echostr']);

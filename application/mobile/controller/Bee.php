@@ -140,6 +140,10 @@ class Bee extends MobileBase {
             $money_nums = $_POST['money'];
 
             $user = M("user_bee_account")->where('uid',$user_id)->find();
+            if(empty($user)){
+                $msg = "蜂王浆数量不足!!!";
+                return json(array('msg'=>$msg,'type'=>0));
+            }
             if($user['bee_milk']>=$money_nums)
             {
                 //减少

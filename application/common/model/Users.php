@@ -24,4 +24,7 @@ class Users extends Model
         //TODO:自定义的初始化
     }
 
+    protected $table = 'tp_users';
+
+
 }
