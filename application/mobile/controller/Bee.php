@@ -21,12 +21,9 @@ use think\Page;
 use think\Verify;
 use think\Db;
 use think\Cookie;
-<<<<<<< HEAD
 use think\Exception;
-=======
 use app\mobile\controller\Code;
 
->>>>>>> 03e0c10da0ecdb4c7271230790f53e4230424fdc
 class Bee extends MobileBase {
 
     public $user_id = 0;
