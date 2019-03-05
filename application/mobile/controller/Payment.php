@@ -21,17 +21,18 @@ class Payment extends MobileBase {
     /**
      * 析构流函数
      */
-    public function  __construct() {   
+    public function  __construct() {
+
         parent::__construct();      
         // tpshop 订单支付提交
         $pay_radio = $_REQUEST['pay_radio'];
         if(!empty($pay_radio)) 
-        {                         
+        {
             $pay_radio = parse_url_param($pay_radio);
             $this->pay_code = $pay_radio['pay_code']; // 支付 code
         }
         else // 第三方 支付商返回
-        {            
+        {   
             //$_GET = I('get.');            
             //file_put_contents('./a.html',$_GET,FILE_APPEND);    
             $this->pay_code = I('get.pay_code');
@@ -51,8 +52,7 @@ class Payment extends MobileBase {
     /**
      * tpshop 提交支付方式
      */
-    public function getCode(){     
-        
+    public function getCode(){
             //C('TOKEN_ON',false); // 关闭 TOKEN_ON
             header("Content-type:text/html;charset=utf-8");            
             $order_id = I('order_id/d'); // 订单id
@@ -122,6 +122,30 @@ class Payment extends MobileBase {
         $this->assign('order_id', $order_id); 
     	return $this->fetch('recharge'); //分跳转 和不 跳转
     }
+        public function beePay()
+        {
+            $user = session('user');
+            $config = tpCache('game'); //配置信息
+
+            //添加幼蜂
+            $bee = [
+                'uid' => $user['user_id'],
+                'order_sn' => 'Bee'.get_rand_str(10,0,1),
+                'adopt_time' => date('Y-m-d H:i:s',time())
+            ];
+            $row = M('user_bee')->insert($bee);
+
+            if($row){
+                $order = M('user_bee')->where("id", $row)->find();
+                $order['order_amount'] = $config['one_bee_money'];
+                dump($order);exit;
+                $code_str = $this->payment->getJSAPI($order);
+                exit($code_str);
+            }else{
+                $this->error('提交失败,参数有误!');
+            }
+        }
+
         // 服务器点对点 // http://www.tp-shop.cn/index.php/Home/Payment/notifyUrl        
         public function notifyUrl(){            
             $this->payment->response();            

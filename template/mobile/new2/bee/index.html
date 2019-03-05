@@ -247,13 +247,16 @@
 				</div>
 				<!--认养弹框-->
 				<div class="star of" id="star">
-					<div class="case gouMai">
-						<div class="what">
-							<p>您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)</p>
+					<form action="{:U('Mobile/Payment/beePay')}" method="post" name="cart4_form" id="cart4_form">
+						<div class="case gouMai">
+							<div class="what">
+								<p>您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)</p>
+                                <input type="hidden" value="pay_code=weixin" class="c_checkbox_t" name="pay_radio" style="display:none;"/>
+							</div>
 						</div>
-					</div>
-					<div class="x-btn"></div>
-					<div class="q-btn" id="qbtn"></div>
+						<div class="x-btn"></div>
+						<div class="q-btn" id="qbtn"></div>
+					</form>
 				</div>
 				<!--认养-失败弹框-->
 				<div class="publicWrap buyWrap">
