@@ -360,16 +360,11 @@ class Bee extends MobileBase {
         $userId = session('user.user_id');
         $isPrize = 0;
         $prize_num = M('bee_flow')->where('uid', $userId)->where('type', $type)->whereTime('create_time', 'today')->count();
-
-        //判断是否有抽奖机会
-        if ($prize_num>=$this->config['prize_count']) {
-            $msg = "你没有抽奖机会了哦";
-            return json(array('is_prize'=>$isPrize,'msg'=>$msg));
-        }
        
         $prize_arr = array();
         $isConfig  = true;
 
+        //获取蜂王浆的设置
         for ($i=0; $i < 5; $i++) { 
             $prizeMilk = $this->config['prize_bee_milk'.($i+1)];
             $rate = $this->config['prize_rate'.($i+1)];
@@ -391,6 +386,12 @@ class Bee extends MobileBase {
         //判断后台是否设置奖项及设置是否完整
         if (!$isConfig || count($arr) < 1) {
             return json(array('is_prize' => $isPrize,'msg' => "还没有设置奖项"));
+        }
+
+        //判断是否有抽奖机会
+        if ($prize_num>=$this->config['prize_count']) {
+            $msg = "你没有抽奖机会了哦";
+            return json(array('is_prize'=>$isPrize,'msg'=>$msg));
         }
 
         $rid = $this->getRand($arr);   //根据概率获取奖项id
@@ -419,10 +420,25 @@ class Bee extends MobileBase {
                 'num'         => $prize_arr[$rid-1]['value'],
                 'status'      => 1,
                 'create_time' => time(),
-                'note'        => "转盘抽奖"
+                'note'        => "转盘抽中".$prize_arr[$rid-1]['value']."蜂王浆"
             );
             $res = M('bee_flow')->insert($data);
-            $bool = $res ? $bool : false;
+            
+            //抽到蜂王浆计算到用户总蜂王浆数里
+            if ($res) {
+                $userBeeMilk = M('user_bee_account')->where('uid',$userId)->field('bee_milk')->find();
+                if (!$userBeeMilk && $userBeeMilk !== 0) {
+                    M('user_bee_account')->insert(
+                        ['uid'=>$userId, 'bee_milk'=>$prize_arr[$rid-1]['value'],
+                        'create_+ime'=>date('Y-m-d H:m:s',time()),
+                        'update'=>date('Y-m-d H:m:s',time())]
+                    );
+                } else {
+                    M('user_bee_account')->where('uid',$userId)->update(['bee_milk'=>($prize_arr[$rid-1]['value']+$userBeeMilk), 'update_time'=>date('Y-m-d H:m:s',time())]);
+                }
+            } else {
+                $bool = false;
+            }
         } else {
             $bool = false;
         }
