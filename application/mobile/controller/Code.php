@@ -2,11 +2,14 @@
 
 namespace app\mobile\controller;
 use think\Db;
+use app\common\model\UserCode;
 
 class Code extends MobileBase
 {
     /**
      * 获取二维码
+     * 引用地址 ：
+     *      /Mobile/code/create_code
      */
     public function create_code()
     {
@@ -16,40 +19,35 @@ class Code extends MobileBase
             //测试
             $openid = 'testopenid';
         }
+    
+        $model = new UserCode();
+        $img = $model->where(['openid'=>$openid])->value('img');
+        if($img){
+            return $img;
+        }
 
-        // $wx_user = M('wx_user')->find();
-        $access_token = $this->access_token();
-        dump($access_token);
-        // $wx_user['web_access_token'];
-
-
+        $access_token = httpRequest("http://www.jiusheyounong.com/mobile/api/access_token");
+   
         $url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=".$access_token;
         $data['action_name'] = 'QR_LIMIT_STR_SCENE';
         $data['action_info']['scene']['scene_str'] = "openid_".$openid;
         $data = json_encode($data);
         $res = httpRequest($url,'POST',$data);
-        dump($res);
+        $result = json_decode($res,true);
 
-         
+        $result['openid'] = $openid;
+        $result['img'] = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=".$result['ticket'];
+
+        $model = new UserCode();
+        $model->openid = $openid;
+        $model->url = $result['url'];
+        $model->ticket = $result['ticket'];
+        $model->img = $result['img'];
+
+        $re = $model->save();
+
+        return $result['img'];
+
     }
-
-    public function access_token(){
-        //判断是否过了缓存期
-        $wx_user = M('wx_user')->find();
-        $expire_time = $wx_user['web_expires'];
-        
-        // if($expire_time > time()){
-        //    return $wx_user['web_access_token'];
-        // }
-        
-        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={$wx_user[appid]}&secret={$wx_user[appsecret]}";
-        $return = httpRequest($url,'GET');
-        $return = json_decode($return,1);
-        
-        $web_expires = time() + 7140; // 提前60秒过期
-        M('wx_user')->where(array('id'=>$wx_user['id']))->save(array('web_access_token'=>$return['access_token'],'web_expires'=>$web_expires));
-        return $return['access_token'];
-    }  
-
 
 }
