@@ -23,7 +23,7 @@ class Code extends MobileBase
         $model = new UserCode();
         $img = $model->where(['openid'=>$openid])->value('img');
         if($img){
-            exit($img);
+            return $img;
         }
 
         $access_token = httpRequest("http://www.jiusheyounong.com/mobile/api/access_token");
@@ -46,7 +46,7 @@ class Code extends MobileBase
 
         $re = $model->save();
 
-        exit($result['img']);
+        return $result['img'];
 
     }
 

@@ -21,6 +21,8 @@ use think\Page;
 use think\Verify;
 use think\Db;
 use think\Cookie;
+use app\mobile\controller\Code;
+
 class Bee extends MobileBase {
 
     public $user_id = 0;
@@ -145,26 +147,44 @@ class Bee extends MobileBase {
                     "bee_milk" => $user['bee_milk']-$money_nums,
                     "update_time" => time()
                 );
-                $js_bee = M("user_bee_account")->insert($data_user);
+                $js_bee = M("user_bee_account")->where('uid',$user_id)->update($data_user);
                 //增加
                 $leader_user = M("user_bee_account")->where('uid',$first_leader)->find();
-                if ($first_leader)
+                if (empty($leader_user))
                 {
+                    $data = array(
+                        "uid" => $first_leader,
+                        "bee_hive" => 0,
+                        "water" => 0,
+                        "sun_value" => 0,
+                        "gooey" => 0,
+                        "drone" => 0,
+                        "bee_milk" =>$money_nums,
+                        "status" =>1,
+                        "update_time" =>time(),
+                        "create_time" =>time()
+                    );
+                    $zj_bee = Db('user_bee_account')->insert($data);
+                }else{
                     $leader_data = array(
                         "bee_milk" => $user['bee_milk']+$money_nums,
                         "update_time" => time()
                     );
                     $zj_bee = M("user_bee_account")->insert($leader_data);
-
-                }else{
-                    $data = array(
-                        "uid" => $first_leader,
-                        "bee_milk" =>$money_nums,
-                        "status" =>1,
-                        "create_time" =>time()
-                    );
-
                 }
+
+                if ($js_bee && $zj_bee){
+                    $this->add_bee_flow($user_id,"222","赠送用户".$first_leader.",".$money_nums."滴蜂王浆",2);
+                    $this->add_bee_flow($user_id,"222","用户".$first_leader."获得".$user_id."赠送的".$money_nums."滴蜂王浆",1);
+                    $msg = "赠送用户".$first_leader.",".$money_nums."滴蜂王浆成功.";
+                    return json(array('msg'=>$msg,'type'=>1));
+                }else{
+                    $msg = "赠送失败!!!";
+                    return json(array('msg'=>$msg,'type'=>0));
+                }
+            }else{
+                $msg = "蜂王浆数量不足!!!";
+                return json(array('msg'=>$msg,'type'=>0));
             }
         }
     }
@@ -174,11 +194,16 @@ class Bee extends MobileBase {
     */ 
     public function beeInvite(){
         //传递快速注册的地址和分享用户的手机
-        $user_id = session('user.user_id');
-        $mobile  = M('users')->where('user_id', $user_id)->value('mobile');
-        $path    = $_SERVER['HTTP_HOST'];
-        $url     = 'http://' . $path . '/Mobile/User/reg?mobile=' . $mobile;
-        $this->assign('url', $url);
+//        $user_id = session('user.user_id');
+//
+//        $mobile  = M('users')->where('user_id', $user_id)->value('mobile');
+//        $path    = $_SERVER['HTTP_HOST'];
+//        $url     = 'http://' . $path . '/Mobile/User/reg?mobile=' . $mobile;
+//        $this->assign('url', $url);
+
+        $code = new Code();
+        $img = $code->create_code();
+        $this->assign('urlimg',$img);
         return $this->fetch('/bee/invite');
     }
 
@@ -346,7 +371,7 @@ class Bee extends MobileBase {
         {
             return $this->fetch('/bee/duihuan');    //成功后跳转  lst 界面
         }else{
-            $this->error('兑换失败', U('/bee/duihuan'));
+            $this->error('失败', U('/bee/duihuan'));
             exit();
         }
     }
