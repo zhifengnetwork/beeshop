@@ -134,6 +134,7 @@ class BeeCategory extends MobileBase {
             $getHoeny = array(
                 'uid' => $this->user_id,
                 'bee_num' => $beeNum,
+                'honey_num' => $this->config['six_worker_bee_days']?$this->config['six_worker_bee_days']:310,
                 'total_honey_num' => $this->config['six_worker_bee_days']?$this->config['six_worker_bee_days']*$beeNum:310*$beeNum,
                 'create_time' => time()
             );
