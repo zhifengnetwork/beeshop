@@ -48,15 +48,17 @@ class User extends MobileBase
             'verifyHandle', 'reg', 'send_sms_reg_code', 'find_pwd', 'check_validate_code',
             'forget_pwd', 'check_captcha', 'check_username', 'send_validate_code', 'express' , 'bind_guide', 'bind_account',
         );
-        $is_bind_account = tpCache('basic.is_bind_account');
-        if (!$this->user_id && !in_array(ACTION_NAME, $nologin)) {
-            if(strstr($_SERVER['HTTP_USER_AGENT'],'MicroMessenger') && $is_bind_account){
-                header("location:" . U('Mobile/User/bind_guide'));//微信浏览器, 调到绑定账号引导页面
-            }else{
-                header("location:" . U('Mobile/User/login'));
-            }
-            exit;
-        }
+        // $is_bind_account = tpCache('basic.is_bind_account');
+        // if (!$this->user_id && !in_array(ACTION_NAME, $nologin)) {
+        //     if(strstr($_SERVER['HTTP_USER_AGENT'],'MicroMessenger') && $is_bind_account){
+        //         echo 2222;exit;
+        //         header("location:" . U('Mobile/User/bind_guide'));//微信浏览器, 调到绑定账号引导页面
+        //     }else{
+        //         echo 3333;exit;
+        //         header("location:" . U('Mobile/User/login'));
+        //     }
+        //     exit;
+        // }
 
         $order_status_coment = array(
             'WAITPAY' => '待付款 ', //订单查询状态 待支付

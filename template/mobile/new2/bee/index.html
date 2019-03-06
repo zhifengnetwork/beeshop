@@ -16,13 +16,24 @@
 		<meta name="author" content=""/>
 		<meta name="copyright" content=""/>
 		<meta name="description" content=""/>
+		<style type="text/css">
+			.headS{
+				width: 50px;
+				height: 50px;
+				display: flex;
+				border-radius: 50%;
+				align-items: center;
+				justify-content: center;
+				overflow: hidden;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="container">
 			<div class="wrap">
 				<div class="head">
 					<!--头像-->
-					<div class="via">
+					<div class="via headS">
 						<img src="{$user.head_pic}" />
 					</div>
 					<span class="suffer">0</span>
@@ -42,6 +53,7 @@
 						</li>
 					</ul>
 				</div>
+				
 				
 				<!--用户资料-->
 				<div class="next">
@@ -445,9 +457,9 @@
 				<div class="head">
 					<div class="userName">
 						<a>
-							<img src="__STATIC__/images/imge/2.png" />
+							<img src="{$user.head_pic}" />
 						</a>
-						<p>用户名称</p>
+						<p>{$user.nickname}</p>
 					</div>
 					
 					<!--栏目-->
@@ -498,6 +510,10 @@
 		
 	</body>
 </html>
+<<<<<<< HEAD
+=======
+
+>>>>>>> b4bab3057b0f4221419f080098217b7e882145ca
 <script>
 	function ajaxPost(num){
 		if (num == 1) {
