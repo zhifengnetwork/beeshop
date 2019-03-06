@@ -124,14 +124,15 @@ class UsersLogic extends Model
     	}else{
     	    $column = 'unionid';
     	    $open_or_unionid = $data['unionid'];
-    	}  
-    	
+    	}
+
     	if(empty($user['openid'])){
     		$ouser = M('Users')->alias('u')->field('u.user_id,o.tu_id')->join('OauthUsers o' , 'u.user_id = o.user_id')->where(['oauth'=>$data['oauth'],$column=>$open_or_unionid])->find();
     		if($ouser){
     		    //删除原来绑定
     		    M('OauthUsers')->where('tu_id' , $ouser['tu_id'])->delete();
     		}
+
     		//绑定账号
     		return M('OauthUsers')->save(array('oauth'=>$data['oauth'] , 'openid'=>$data['openid'] ,'user_id'=>$user['user_id'] , 'unionid'=>$data['unionid'], 'oauth_child'=>$data['oauth_child']));
     	}
@@ -212,35 +213,65 @@ class UsersLogic extends Model
        
          
     }
- 
+
+    /**
+     * 获取第三方登录的用户
+     * @param $openid
+     * @param $unionid
+     * @param $oauth
+     * @param $oauth_child
+     * @return array
+     */
+    private function getThirdUser($data)
+    {
+        $user = [];
+        $thirdUser = Db::name('oauth_users')->where(['openid' => $data['openid'], 'oauth' => $data['oauth']])->find();
+        if (!$thirdUser) {
+            if ($data['unionid']) {
+                $thirdUser = Db::name('oauth_users')->where(['unionid' => $data['unionid']])->find();
+                return $thirdUser['user_id'];
+                if ($thirdUser) {
+                    $data['user_id'] = $thirdUser['user_id'];
+                    Db::name('oauth_users')->insert($data);//补充其他第三方登录方式
+                }
+            }
+        }
+        
+        if ($thirdUser) {
+            $user = Db::name('users')->where('user_id', $thirdUser['user_id'])->find();
+            if (!$user) {
+                Db::name('oauth_users')->where(['openid' => $data['openid'], 'oauth' => $data['oauth']])->delete();//删除残留数据
+            }
+        }
+        return $user;
+    }
+    
     /*
      * 第三方登录: (第一种方式:第三方账号直接创建账号, 不需要额外绑定账号)
      */
     public function thirdLogin($data=array()){
-        $openid = $data['openid']; //第三方返回唯一标识
-        $oauth = $data['oauth']; //来源
-        $unionid = $data['$unionid']; //$unionid
-        if(!$openid || !$oauth)
-            return array('status'=>-1,'msg'=>'参数有误','result'=>'');
-        //获取用户信息
-        if(!empty($data['unionid'])){
-        	$map['unionid'] = $data['unionid'];
-        	$user = get_user_info($data['unionid'],4,$oauth);
-        }else{
-            $user = get_user_info($openid,3,$oauth);
+ 
+        if (!$data['openid'] || !$data['oauth']) {
+            return array('status' => -1, 'msg' => '参数有误openid或oauth丢失', 'result' => 'aaa');
         }
-        $user2 = session('user');
-        if(!empty($user2)){
-            $r = $this->oauth_bind($data);//绑定账号
-            if($r){
-                return array('status'=>1,'msg'=>'绑定成功','result'=>$user2);
-            }else{
-                return array('status'=>-1,'msg'=>'您的'.$data['oauth'].'账号已经绑定过账号','bind_status'=>0);
-            }
-        }
+
+        // $user2 = session('user');
+        // if (!empty($user2)) {
+        //     $r = $this->oauth_bind($data);//绑定账号
+        //     if ($r) {
+        //         return array('status' => 1, 'msg' => '绑定成功', 'result' => $user2);
+        //     } else {
+        //         return array('status' => -1, 'msg' => '您的' . $data['oauth'] . '账号已经绑定过账号', 'bind_status' => 0);
+        //     }
+        // }
+
         $data['push_id'] && $map['push_id'] = $data['push_id'];
-        $map['token'] = md5(time().mt_rand(1,999999999));
+        $map['token'] = md5(time() . mt_rand(1, 999999999));
         $map['last_login'] = time();
+
+        $user = $this->getThirdUser($data);
+        echo 222222;
+        return $user;
         if(!$user){
             //账户不存在 注册一个
             $map['password'] = '';
@@ -264,8 +295,7 @@ class UsersLogic extends Model
                 M('users')->where(array('user_id' => $map['first_leader']))->setInc('underling_number');
                 M('users')->where(array('user_id' => $map['second_leader']))->setInc('underling_number');
                 M('users')->where(array('user_id' => $map['third_leader']))->setInc('underling_number');
-            }else
-            {
+            }else{
                 $map['first_leader'] = 0;
             }
             // 成为分销商条件
@@ -290,36 +320,34 @@ class UsersLogic extends Model
         return array('status'=>1,'msg'=>'登陆成功5','result'=>$user);
     }
     
-    /*
+   /*
      * 第三方登录(第二种方式:第三方账号登录必须绑定账号)
      */
-    public function thirdLogin_new($data=array()){
-        $openid = $data['openid']; //第三方返回唯一标识
-        $oauth = $data['oauth']; //来源
-        if(!$openid || !$oauth){
-            return array('status'=>-1,'msg'=>'第三方平台参数有误','result'=>'');
-        }
-        //获取用户信息
-        if($data['unionid']){
-            $user = get_user_info($data['unionid'],4,$oauth);
-        } else {
-            $user = get_user_info($openid,3,$oauth);
+    public function thirdLogin_new($data = array())
+    {
+        if((empty($data['openid']) && empty($data['unionid'])) || empty($data['oauth'])){
+            return ['status' => -1, 'msg' => '参数错误, openid,unionid或oauth为空','result'=>''];
         }
 
-        if (!$user) {
-            return array('status'=>-1,'msg'=>'用户不存在', 'result' => $data);
+        $user = $this->getThirdUser($data);
+        if( ! $user){
+            return ['status' => -1, 'msg' => '请绑定账号' , 'result'=>'100'];
+        }
+
+        //兼容以前登录的小程序用户没有获取到openid
+        if(!$user['openid']){
+            $map['openid'] = $data['openid'];
         }
 
         $data['push_id'] && $map['push_id'] = $data['push_id'];
-    
-        $map['token'] = md5(time().mt_rand(1,999999999));
+        $map['token'] = md5(time() . mt_rand(1, 999999999));
         $map['last_login'] = time();
-    
-        M('users')->where(array('user_id'=>$user['user_id']))->save($map);
+
+        Db::name('users')->where(array('user_id' => $user['user_id']))->save($map);
         //重新加载一次用户信息
-        $user = M('users')->where(array('user_id'=>$user['user_id']))->find();
-    
-        return array('status'=>1,'msg'=>'登陆成功','result'=>$user);
+        $user = Db::name('users')->where(array('user_id' => $user['user_id']))->find();
+
+        return array('status' => 1, 'msg' => '登陆成功', 'result' => $user);
     }
 
     /**

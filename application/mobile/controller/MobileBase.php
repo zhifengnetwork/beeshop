@@ -26,8 +26,6 @@ class MobileBase extends Controller {
      * 初始化操作
      */
     public function _initialize() {
-       
-       
         session('user'); //不用这个在忘记密码不能获取session('validate_code');
 //        Session::start();
         header("Cache-control: private");  // history.back返回后输入框值丢失问题 参考文章 http://www.tp-shop.cn/article_id_1465.html  http://blog.csdn.net/qinchaoguang123456/article/details/29852881
@@ -39,57 +37,42 @@ class MobileBase extends Controller {
         else 
             cookie('is_mobile','0',3600);
         
-        $wx_qr = M('wx_user')->cache(true)->value('qr'); //获取微信配置
-        $this->assign('wx_qr',$wx_qr);
         //微信浏览器
         if(strstr($_SERVER['HTTP_USER_AGENT'],'MicroMessenger')){
-            $this->assign('is_weixin_browser',1);
+            $this->weixin_config = M('wx_user')->find(); //取微获信配置
+            $this->assign('wechat_config', $this->weixin_config);            
             $user_temp = session('user');
             if (isset($user_temp['user_id']) && $user_temp['user_id']) {
                 $user = M('users')->where("user_id", $user_temp['user_id'])->find();
                 if (!$user) {
-                    session('openid',null);
+                    $_SESSION['openid'] = 0;
                     session('user', null);
                 }
             }
-            $op = session('openid');
-           
-            if (empty($op)) {
-                $this->weixin_config = M('wx_user')->find(); //获取微信配置
-                $this->assign('wechat_config', $this->weixin_config);
-             
-                if(is_array($this->weixin_config) ){
-                  
-                    // && $this->weixin_config['wait_access'] == 1
+            if (empty($_SESSION['openid'])){
+                if(is_array($this->weixin_config) && $this->weixin_config['wait_access'] == 1){
                     $wxuser = $this->GetOpenid(); //授权获取openid以及微信用户信息
-                   
+                    //过滤特殊字符串
+                    $wxuser['nickname'] && $wxuser['nickname'] = replaceSpecialStr($wxuser['nickname']);
+                    
                     session('subscribe', $wxuser['subscribe']);// 当前这个用户是否关注了微信公众号
                     setcookie('subscribe',$wxuser['subscribe']);
-                    $logic = new UsersLogic();
-                   
+                    $logic = new UsersLogic(); 
                     $is_bind_account = tpCache('basic.is_bind_account');
-                    if($is_bind_account){
-                        if($wxuser['unionid']){
-                            $thirdUser = M('OauthUsers')->where(['unionid'=>$wxuser['unionid'], 'oauth'=>$wxuser['oauth']])->find();
-                        }else{
-                            $thirdUser = M('OauthUsers')->where(['openid'=>$wxuser['openid'], 'oauth'=>$wxuser['oauth']])->find();
-                        }
-                        if(empty($thirdUser)){
-                            //用户未关联账号, 跳到关联账号页
-                            session('third_oauth',$wxuser);
-                            $first_leader = I('first_leader');
-                            return $this->redirect(U('Mobile/User/bind_guide',['first_leader'=>$first_leader]));
-                        }else{
-                            //微信自动登录
-                            $data = $logic->thirdLogin_new($wxuser);
-                        }
-                    }else{
+                     if ($is_bind_account) {
+                         if (CONTROLLER_NAME != 'User' || ACTION_NAME != 'bind_guide') {
+                            $data = $logic->thirdLogin_new($wxuser);//微信自动登录
+                            if ($data['status'] != 1 && $data['result'] === '100') {
+                                 session("third_oauth" , $wxuser);
+                                 $first_leader = I('first_leader');
+                                 $this->redirect(U('Mobile/User/bind_guide',['first_leader'=>$first_leader]));
+                           }
+                         }
+                    } else {
                         $data = $logic->thirdLogin($wxuser);
-                   }
+                    }
+                    dump($data);exit;
                     if($data['status'] == 1){
-                        //获取公众号openid,并保持到session的user中
-                        $oauth_users = M('OauthUsers')->where(['user_id'=>$data['result']['user_id'] , 'oauth'=>'weixin' , 'oauth_child'=>'mp'])->find();
-                        $oauth_users && $data['result']['open_id'] = $oauth_users['open_id'];
                         session('user',$data['result']);
                         setcookie('user_id',$data['result']['user_id'],null,'/');
                         setcookie('is_distribut',$data['result']['is_distribut'],null,'/');
@@ -97,11 +80,16 @@ class MobileBase extends Controller {
                         // 登录后将购物车的商品的 user_id 改为当前登录的id
                         M('cart')->where("session_id" ,$this->session_id)->save(array('user_id'=>$data['result']['user_id']));
                         $cartLogic = new CartLogic();
-                        $cartLogic->doUserLoginHandle($this->session_id,$data['result']['user_id']);  //用户登录后 需要对购物车 一些操作
+                        $cartLogic->setUserId($data['result']['user_id']);
+                        $cartLogic->doUserLoginHandle();  //用户登录后 需要对购物车 一些操作
                     }
                 }
+            }else{ 
+                setcookie('user_id',$user_temp['user_id'],null,'/');
+                setcookie('is_distribut',$user_temp['is_distribut'],null,'/');
             }
         }
+        
         $this->public_assign();
     }
     
@@ -232,16 +220,19 @@ class MobileBase extends Controller {
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);         
         $res = curl_exec($ch);//运行curl，结果以jason形式返回            
-        $data = json_decode($res,true);            
+        $data = json_decode($res,true);
+
         curl_close($ch);
         //获取用户是否关注了微信公众号， 再来判断是否提示用户 关注
         if(!isset($data['unionid'])){
         	$access_token2 = $this->get_access_token();//获取基础支持的access_token
-        	$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token2&openid=$openid";
+        	$url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=$access_token2&openid=$openid&lang=zh_CN";
         	$subscribe_info = httpRequest($url,'GET');
         	$subscribe_info = json_decode($subscribe_info,true);
-        	$data['subscribe'] = $subscribe_info['subscribe'];
-        }                
+            $data['subscribe'] = $subscribe_info['subscribe'];
+        	$data['unionid'] = $data['unionid']?$data['unionid']:0;
+        }
+
         return $data;
     }
     
