@@ -25,11 +25,9 @@
 					<div class="skill">工蜂</div>
 					<div class="skill"><if condition="$categoryData[0]['worker_bee'] gt 0"> {$categoryData[0]['worker_bee']}<else> 0 </if>只</div>
 					<!-- 蜜蜂数量大于0和在采蜜中时不显示采蜜按钮 -->
-					<if condition="$categoryData[0]['worker_bee'] gt 0 and $flag neq 1">	
 						<div class="cai caiM" id="cai">
 							<img src="__STATIC__/images/imge/7.png" />
 						</div>
-					</if>
 					<div class="surplus hms" id="sur"></div>
 				</div>
 				
@@ -121,37 +119,6 @@ window.onload = function () {
 	var Scout = document.getElementById('scout');
 
 	var securityID = document.getElementById('securityID');
-
-	// Cai.onclick = function() {
-	// 	Work.style.display = 'block';
-	// }
-	// SpyOn.onclick = function() {
-	// 	Scout.style.display = 'block';
-	// }
-	
-	// for(var i=0;i<Xbtn.length;i++) {
-	// 	Xbtn[i].onclick = function() {
-	// 		for(var i=0;i<Star.length;i++) {
-	// 			Star[i].style.display = 'none';
-	// 		}
-	// 	}
-	// }
-	// 确定按钮
-//	 Qbtn.onclick = function() {
-//	 	for(var i=0;i<Star.length;i++) {
-//	 		Star[i].style.display = 'none';
-//	 	}
-//	 	Sur.style.display = 'block';
-//	 	Cai.style.display = 'none';
-//	 }
-	
-	// Zbtn.onclick = function() {
-	// 	for(var i=0;i<Star.length;i++) {
-	// 		Star[i].style.display = 'none';
-	// 	}
-	// 	// Sur01.style.display = 'block';
-	// 	SpyOn.style.display = 'block';
-	// }
 	
 	/*弹窗-(公共)关闭按钮*/
 	$(function(){
@@ -159,9 +126,22 @@ window.onload = function () {
 			$('.star').hide();
 		})
 	})
-	 caiMBtn = '';
+	caiMBtn = '';
+	var isClick = true;
+	$("button").on("click",function(){
+		if(isClick) {
+			isClick = false;
+			//事件
+			console.log($(this).attr("data-val"));
+			//定时器
+			setTimeout(function() {
+				isClick = true;
+			}, 1000);//一秒内不能重复点击
+		}
+	 });
 	// 1、点击采蜜
 	$(".caiM").click(function(){
+		
 		caiMBtn = this;
 		$.ajax({
           type:"post",
@@ -181,6 +161,7 @@ window.onload = function () {
 
 	//点击确认采蜜
 	$("#qbtn").click(function(){
+		$('#qbtn').attr('disabled', false);
 		$.ajax({
           type:"post",
           url:"{:url('BeeCategory/confirmHoney')}",   //数据传输的控制器方法
@@ -191,6 +172,7 @@ window.onload = function () {
 				caiMBtn.style.display = 'none';
 	 			layer.msg(data.msg);
 	 			getDown();
+				$('#qbtn').attr('disabled',true);
 			}else{
 				console.log(data);
 				// Work.style.display = 'none';
