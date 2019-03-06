@@ -111,6 +111,63 @@ class Code extends MobileBase
         }
         
     }
+    //查找用户信息
+    public function upgrade()
+    {
+        $user_id = session('user.user_id');
+        //直推5人
+        $users = M('users')->where(["first_leader"=>$user_id,"is_bee"=>1])->select();
+        $nums  = $data?count($data):false;
+        if($nums<5) return false;
+
+        $agentGrade = $this->is_agent_user($user);
+        if($agentGrade==3) return true;
+
+        if($agentGrade)
+        {
+            $flag = $this->upgrade_agent($agentGrade,$user);
+        }else
+        {
+            $flag = $this->add_agent($user);
+            $this->update_user($user);
+        }
+
+        
+
+    }
+
+    //是否已经在合伙人了
+    private function is_agent_user($user_id)
+    {
+        $where = "user_id = ".$user_id;
+        $agent = M('users')->where($where)->find();
+        return $agent?$agent['distribut_level']:false;
+    }
+    //根据判断条件进行用户升级
+    public function upgrade_agent($grade,$user_id){
+        if($grade==1){
+            $flag = $this->get_child_agent($user_id,5);
+        }else if($grade==2){
+            $flag = $this->get_child_agent($user_id,30);
+        }else if($grade==3){
+            $flag = $this->get_child_agent($user_id,100);
+        }
+        if(!$flag) return false;
+        $newGrade 	= $grade + 1;
+        $flag = M('users')->where($where)->update($data);
+
+    }
+
+    //判断直推条件是否满足
+    private function get_child_agent($userId,$nums)
+    {
+        $users = M('users')->field('User_ID')->where(['first_leader'=>$userId,'is_bee'=>1])->select();
+        if(count($users)<$nums) 
+            return false;
+        else
+            return true;
+    }
+
     //添加获赠100滴蜂王浆，并随机派发阳光值和露水
     public function add_bee($user_id)
     {

@@ -95,10 +95,14 @@ class weixin extends Model
     	if(stripos($order['order_sn'],'recharge') !== false){
     		$go_url = U('Mobile/User/points',array('type'=>'recharge'));
     		$back_url = U('Mobile/User/recharge',array('order_id'=>$order['order_id']));
-    	}else{
+    	}if else(stripos($order['order_sn'],'Bee') !== false){
+            $go_url = U('Mobile/BeeShopp/bee_raise');
+            $back_url = U('Mobile/Bee/beeIndex');
+        }else{
     		$go_url = U('Mobile/User/order_detail',array('id'=>$order['order_id']));
     		$back_url = U('Mobile/Cart/cart4',array('order_id'=>$order['order_id']));
     	}
+        return $go_url;
         //①、获取用户openid
         $tools = new JsApiPay();
         //$openId = $tools->GetOpenid();
@@ -158,6 +162,8 @@ EOF;
     return $html;
 
     }
+
+
     // 微信提现批量转账
     function transfer($data){
     header("Content-type: text/html; charset=utf-8");

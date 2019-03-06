@@ -138,7 +138,6 @@ class Payment extends MobileBase {
             if($row){
                 $order = M('user_bee')->where("id", $row)->find();
                 $order['order_amount'] = $config['one_bee_money'];
-                dump($order);exit;
                 $code_str = $this->payment->getJSAPI($order);
                 exit($code_str);
             }else{

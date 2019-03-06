@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width user-scalable=no initial-scale=1.0 maximum-scale=1.0 minimum-scale=1.0">
-		<title></title>
+		<title>九九蜂王平台</title>
 		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_style.css"/>
 		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_index.css"/>
 		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_rotate.css"/>
@@ -17,17 +17,6 @@
 		<meta name="author" content=""/>
 		<meta name="copyright" content=""/>
 		<meta name="description" content=""/>
-		<style type="text/css">
-			.headS{
-				width: 50px;
-				height: 50px;
-				display: flex;
-				border-radius: 50%;
-				align-items: center;
-				justify-content: center;
-				overflow: hidden;
-			}
-		</style>
 	</head>
 	<body>
 		<div id="container">
@@ -37,7 +26,7 @@
 					<div class="via headS">
 						<img src="{$user.head_pic}" />
 					</div>
-					<span class="suffer">0</span>
+					<!--<span class="suffer">0</span>-->
 					<!--经验值-->
 					<ul class="cost">
 						<li>
@@ -50,6 +39,18 @@
 						</li>
 						<li>
 							<div class="tu_3"></div>
+							<span class="num">{$user_prop.sun_value ? $user_prop.sun_value : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_4"></div>
+							<span class="num">{$user_prop.sun_value ? $user_prop.sun_value : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_5"></div>
+							<span class="num">{$user_prop.sun_value ? $user_prop.sun_value : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_6"></div>
 							<span class="num">{$user_prop.sun_value ? $user_prop.sun_value : 0 }</span>
 						</li>
 					</ul>
@@ -184,7 +185,7 @@
 				<!--商店-->
 				<div class="shop" id="shop">
 					<a>
-						<img src="__STATIC__/images/imge/shop.png" />
+						<img src="__STATIC__/images/imge/shoper.png" />
 					</a>
 				</div>
 				<!--商店弹框-->
