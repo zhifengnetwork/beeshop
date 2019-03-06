@@ -434,7 +434,7 @@ class Bee extends MobileBase {
         // }
 
         $isPrize = 1;
-        $result = array('is_prize' => $isPrize,'prize' => $res['prize'],'id' => $rid);
+        $result = array('is_prize' => $isPrize,'prize' => $res['prize'],'id' => $rid,'milk' => $prize_arr[$rid-1]['value']);
         $bool   = true;
 
         if ($userId) {
