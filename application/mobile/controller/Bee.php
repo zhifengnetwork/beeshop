@@ -230,6 +230,7 @@ class Bee extends MobileBase {
         // 实例化User对象
         $bee_account = M("user_bee_account");
         $bee_milk = $bee_account->where('uid',$user_id)->find();
+        // var_dump($bee_milk);
         switch ($type) {
             case 1:
                 $bee_num = $this->config['three_drip_bee_milk'];
@@ -277,19 +278,19 @@ class Bee extends MobileBase {
                 break;
             case 3:
                 //蜜糖所需总数
-                $nums = $this->config['eight_one_gooey']*$_POST['exchange_nums'];
-                if ($bee_milk['gooey'] < $nums){
+                $nums = $_POST['exchange_nums'];
+                if ($bee_milk['bee_milk'] < $nums){
                     $msg = "对不起，您的蜜糖数量不足".$nums."克!!";
                     return json(array('msg'=>$msg,'type'=>0));
                     exit();
                 }
                 $gooey = $bee_milk['gooey']-$nums;
                 $data = array(
-                    "gooey"=>$gooey,
-                    "bee_milk" =>$bee_milk['bee_milk']+$_POST['exchange_nums']
+                    "bee_milk"=>$bee_milk['bee_milk']-$_POST['exchange_nums'],
+                    "gooey" =>$bee_milk['gooey']+$this->config['eight_one_gooey']*$_POST['exchange_nums']
                 );
 //                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
-                $msg = "恭喜您，".$nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
+                $msg = "恭喜您，".$nums."滴蜂王浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴克蜜糖成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
                 if ($update)
                 {

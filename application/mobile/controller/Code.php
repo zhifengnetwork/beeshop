@@ -4,6 +4,7 @@ namespace app\mobile\controller;
 use think\Db;
 use app\common\model\UserCode;
 use app\common\model\Users;
+use app\common\model\UserBeeAccount;
 
 class Code extends MobileBase
 {
@@ -71,13 +72,15 @@ class Code extends MobileBase
         //写表
         $user = new Users();
         $user_id = $user->where(['openid'=>$EventKey])->value('user_id');
-        $this->write_log('EventKey:'.$EventKey);
-        $this->write_log('FromUserName:'.$FromUserName);
 
-        $user->where(['openid'=>$FromUserName])->save(['first_leader'=>$user_id]);
-
-        $this->write_log('user_id:'.$user_id);
-        $this->write_log('结束');
+        $flas = $user->where(['openid'=>$FromUserName])->save(['first_leader'=>$user_id]);
+        if($flas){
+            //添加奖励
+            $this->add_bee($user_id);
+        }else{
+            return false;
+        }
+        
 
     }
     //查询users信息是否有注册
@@ -100,6 +103,83 @@ class Code extends MobileBase
             $user->sex = $data['sex'];
             $user->head_pic = $data['headimgurl'];
             $user->save();
+
+            $user_id = $user->user_id;
+
+            //不存在则创建个第三方账号
+            M('OauthUsers')->save(array('oauth'=>'weixin' , 'openid'=>$openid ,'user_id'=>$user_id , 'unionid'=>$data['unionid'], 'oauth_child'=>'mp'));
+        }
+        
+    }
+    //添加获赠100滴蜂王浆，并随机派发阳光值和露水
+    public function add_bee($user_id)
+    {
+        $user_bee_accout = new UserBeeAccount();
+        $data = $user_bee_accout->where(['uid'=>$user_id])->find();
+
+        $this->write_log($user_id);
+        $this->config = tpCache('game'); //配置信息
+        $bee_milk = $this->config['nine_give_bee_milk'];
+        $sun_value = $this->config['nine_random_sun'];
+        $water = $this->config['nine_random_water'];
+        
+        $this->write_log('bee_milk----'.$bee_milk);
+        $this->write_log('sun_value----'.$sun_value);
+        $this->write_log('water----'.$water);
+        // 
+        if(empty($data)){
+            $user_bee_accout->uid = $user_id;
+            $user_bee_accout->bee_milk = $bee_milk;
+            $user_bee_accout->sun_value = $sun_value;
+            $user_bee_accout->water = $water;
+            $user_bee_accout->create_time = time();
+            $user_bee_accout->update_time = time();
+            $user_bee_accout->status = 1;
+            // $this->write_log(json_encode($array));
+            $flat = $user_bee_accout->save();
+        }else{
+            $dataarr = array(
+                'bee_milk'=>$data['bee_milk']+$bee_milk,
+                'sun_value'=>$data['sun_value']+$sun_value,
+                'water'=>$data['water']+$water,
+                'update_time'=>time()
+            );
+            $flat = $user_bee_accout->where('uid',$user_id)->update($dataarr);
+        }
+        if($flat){
+            $this->add_bee_flow($user_id,201,"推荐新用户,赠送".$bee_milk."滴蜂王浆",1);
+            $this->add_bee_flow($user_id,401,"推荐新用户,赠送".$sun_value."阳光值",1);
+            $this->add_bee_flow($user_id,301,"推荐新用户,赠送".$water."滴露水",1);
+            $this->write_log("结束");
+        }else{
+            return false;
+        }
+    }
+
+    /*
+     * $userid = 用户id
+     * $type = 类型
+     * $note = 备注信息
+     * $inc_or_dec = 1增加，2减少
+     */
+    public function add_bee_flow($userid,$type,$note,$inc_or_dec)
+    {
+        $data = array(
+            "uid" => $userid,
+            "type"=> $type,
+            "note"=> $note,
+            "inc_or_dec"=>$inc_or_dec,
+            "create_time"=>time(),
+            "status"=>1,
+            "num"=>1
+        );
+        $bee_flow = M('bee_flow');
+        if ($bee_flow->insert($data))
+        {
+            return $this->fetch('/bee/duihuan');    //成功后跳转  lst 界面
+        }else{
+            $this->error('失败', U('/bee/duihuan'));
+            exit();
         }
     }
 
