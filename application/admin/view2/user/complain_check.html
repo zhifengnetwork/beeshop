@@ -311,7 +311,7 @@
                                                     <span class="direct-chat-mobile pull-left">{$complain.user_mobile}</span>
                                                     <span class="direct-chat-timestamp pull-right">{$complain.complain_time|date="Y-m-d H:i:s",###}</span>
                                                 </div>
-                                                <img src="{$complain.head_pic}" class="direct-chat-img">
+                                                <img src="{$complain.head_pic|default='__PUBLIC__/static/images/user1-128x128.jpg'}" class="direct-chat-img">
                                                 <div class="direct-chat-text">{$complain.complain_content}</div>
                                             </div>
                                         </div> 
