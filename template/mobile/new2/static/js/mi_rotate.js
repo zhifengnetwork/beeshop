@@ -128,42 +128,48 @@ $(document).ready(function(){
             sync:true,
             data:{id:id},
             success: function(text){
-                console.log(text)
-            
                 Lottey.init(6,0,colors,text,0) //初始化转盘
+                var flg   = true;
 
                 //点击旋转
                 document.getElementById('start').addEventListener('click',function(){ 
-                    $.ajax({
-                        type:"POST",
-                        url:"rotate",
-                        sync:true,
-                        data:{ id:id},
-                        success: function(data){
-                            console.log(data)
-                            //是否有抽奖机会
-                            if (data['is_prize'] == 1) {
-                                let num=360-data['id']*360/text.length //旋转到指定位置
-                                console.log(num)
-                                let n=Lottey.isRotate //传入指定的旋转角度，内部指定获奖结果。在指定角度上加上旋转基数模拟转盘随机旋转。
-                                n = n - n%360 - 60;
-                                let rand=num    //旋转角度
-                                n=n+rand-(rand%60)+360*5  // //360*5为旋转基数，最低要旋转360*5度，即5圈。rand-(rand%60) 这个是让指针永远停在扇形中心的算法。n + 是为了重复点击的时候有足够的旋转角度。
-                                // console.log(n)
-                                Lottey.isRotate=n
-                                if(Lottey.isRotate){
-                                    document.getElementById('rotate').style.transform='rotate('+Lottey.isRotate+'deg)'
-                                }
+                    //防止连续多次点击
+                    if (flg) {
+                        flg = false;
 
-                                setTimeout(function(){
-                                    layer.msg(data['prize'])    //延时显示奖项
-                                },3000)
-                                
-                            } else {
-                                layer.msg(data['msg'])
+                        $.ajax({
+                            type:"POST",
+                            url:"rotate",
+                            sync:true,
+                            data:{ id:id},
+                            success: function(data){
+                                //是否有抽奖机会
+                                if (data['is_prize'] == 1) {
+                                    let num=360-data['id']*360/text.length //旋转到指定位置
+                                    let n=Lottey.isRotate //传入指定的旋转角度，内部指定获奖结果。在指定角度上加上旋转基数模拟转盘随机旋转。
+                                    n = n - n%360 - 60;
+                                    let rand=num    //旋转角度
+                                    n=n+rand-(rand%60)+360*5  // //360*5为旋转基数，最低要旋转360*5度，即5圈。rand-(rand%60) 这个是让指针永远停在扇形中心的算法。n + 是为了重复点击的时候有足够的旋转角度。
+                                    // console.log(n)
+                                    Lottey.isRotate=n
+                                    if(Lottey.isRotate){
+                                        document.getElementById('rotate').style.transform='rotate('+Lottey.isRotate+'deg)'
+                                    }
+
+                                    setTimeout(function(){
+                                        layer.msg(data['prize'])    //延时显示奖项
+                                        let bee_milk = document.getElementsByClassName('num')[0];  //获取蜂王浆数量
+                                        bee_milk.innerHTML = parseInt(bee_milk.innerHTML)+parseInt(data['milk'])  //修改蜂王浆数量
+                                        flg = true
+                                    },3000)
+                                    
+                                } else {
+                                    layer.msg(data['msg'])
+                                    flg = true
+                                }
                             }
-                        }
-                    }); 
+                        });
+                    }
                 });
             }
         });

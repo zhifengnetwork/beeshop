@@ -111,6 +111,76 @@ class Code extends MobileBase
         }
         
     }
+
+    public function bonus()
+    {   
+        $user_id = session('user.user_id');
+        $users = $this->users($user_id);
+        
+        $meetUser = get_uper_user($users);
+        foreach($meetUser['recUser'] as $level=>$user)
+	    	{
+                if($level>2) return true;
+	    		$agentLevel = $this->get_agent_user($user);
+	    	}
+
+    }
+    //查找用户信息
+    private function get_agent_user($user)
+    {
+        //直推5人
+        $users = M('users')->where(["first_leader"=>$user['user_id'],"is_bee"=>1])->select();
+       
+        $nums  = $users?count($users):false;
+        
+        if($nums<5) return false;
+        
+        $agentGrade = $this->is_agent_user($user['user_id']);
+        
+        if($agentGrade>=3) return true;
+        $flag = $this->upgrade_agent($agentGrade,$user['user_id']);
+
+    }
+
+    //是否已经在合伙人了
+    private function is_agent_user($user_id)
+    {
+        $where = "user_id = ".$user_id;
+        $agent = M('users')->where($where)->find();
+        return $agent?$agent['distribut_level']:false;
+    }
+
+    //查找用户信息
+    private function users($user_id)
+    {
+        $user_leader = M('users')->where('user_id',$user_id)->find();
+        return $user_leader;
+    }
+    //根据判断条件进行用户升级
+    private function upgrade_agent($grade,$user_id){
+        if($grade<1){
+            $flag = $this->get_child_agent($user_id,5);
+        }else if($grade<2){
+            $flag = $this->get_child_agent($user_id,30);
+        }else if($grade<3){
+            $flag = $this->get_child_agent($user_id,100);
+        }
+        if(!$flag) return false;
+        $newGrade 	= $grade + 1;
+        $data = array("distribut_level"=>$newGrade);
+        $flag = M('users')->where('user_id',$user_id)->update($data);
+    }
+
+    //判断直推条件是否满足
+    private function get_child_agent($userId,$nums)
+    {
+        $users = M('users')->field('User_ID')->where(['first_leader'=>$userId,'is_bee'=>1])->select();
+        if(count($users)<$nums) 
+            return false;
+        else
+            return true;
+    }
+
     //添加获赠100滴蜂王浆，并随机派发阳光值和露水
     public function add_bee($user_id)
     {

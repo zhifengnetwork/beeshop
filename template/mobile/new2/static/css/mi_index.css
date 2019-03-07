@@ -1,4 +1,4 @@
-#container {
+﻿#container {
 	position: relative;
 	width: 100%;
     height: 13.34rem;
@@ -7,24 +7,26 @@
 #container .wrap {
 	position: relative;
 	height: 100%;
-	background: url(/template/mobile/new2/static/images/imge/bj01.png) no-repeat;
+	background: url(/template/mobile/new2/static/images/imge/bj02.png) no-repeat;
 	background-size: 100% 100%;
 }
 /*头像*/
 #container .wrap .head .via {
 	position: absolute;
-	top: 2%;
-	left: 5%;
+	top: 1%;
+	left: 2%;
 	width: 15%;
 	font-size: 0;
+}
+#container .wrap .head .via img{
 	border-radius: 50%;
 }
 #container .wrap .head .suffer {
 	position: absolute;
-	top: 3%;
-	left: 17%;
+	top: 10%;
+	left: 1%;
 	display: inline-block;
-	width: 8%;
+	width: 16%;
 	height: .25rem;
 	background: #2e160a;
 	font-size: 12px;
@@ -36,20 +38,20 @@
 /*经验值*/
 #container .wrap .head .cost {
 	position: absolute;
-	top: 4%;
-	left: 24%;
-	width: 81%;
+	top: 2%;
+	left: 19%;
+	width: 82%;
 }
 #container .wrap .head .cost li {
 	position: relative;
 	margin: 0 .2rem 0 0;
 	float: left;
-	line-height: .75rem;
+	line-height: .65rem;
 	width: 29%;
 }
 #container .wrap .head .cost li div {
 	width: 100%;
-	height: .75rem;
+	height: .65rem;
 }
 #container .wrap .head .cost li span {
 	font-size: 14px;
@@ -72,11 +74,23 @@
 	background: url(/template/mobile/new2/static/images/imge/yg.png) no-repeat;
 	background-size: 100% 100%;
 }
+#container .wrap .head .cost li .tu_4 {
+	background: url(/template/mobile/new2/static/images/imge/mt.png) no-repeat;
+	background-size: 100% 100%;
+}
+#container .wrap .head .cost li .tu_5 {
+	background: url(/template/mobile/new2/static/images/imge/f_sf.png) no-repeat;
+	background-size: 100% 100%;
+}
+#container .wrap .head .cost li .tu_6 {
+	background: url(/template/mobile/new2/static/images/imge/fw.png) no-repeat;
+	background-size: 100% 100%;
+}
 /*用户资料*/
 #container .wrap .next {
 	font-size: 0;
 	position: absolute;
-	top: 13%;
+	top: 16%;
 	left: 1%;
 	width: 12%;
 }
@@ -88,7 +102,7 @@
 /*活动*/
 #container .wrap .hot {
 	position: absolute;
-	top: 10.5%;
+	top: 13%;
 	left: 20%;
 	width: 12%;
 }
@@ -99,14 +113,14 @@
 /*礼包*/
 #container .wrap .hot_1 {
 	position: absolute;
-	top: 10.5%;
+	top: 13%;
 	left: 40%;
 	width: 12%;
 }
 /*邀请好友*/
 #container .wrap .hot_2 {
 	position: absolute;
-	top: 10%;
+	top: 13%;
 	left: 59%;
 	width: 18%;
 }
@@ -114,7 +128,7 @@
 /*好友，打扫，守卫，地图，转盘*/
 #container .wrap .sidebar {
 	position: absolute;
-	top: 16%;
+	top: 22%;
 	right: 6%;
 	width: 13%;
 }

@@ -76,6 +76,8 @@ class Bee extends MobileBase {
 
     // 游戏主页
     public function beeIndex(){
+        $code = new Code();
+        $test = $code->bonus();
         $level = 0;
         $mating = 0;
 
@@ -90,10 +92,12 @@ class Bee extends MobileBase {
         }
 
         $user_prop = M('user_bee_account')->where(array('uid' => $this->user_id))->find();
+        $user_bee = M('user_bee')->where(array('uid' => $this->user_id))->select();
         $user_prop['level'] = $level;
         $user_prop['mating'] = $mating;
 //        dump($user_prop['bee_milk']);exit;
         $this->assign('user_prop', $user_prop);
+        $this->assign('user_bee', count($user_bee));
 
          //增加头像
          $head_pic = session('user.head_pic');
@@ -435,7 +439,7 @@ class Bee extends MobileBase {
         // }
 
         $isPrize = 1;
-        $result = array('is_prize' => $isPrize,'prize' => $res['prize'],'id' => $rid);
+        $result = array('is_prize' => $isPrize,'prize' => $res['prize'],'id' => $rid,'milk' => $prize_arr[$rid-1]['value']);
         $bool   = true;
 
         if ($userId) {
@@ -464,6 +468,8 @@ class Bee extends MobileBase {
                 } else {
                     M('user_bee_account')->where('uid',$userId)->update(['bee_milk'=>($prize_arr[$rid-1]['value']+$userBeeMilk['bee_milk']), 'update_time'=>time()]);
                 }
+
+                M('users')->where('user_id',$userId)->setInc('pay_points',$prize_arr[$rid-1]['value']);
             } else {
                 $bool = false;
             }

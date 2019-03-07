@@ -133,12 +133,11 @@ class Payment extends MobileBase {
                 'order_sn' => 'Bee'.get_rand_str(10,0,1),
                 'adopt_time' => date('Y-m-d H:i:s',time())
             ];
-            $row = M('user_bee')->insert($bee);
+            $row = M('user_bee')->insertGetId($bee);
 
             if($row){
                 $order = M('user_bee')->where("id", $row)->find();
                 $order['order_amount'] = $config['one_bee_money'];
-                dump($order);exit;
                 $code_str = $this->payment->getJSAPI($order);
                 exit($code_str);
             }else{

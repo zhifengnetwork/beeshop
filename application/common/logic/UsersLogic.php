@@ -229,7 +229,6 @@ class UsersLogic extends Model
         if (!$thirdUser) {
             if ($data['unionid']) {
                 $thirdUser = Db::name('oauth_users')->where(['unionid' => $data['unionid']])->find();
-                return $thirdUser['user_id'];
                 if ($thirdUser) {
                     $data['user_id'] = $thirdUser['user_id'];
                     Db::name('oauth_users')->insert($data);//补充其他第三方登录方式
@@ -250,7 +249,9 @@ class UsersLogic extends Model
      * 第三方登录: (第一种方式:第三方账号直接创建账号, 不需要额外绑定账号)
      */
     public function thirdLogin($data=array()){
- 
+        $openid = $data['openid']; //第三方返回唯一标识
+        $oauth = $data['oauth']; //来源
+        $unionid = $data['$unionid']; //$unionid
         if (!$data['openid'] || !$data['oauth']) {
             return array('status' => -1, 'msg' => '参数有误openid或oauth丢失', 'result' => 'aaa');
         }
@@ -268,10 +269,8 @@ class UsersLogic extends Model
         $data['push_id'] && $map['push_id'] = $data['push_id'];
         $map['token'] = md5(time() . mt_rand(1, 999999999));
         $map['last_login'] = time();
-
         $user = $this->getThirdUser($data);
-        echo 222222;
-        return $user;
+
         if(!$user){
             //账户不存在 注册一个
             $map['password'] = '';

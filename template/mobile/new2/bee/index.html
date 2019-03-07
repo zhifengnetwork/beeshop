@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width user-scalable=no initial-scale=1.0 maximum-scale=1.0 minimum-scale=1.0">
-		<title></title>
+		<title>九九蜂王平台</title>
 		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_style.css"/>
 		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_index.css"/>
 		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_rotate.css"/>
@@ -13,21 +13,9 @@
 		<script src="__STATIC__/js/jquery-3.1.1.min.js" ></script>
 		<script src="__STATIC__/js/mi_jquery.min.js" ></script>
 		<script type="text/javascript" src="__STATIC__/js/layer/layer.js" ></script>
-
 		<meta name="author" content=""/>
 		<meta name="copyright" content=""/>
 		<meta name="description" content=""/>
-		<style type="text/css">
-			.headS{
-				width: 50px;
-				height: 50px;
-				display: flex;
-				border-radius: 50%;
-				align-items: center;
-				justify-content: center;
-				overflow: hidden;
-			}
-		</style>
 	</head>
 	<body>
 		<div id="container">
@@ -37,7 +25,13 @@
 					<div class="via headS">
 						<img src="{$user.head_pic}" />
 					</div>
-					<span class="suffer">0</span>
+					<div class="suffer">
+						<if condition="($user.distribut_level == 1)"> 蜂农学员
+						<elseif condition="$user.distribut_level eq 2"/>蜂农
+						<elseif condition="$user.distribut_level eq 3"/>老蜂农
+						<else /> 普通会员
+						</if>
+					</div>
 					<!--经验值-->
 					<ul class="cost">
 						<li>
@@ -51,6 +45,18 @@
 						<li>
 							<div class="tu_3"></div>
 							<span class="num">{$user_prop.sun_value ? $user_prop.sun_value : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_4"></div>
+							<span class="num">{$user_prop.gooey ? $user_prop.gooey : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_5"></div>
+							<span class="num">{$user_bee ? $user_bee : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_6"></div>
+							<span class="num">{$user_prop.drone ? $user_prop.drone : 0 }</span>
 						</li>
 					</ul>
 				</div>
@@ -184,7 +190,7 @@
 				<!--商店-->
 				<div class="shop" id="shop">
 					<a>
-						<img src="__STATIC__/images/imge/shop.png" />
+						<img src="__STATIC__/images/imge/shoper.png" />
 					</a>
 				</div>
 				<!--商店弹框-->
@@ -294,7 +300,7 @@
 						</div>
 					</div>
 					<div class="x-btn"></div>
-					<div class="q-btn" onclick="ajaxPost(1)"></div>
+					<div class="q-btn"></div>
 				</div>
 				<!--雄蜂兑换框-->
 				<div class="star drone of" id="droneChangeAlert">
@@ -304,7 +310,7 @@
 						</div>
 					</div>
 					<div class="x-btn"></div>
-					<div class="q-btn"></div>
+					<div class="q-btn" onclick="ajaxPost(1)"></div>
 				</div>
 				<!--雄蜂兑换-失败弹框-->
 				<div class="publicWrap droneWrap">
@@ -320,8 +326,8 @@
 				<div class="star drone of" id="qee">
 					<div class="case box">
 						<div class="what hint">
-							<p>您想兑换的蜂王浆为<input class="price" name="qee"/></p>
-							<p>(50克蜜糖可以兑换1滴蜂王浆，您目前有xxx克蜜糖最多可兑换x滴蜂王浆)</p>
+							<p>您想兑换的蜂王浆为<input class="price" name="qee" value="1"/></p>
+							<p>(50克蜜糖可以兑换1滴蜂王浆)</p>
 						</div>
 					</div>
 					<div class="x-btn"></div>
@@ -341,8 +347,8 @@
 				<div class="star drone of" id="mi">
 					<div class="case box">
 						<div class="what hint">
-							<p>您想兑换的蜜糖为<input class="price" name="mi" /></p>
-							<p>(1滴蜂王浆可以兑换50克蜜糖，您目前有xx滴蜂王浆最多可兑换xx克蜜糖)</p>
+							<p>您想兑换的蜜糖为<input class="price" name="mi" value="1" /></p>
+							<p>(1滴蜂王浆可以兑换50克蜜糖)</p>
 						</div>
 					</div>
 					<div class="x-btn"></div>
@@ -362,8 +368,8 @@
 				<div class="star drone of" id="sui">
 					<div class="case box">
 						<div class="what hint">
-							<p>您想兑换的露水为<input class="price" name="sui" /></p>
-							<p>(5克蜜糖可以兑换1滴露水，您目前有xxx克蜜糖最多可兑换x滴露水)</p>
+							<p>您想兑换的露水为<input class="price" name="sui" value="1" /></p>
+							<p>(5克蜜糖可以兑换1滴露水)</p>
 						</div>
 					</div>
 					<div class="x-btn"></div>
@@ -383,8 +389,8 @@
 				<div class="star drone of" id="rey">
 					<div class="case box">
 						<div class="what hint">
-							<p>您想兑换的阳光为<input class="price" name="rey" /></p>
-							<p>(5克蜜糖可以兑换1克阳光值，您目前有xx克蜜糖最多可兑换xx克阳光值)</p>
+							<p>您想兑换的阳光为<input class="price" name="rey" value="1" /></p>
+							<p>(5克蜜糖可以兑换1克阳光值)</p>
 						</div>
 					</div>
 					<div class="x-btn"></div>
@@ -511,7 +517,6 @@
 		
 	</body>
 </html>
-
 <script>
 	function ajaxPost(num){
 		if (num == 1) {
@@ -543,6 +548,7 @@
 					layer.msg(data.msg);
 				}else{
 					layer.msg(data.msg);
+					setTimeout(function(){window.location.reload();},3000);
 				}
 			}
 		});
