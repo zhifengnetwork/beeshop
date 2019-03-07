@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width user-scalable=no initial-scale=1.0 maximum-scale=1.0 minimum-scale=1.0">
+		<title>九九蜂王平台</title>
+		<link rel="stylesheet" type="text/css" href="__STATIC__/font01/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_style.css"/>
+	</head>
+	<style>
+		.iconfont {
+			margin: 25% 0 0;
+			font-size: 2rem;
+			color: #14c553;
+			text-align: center;
+		}
+		.icon {
+			color: #f75959;
+		}
+		.T_text {
+			font-size: .75rem;
+			font-weight: 900;
+			text-align: center;
+			line-height: 1.5rem;
+		}
+		.art a {
+			margin: 0 0 0 5%;
+			color: #f75959;
+			font-size: .75rem;
+		}
+		.que {
+			margin: 10% 0 0 26%;
+			width: 45%;
+			height: .95rem;
+			background: #14c553;
+			font-size: .45rem;
+			text-align: center;
+			line-height: .95rem;
+		}
+		.que a{
+			color:#fff;
+		}
+	</style>
+	<body>
+		<div id="container">
+			<div class="art">
+				<a class="iconfont" href="{:U('Bee/beeIndex')}">&#xe636;</a>
+			</div>
+			<div class="astir">
+				<if condition="$data['status'] eq 1">
+					<div class="iconfont" >&#xe679;</div>
+                <else/>
+                	<div class="iconfont icon">&#xe658;</div>
+                </if>
+				<div class="T_text">{$data.msg}</div>
+			</div>
+			<div class="que">
+				<p><a href="{$data.go_url}">确定</a></p>
+			</div>
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="__STATIC__/js/rem.js" ></script>

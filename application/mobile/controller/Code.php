@@ -217,6 +217,8 @@ class Code extends MobileBase
             $flat = $user_bee_accout->where('uid',$user_id)->update($dataarr);
         }
         if($flat){
+            //同步积分字段
+            update_user($user_id,$bee_milk,1);
             $this->add_bee_flow($user_id,201,"推荐新用户,赠送".$bee_milk."滴蜂王浆",1);
             $this->add_bee_flow($user_id,401,"推荐新用户,赠送".$sun_value."阳光值",1);
             $this->add_bee_flow($user_id,301,"推荐新用户,赠送".$water."滴露水",1);

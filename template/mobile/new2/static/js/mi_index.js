@@ -83,43 +83,6 @@
 		Tbn.onclick = function() {
 
         	$('#cart4_form').submit();
-		// 	$.ajax({
-		// 		type : 'get',
-		// 		url : '/index.php?m=Mobile&c=BeeShop&a=bee_raise',
-		// 		dataType : 'json',
-		// 		success : function(data){
-		// 			if(data.status == 1){
-		// 				tank.style.display = 'block';
-		// 				layer.msg(data.msg);
-		// 			}else{
-		// 				layer.msg(data.msg);
-		// 			}
-		// 		},
-		// 		error : function(XMLHttpRequest, textStatus, errorThrown) {
-		// 			layer.msg('网络异常，请稍后重试');
-		// 		}
-		// 	})
-
-		}
-
-		function beeRaise() {
-			alert(22);
-			$.ajax({
-				type : 'get',
-				url : '/index.php?m=Mobile&c=BeeShop&a=bee_raise',
-				dataType : 'json',
-				success : function(data){
-					if(data.status == 1){
-						tank.style.display = 'block';
-						layer.msg(data.msg);
-					}else{
-						layer.msg(data.msg);
-					}
-				},
-				error : function(XMLHttpRequest, textStatus, errorThrown) {
-					layer.msg('网络异常，请稍后重试');
-				}
-			})
 		}
 
 	    for(var i=0;i<xbtn.length;i++) {
@@ -292,4 +255,26 @@ $(document).ready(function(){
 	$('.publicCancelBut').on('click',function(){
 		$('.publicWrap').hide();
 	})
+	
+	
+	//		公告弹框
+		$('.t_Xbtn').on('click',function(){
+			$('.t_Wrap').hide();
+			$('.t_view').hide();
+			$('.bgColor').hide();
+			
+		})
+		$('.t_Qbtn').on('click',function(){
+			$('.t_Wrap').hide();
+			$('.t_view').hide();
+		})
+		$('.notice').on('click',function(){
+			$('.t_Wrap').show();
+			$('.t_view').show();
+			$('.newShow').animate({
+				left:"-80%"
+				
+			});
+			$('.bgColor').hide();
+		})
 })	

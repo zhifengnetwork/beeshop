@@ -24,6 +24,25 @@ function is_login(){
         return false;
     }
 }
+//同步users的积分字段 $type 1:添加,2:减少
+function update_user($user_id,$bee_nums,$type){
+    
+    $user_find = M('users')->where('user_id',$user_id)->find();
+    if (empty($user_find)) return false;
+    if ($type == 1) {
+        $data = array(
+            'pay_points'=>$user_find['pay_points']+$bee_nums
+        );
+    }else if ($type == 2) {
+        $data = array(
+            'pay_points'=>$user_find['pay_points']-$bee_nums
+        );
+    }
+    
+    if ($user_find['pay_points'] <0) return false;
+   
+    M('users')->where('user_id',$user_id)->update($data);
+}
 
 //获取推荐上级
 function get_uper_user($data)
@@ -51,7 +70,7 @@ function getAllUp($invite_id,$userList=array())
 /**
  * 获取用户信息
  * @param $user_id_or_name  用户id 邮箱 手机 第三方id
- * @param int $type  类型 0 user_id查找 1 邮箱查找 2 手机查找 3 第三方唯一标识查找
+ * @param int $type  类型 0 user_id查找 1 邮箱查找 2 手机查找 3 第三方唯一标识查找    
  * @param string $oauth  第三方来源
  * @return mixed
  */
@@ -883,7 +902,11 @@ function update_pay_status($order_sn,$ext=array())
         if (!$order) return false;// 看看有没已经处理过这笔订单  支付宝返回不重复处理操作
         M('recharge')->where("order_sn",$order_sn)->save(array('pay_status'=>1,'pay_time'=>time()));
         accountLog($order['user_id'],$order['account'],0,'会员在线充值');
-    }else{
+    } elseif (stripos($order_sn,'Bee') !== false) {
+        $order = M('user_bee')->where(['order_sn' => $order_sn, 'status' => 2])->find();
+        if (!$order) return false;// 看看有没已经处理过这笔订单  支付宝返回不重复处理操作
+        M('user_bee')->where("order_sn",$order_sn)->save(array('status'=>1,'adopt_time'=>time()));
+    } else{
         // 如果这笔订单已经处理过了
         $count = M('order')->master()->where("order_sn = :order_sn and pay_status = 0 OR pay_status = 2")->bind(['order_sn'=>$order_sn])->count();   // 看看有没已经处理过这笔订单  支付宝返回不重复处理操作
         if($count == 0) return false;

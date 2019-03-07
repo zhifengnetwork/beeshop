@@ -59,6 +59,7 @@ class OrderLogic
 		//有余额支付的情况
 		if($order['user_money'] > 0 || $order['integral'] > 0){
 			accountLog($user_id,$order['user_money'],$order['integral'],"订单取消，退回{$order['user_money']}元,{$order['integral']}积分",0,$order['order_id'],$order['order_sn']);
+			$this->user_bee($user_id,$order['integral']);
 		}
 
 		if($order['coupon_price'] >0){
@@ -83,6 +84,15 @@ class OrderLogic
 			return array('status'=>-1,'msg'=>'操作失败','result'=>'');
 		return array('status'=>1,'msg'=>'操作成功','result'=>'');
 
+	}
+	//退还蜂王浆
+	public function user_bee($user_id,$integral)
+	{
+		$user = M('user_bee_account')->where('uid',$user_id)->find();
+		$data = array(
+			"bee_milk" =>$user['bee_milk']+$integral
+		);
+		M('user_bee_account')->where('uid',$user_id)->update($data);
 	}
 
 	public function addReturnGoods($rec_id,$order)

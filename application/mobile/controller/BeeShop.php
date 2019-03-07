@@ -21,6 +21,7 @@ use think\Page;
 use think\Verify;
 use think\Db;
 use think\Cookie;
+use app\common\model\Code;
 class BeeShop extends MobileBase {
 
     public $user_id = 0;
@@ -86,29 +87,34 @@ class BeeShop extends MobileBase {
     // 认养
     public function bee_raise()
     {
-        $pay = $this->bee_pay($this->config['one_bee_money']);
-        if($pay['status'] != 1){
-            $this->ajaxReturn($pay);
-            exit;
+
+        $order_id = I('oid');
+
+        $paymentList = M('user_bee')->where(['order_sn'=>$order_id,'status'=>1])->select();
+        if ($paymentList == null) {
+            $data['status'] = 0;
+            $data['msg'] = '支付失败';
+            $data['go_url'] = U('Mobile/Bee/beeIndex');
+
+            $this->assign('data', $data); 
         }
 
         Db::startTrans();
         try{
             //修改购买记录
-            $row = M('users')->where('user_id', $this->user_id)->save(['is_bee'=>1]);
-            $row = M('user_bee')->where('user_id', $this->user_id)->save(['status'=>1]);
-
+            M('users')->where('user_id', $this->user_id)->save(['is_bee'=>1]);
+            
             //赠送道具
             $count = M('user_bee_account')->where('uid','=',$this->user_id)->find();
             if ($count != null ){
                 $prop = [
-                    'bee_hive' => $count['bee_hive'] + $this->config['one_give_hive'], //蜂箱
+                    'bee_hive' => $count['bee_hive'] + $this->config['one_give_hive'] == '' ? 0 : $this->config['one_give_hive'], //蜂箱
                     'bee_milk' => $count['bee_milk'] + $this->config['one_bee_milk'], //蜂王浆
                     'water' => $count['water'] + $this->config['one_water'], //水
                     'sun_value' => $count['sun_value'] + $this->config['one_sun'], //阳光
-                    'update_time' => $this->time
+                    'update_time' => time()
                 ];
-                $row = M('user_bee_account')->where(array('uid' => $this->user_id))->save($prop);
+                $row = M('user_bee_account')->where('id', $count['id'])->update($prop);
                 $id = $count['id'];
             } else {
                 $prop = [
@@ -117,11 +123,15 @@ class BeeShop extends MobileBase {
                     'bee_milk' => $this->config['one_bee_milk'], //蜂王浆
                     'water' => $this->config['one_water'], //水
                     'sun_value' => $this->config['one_sun'], //阳光
-                    'create_time' => $this->time
+                    'create_time' => time()
                 ];
                 $row = M('user_bee_account')->insertGetId($prop);
                 $id = $row;
             }
+            // 添加积分
+            $this->userPoints( 1, $this->config['one_bee_milk']);
+            
+            M('user_bee')->where(['order_sn'=>$order_id])->save(['status'=>1]);
 
             // 提交事务
             Db::commit();
@@ -165,12 +175,17 @@ class BeeShop extends MobileBase {
             'note' => '购买幼蜂赠送'
             ],
         ];
+
         $this->prop_log($log);
+        $cart = new Cart();
+        $cart->bonus();
 
         $data['status'] = 1;
         $data['msg'] = '购买成功';
-        exit(json_encode($data));
+        $data['go_url'] = U('Mobile/Bee/beeIndex');
 
+        $this->assign('data', $data); 
+        return $this->fetch('/bee/succeed');
     }
 
     // 喂养
@@ -208,7 +223,7 @@ class BeeShop extends MobileBase {
                     'bee_milk' => $user_prop['bee_milk'] - $this->config['two_fee_bee_milk'], //蜂王浆
                     'water' => $user_prop['water'] - $this->config['two_fee_water'], //水
                     'sun_value' => $user_prop['sun_value'] - $this->config['two_fee_sun'], //阳光
-                    'update_time' => $this->time
+                    'update_time' => time()
                 ];
                 M('user_bee_account')->where(array('uid' => $this->user_id))->save($prop);
                 M('user_bee')->where(array('id' => $level['id']))->save(['level'=>2]);
@@ -297,7 +312,7 @@ class BeeShop extends MobileBase {
         $prop = [
             'bee_milk' => $data['bee_milk'] - $this->config['three_drip_bee_milk'], //蜂王浆
             'drone' => $data['drone'] + 1, //雄蜂
-            'update_time' => $this->time
+            'update_time' => time()
         ];
 
         $row = M('user_bee_account')->where(array('id' => $data['id']))->save($prop);
@@ -333,7 +348,7 @@ class BeeShop extends MobileBase {
         if ($data != null){
             $prop = [
                 'drone' => $data['drone'] + 1, //雄蜂
-                'update_time' => $this->time
+                'update_time' => time()
             ];
 
             M('user_bee_account')->where(array('id' => $data['id']))->save($prop);
@@ -343,7 +358,7 @@ class BeeShop extends MobileBase {
             $prop = [
                 'uid' => $this->user_id,
                 'drone' => 1, //雄蜂
-                'create_time' => $this->time
+                'create_time' => time()
             ];
             $id = M('user_bee_account')->insertGetId($prop);
         }
@@ -390,7 +405,7 @@ class BeeShop extends MobileBase {
 
             $prop = [
                 'drone' => $user_prop['drone'] - 1, //雄蜂
-                'update_time' => $this->time
+                'update_time' => time()
             ];
 
             M('user_bee_account')->where(array('uid' => $this->user_id))->save($prop);
@@ -444,8 +459,22 @@ class BeeShop extends MobileBase {
      */
     public function prop_log($data)
     {
-
         Db::name('bee_flow')->insertAll($data);
+    }
+
+    /*
+     * 积分
+     * $type 1自增，2自减
+     */
+    public function userPoints($type,$sum)
+    {
+        if($type == 1){
+            // 增
+            M('Users')->where("user_id", $this->user_id)->setInc('pay_points', $sum);
+        } else {
+            // 减
+            M('Users')->where("user_id", $this->user_id)->setDec('pay_points', $sum);
+        }
     }
 
 }

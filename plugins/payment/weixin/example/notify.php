@@ -31,7 +31,7 @@ class PayNotifyCallBack extends WxPayNotify
 	
 	//重写回调处理函数
 	public function NotifyProcess($data, &$msg)
-	{                       
+	{               
 		Log::DEBUG("call back:" . json_encode($data));
 		$notfiyOutput = array();
 		
@@ -56,7 +56,10 @@ class PayNotifyCallBack extends WxPayNotify
 		//用户在线充值
 		if (stripos($order_sn, 'recharge') !== false)
 			$order_amount = M('recharge')->where(['order_sn' => $order_sn, 'pay_status' => 0])->value('account');
-		else		
+		elseif (stripos($order_sn, 'Bee') !== false)
+
+            $order_amount = M('user_bee')->where(['order_sn' => "$order_sn"])->value('money');
+		else
 			$order_amount = M('order')->where(['order_sn'=>"$order_sn"])->value('order_amount');
 			if((string)($order_amount * 100) != (string)$data['total_fee']) 
 				return false; //验证失败         		

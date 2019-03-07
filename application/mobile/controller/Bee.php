@@ -81,7 +81,7 @@ class Bee extends MobileBase {
         $level = 0;
         $mating = 0;
 
-        $bee = M('user_bee')->where(array('uid' => $this->user_id))->select();
+        $bee = M('user_bee')->where(array('uid' => $this->user_id,'status'=>1))->select();
         foreach($bee as $key => $value){
             if($value['level'] == 2){
                 $level = count($key);
@@ -150,6 +150,8 @@ class Bee extends MobileBase {
             }
             if($user['bee_milk']>=$money_nums)
             {
+                //同步积分字段
+                update_user($user_id,$money_nums,2);
                 //减少
                 $data_user = array(
                     "bee_milk" => $user['bee_milk']-$money_nums,
@@ -180,7 +182,7 @@ class Bee extends MobileBase {
                     );
                     $zj_bee = M("user_bee_account")->where('uid',$first_leader)->update($leader_data);
                 }
-
+                update_user($first_leader,$money_nums,1);
                 if ($js_bee && $zj_bee){
                     $this->add_bee_flow($user_id,"222","赠送用户".$first_leader.",".$money_nums."滴蜂王浆",2);
                     $this->add_bee_flow($user_id,"222","用户".$first_leader."获得".$user_id."赠送的".$money_nums."滴蜂王浆",1);
@@ -251,6 +253,8 @@ class Bee extends MobileBase {
                 );
                 $msg = "恭喜您，".$bee_num."滴蜂王浆兑换一只雄峰成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
+                update_user($user_id,$bee_num,2);
+
                 if ($update)
                 {
                     //增加蜂王浆兑换雄峰日志记录
@@ -271,8 +275,9 @@ class Bee extends MobileBase {
                     "gooey"=>$gooey,
                     "bee_milk" =>$bee_milk['bee_milk']+$_POST['exchange_nums']
                 );
-                $msg = "恭喜您，".$nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
+                $msg = "恭喜您，".$nums."克蜜糖兑换".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
+                update_user($user_id,$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums'],1);
                 if ($update)
                 {
                     //增加蜂王浆兑换雄峰日志记录
@@ -294,13 +299,14 @@ class Bee extends MobileBase {
                     "gooey" =>$bee_milk['gooey']+$this->config['eight_one_gooey']*$_POST['exchange_nums']
                 );
 //                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
-                $msg = "恭喜您，".$nums."滴蜂王浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴克蜜糖成功";
+                $msg = "恭喜您，".$nums."滴蜂王浆兑".$this->config['eight_one_gooey']*$_POST['exchange_nums']."滴克蜜糖成功";
+                update_user($user_id,$nums,2);
                 $update = $bee_account->where('uid',$user_id)->setField($data);
                 if ($update)
                 {
                     //增加蜂王浆兑换雄峰日志记录
                     $this->add_bee_flow($user_id,801,"减少".$nums."蜜糖",2);
-                    $this->add_bee_flow($user_id,201,"增加".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆",1);
+                    $this->add_bee_flow($user_id,201,"增加".$this->config['eight_one_gooey']*$_POST['exchange_nums']."滴蜂王浆",1);
                 }
                 break;
             case 4:
@@ -468,8 +474,6 @@ class Bee extends MobileBase {
                 } else {
                     M('user_bee_account')->where('uid',$userId)->update(['bee_milk'=>($prize_arr[$rid-1]['value']+$userBeeMilk['bee_milk']), 'update_time'=>time()]);
                 }
-
-                M('users')->where('user_id',$userId)->setInc('pay_points',$prize_arr[$rid-1]['value']);
             } else {
                 $bool = false;
             }

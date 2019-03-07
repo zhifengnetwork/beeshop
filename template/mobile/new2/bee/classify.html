@@ -17,6 +17,18 @@
 					</a>
 				</div>
 				
+				<!--蜂王-->
+				<div class="wasp">
+					<div class="tu">
+						<img src="__STATIC__/images/imge/t_fw.png" />
+					</div>
+					<div class="skill">蜂王</div>
+					<div class="skill"><if condition="$categoryData[0]['house_bee'] gt 0"> {$categoryData[0]['house_bee']}<else> 0 </if>只</div>
+					<div class="cai" id="feedBee">
+						<img src="__STATIC__/images/imge/t_wy.png" />
+					</div>
+				</div>
+				
 				<!--工蜂-->
 				<div class="wasp">
 					<div class="tu">
@@ -67,6 +79,8 @@
 						<img src="__STATIC__/images/imge/nqn.png" />
 					</div>
 				</div>
+				
+				
 				
 				<!--采蜜弹框-->
 				<div class="star" id="star">
@@ -278,6 +292,24 @@ window.onload = function () {
           success:function(msg){
 			if(msg.code==200){
 				securityID.style.display = 'none';
+	 			layer.msg(msg.msg);
+			}else{
+				// console.log(msg);
+				layer.msg(msg.msg);
+	 			return false;
+			}
+          }
+        });
+	});
+
+	// 喂养蜂王操作
+	$("#feedBee").click(function(){
+		$.ajax({
+          type:"post",
+          url:"{:url('BeeCategory/feedDebby')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(msg){
+			if(msg.code==200){
 	 			layer.msg(msg.msg);
 			}else{
 				// console.log(msg);

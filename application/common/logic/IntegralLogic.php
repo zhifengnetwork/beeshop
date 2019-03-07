@@ -236,6 +236,7 @@ class IntegralLogic extends Model
         $user = Users::get($this->user['user_id']);
         if($this->structure['total_integral'] > 0){
             $user->pay_points = $user->pay_points - $this->structure['total_integral'];// 用户的积分减
+            $this->user_bee($this->user['user_id'],$this->structure['total_integral']);
         }
 
         if($this->structure['user_money'] > 0){
@@ -282,5 +283,14 @@ class IntegralLogic extends Model
         }
         return array('status'=>1,'msg'=>'提交订单成功','result'=>$order['order_id']); // 返回新增的订单id
     }
+
+    public function user_bee($user_id,$integral)
+	{
+		$user = M('user_bee_account')->where('uid',$user_id)->find();
+		$data = array(
+			"bee_milk" =>$user['bee_milk']-$integral
+		);
+		M('user_bee_account')->where('uid',$user_id)->update($data);
+	}
 
 }

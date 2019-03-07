@@ -122,28 +122,30 @@ class Payment extends MobileBase {
         $this->assign('order_id', $order_id); 
     	return $this->fetch('recharge'); //分跳转 和不 跳转
     }
-        public function beePay()
-        {
-            $user = session('user');
-            $config = tpCache('game'); //配置信息
 
-            //添加幼蜂
-            $bee = [
-                'uid' => $user['user_id'],
-                'order_sn' => 'Bee'.get_rand_str(10,0,1),
-                'adopt_time' => date('Y-m-d H:i:s',time())
-            ];
-            $row = M('user_bee')->insertGetId($bee);
+    // 购买蜜蜂
+    public function beePay()
+    {
+        $user = session('user');
+        $config = tpCache('game'); //配置信息
 
-            if($row){
-                $order = M('user_bee')->where("id", $row)->find();
-                $order['order_amount'] = $config['one_bee_money'];
-                $code_str = $this->payment->getJSAPI($order);
-                exit($code_str);
-            }else{
-                $this->error('提交失败,参数有误!');
-            }
+        //添加幼蜂
+        $bee = [
+            'uid' => $user['user_id'],
+            'order_sn' => 'Bee'.get_rand_str(10,0,1),
+            'money' => $config['one_bee_money']
+        ];
+        $row = M('user_bee')->insertGetId($bee);
+
+        if($row){
+            $order = M('user_bee')->where("id", $row)->find();
+            $order['order_amount'] = $config['one_bee_money'];
+            $code_str = $this->payment->getJSAPI($order);
+            exit($code_str);
+        }else{
+            $this->error('提交失败,参数有误!');
         }
+    }
 
         // 服务器点对点 // http://www.tp-shop.cn/index.php/Home/Payment/notifyUrl        
         public function notifyUrl(){            

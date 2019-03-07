@@ -218,6 +218,9 @@ class Order extends MobileBase
         $data = $logic->cancel_order($this->user_id, $id);
         $this->ajaxReturn($data);
     }
+    public function user_bee(){
+        
+    }
     /**
      * 确定收货成功
      */

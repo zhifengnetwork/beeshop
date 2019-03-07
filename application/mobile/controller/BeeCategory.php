@@ -61,6 +61,8 @@ class BeeCategory extends MobileBase {
             $wheres['is_oviposition'] = 2; // 已孵化
             $wheres['depart_num'] = ['<', 60]; // 采蜜次数少于60的
             $oneDatas = M('user_bee')->field('uid, depart_time')->where($wheres)->order('depart_time desc')->find();
+            $fwData = M('user_bee')->where($wheres)->count('id');
+            $categoryData['fwNum'] = $fwData;
             $ifTime = $oneDatas['depart_time']+3600; // 一小时
             if(time()<$ifTime){
                 $flag = 1; // 正在采蜜中
@@ -74,6 +76,55 @@ class BeeCategory extends MobileBase {
         $this->assign('categoryData', $categoryData);
         $this->assign('flag', $flag);
         return $this->fetch('/bee/classify');
+    }
+
+    /*
+    * Type: 804喂养蜂王浆，805喂养蜜糖，806蜂箱消耗阳光值，807蜜蜂消耗露水
+    * 使用蜂王浆每天喂养蜂王
+    * 喂养蜂王浆的数量后台设置
+    */
+    public function feedDebby(){
+
+        // 判断是否存在蜂王
+        $beeOne = M('user_bee')->where(['uid'=>$this->user_id, 'level'=>2])->find();
+        if(!$beeOne){
+            return json(['code'=>'-1','msg'=>'你还没蜂王哦']);
+        }
+        // 获取bee_flow记录判断当天是否已经喂养过一次
+        $flowData = M('bee_flow')->where(['uid'=>$this->user_id, 'type'=>804])->whereTime('create_time', 'today')->find();
+        if($flowData){
+            return json(['code'=>'-1','msg'=>'蜂王今天喂食过了哦']);
+        }
+        // 判断当前用户的蜂王浆是否足够
+        $beeMilkNum = $this->config['seven_bee_milk_days']?$this->config['seven_bee_milk_days']:1;
+
+        $beeMilk = M('user_bee_account')->field('uid,bee_milk')->where(['uid'=>$this->user_id])->find();
+        if($beeMilk['bee_milk']<$beeMilkNum){
+            return json(['code'=>'-1','msg'=>'你的蜂王浆不足哦']);
+        }
+
+        // 执行喂养操作
+        $decRes = M('user_bee_account')->where(['uid'=>$this->user_id])->setDec('bee_milk', $beeMilkNum);
+        $resU = M('users')->where(['user_id', $this->user_id])->setInc('pay_points', $beeMilkNum); // 蜂王浆users表字段
+
+        if(!$decRes){
+            return json(['code'=>'-1','msg'=>'喂养失败,稍后再试']);
+        }
+        // 插入喂养记录
+        $logs = array(
+            'uid' => $v['uid'],
+            'type' => 804,
+            'inc_or_dec' => 2,
+            'num' => $beeMilkNum,
+            'create_time' => time(),
+            'note' => '蜂王喂食蜂王浆'.$beeMilkNum.'滴'
+        );
+        $res = M('bee_flow')->save($logs);
+        if($decRes&&$res){
+            return json(['code'=>200,'msg'=>'喂养蜂王成功']);
+        }else{
+            return json(['code'=>'-1','msg'=>'喂养蜂王失败']);
+        }
     }
 
     /*

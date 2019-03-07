@@ -1230,15 +1230,17 @@ class User extends MobileBase
         if(strrchr($_SERVER['HTTP_REFERER'],'/') =='/cart2.html'){  //用户从提交订单页来的，后面设置完有要返回去
             session('payPriorUrl',U('Mobile/Cart/cart2'));
         }
-        if ($user['mobile'] == '')
-            $this->error('请先绑定手机号',U('User/userinfo',['action'=>'mobile']));
-        $step = I('step', 1);
-        if ($step > 1) {
-            $check = session('validate_code');
-            if (empty($check)) {
-                $this->error('验证码还未验证通过', U('mobile/User/paypwd'));
-            }
-        }
+        // if ($user['mobile'] == '')
+        //     $this->error('请先绑定手机号',U('User/userinfo',['action'=>'mobile']));
+        // $step = I('step', 1);
+        // if ($step > 1) {
+        //     $check = session('validate_code');
+        //     if (empty($check)) {
+        //         $this->error('验证码还未验证通过', U('mobile/User/paypwd'));
+        //     }
+        // }
+
+        $step = 2;
         if (IS_POST && $step == 2) {
             $new_password = trim(I('new_password'));
             $confirm_password = trim(I('confirm_password'));
