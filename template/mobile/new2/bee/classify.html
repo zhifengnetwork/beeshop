@@ -52,7 +52,7 @@
 					<div class="skill">安保蜂</div>
 					<div class="skill"><if condition="$categoryData[0]['security_bee'] gt 0"> {$categoryData[0]['security_bee']}<else> 0 </if>只</div>
 					<div class="cai" id="securityID">
-						<img src="__STATIC__/images/imge/8.png" />
+						<img src="__STATIC__/images/imge/abn.png" />
 					</div>
 				</div>
 				
@@ -64,7 +64,7 @@
 					<div class="skill">内勤蜂</div>
 					<div class="skill"><if condition="$categoryData[0]['house_bee'] gt 0"> {$categoryData[0]['house_bee']}<else> 0 </if>只</div>
 					<div class="cai" id="houseID">
-						<img src="__STATIC__/images/imge/8.png" />
+						<img src="__STATIC__/images/imge/nqn.png" />
 					</div>
 				</div>
 				
@@ -148,7 +148,7 @@ window.onload = function () {
           url:"{:url('BeeCategory/gatherHoney')}",   //数据传输的控制器方法
           data:{type:1}, //这里data传递过去的是序列化以后的字符串
           success:function(data){
-			if(data.code=200){
+			if(data.code==200){
 				Work.style.display = 'block';
 			}else{
 				Work.style.display = 'none';

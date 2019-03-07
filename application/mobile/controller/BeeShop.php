@@ -50,7 +50,6 @@ class BeeShop extends MobileBase {
 
     public function bee_pay($user_money)
     {
-
         //使用余额,检查使用余额条件
         if($this->user['is_lock'] == 1){
             return $data = ['status' => 0, 'msg' => '账号异常已被锁定，不能使用积分或余额支付！', 'result' => []];// 用户被冻结不能使用余额支付
@@ -95,12 +94,9 @@ class BeeShop extends MobileBase {
 
         Db::startTrans();
         try{
-            //添加幼蜂
-            $bee = [
-                'uid' => $this->user_id,
-                'adopt_time' => date('Y-m-d H:i:s',time())
-            ];
-            $row = M('user_bee')->insert($bee);
+            //修改购买记录
+            $row = M('users')->where('user_id', $this->user_id)->save(['is_bee'=>1]);
+            $row = M('user_bee')->where('user_id', $this->user_id)->save(['status'=>1]);
 
             //赠送道具
             $count = M('user_bee_account')->where('uid','=',$this->user_id)->find();

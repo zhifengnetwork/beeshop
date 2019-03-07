@@ -48,6 +48,7 @@ class AutoGooey
 					$autoBeeMilk = $v['bee_num']*2; // 采蜜蜂王的数量*2(100克蜜糖=2滴蜂王券)
 					$res1 = Db::name('user_bee_account')->where('uid', $v['uid'])->setInc('gooey', $gainTotalGooey); // 蜜糖
 					$res2 = Db::name('user_bee_account')->where('uid', $v['uid'])->setInc('bee_milk', $autoBeeMilk); // 蜂王浆
+					$resU = Db::name('users')->where('user_id', $v['uid'])->setInc('pay_points', $autoBeeMilk); // 蜂王浆users表字段
 					// 修改当前订单
 					$updateGooey['is_out'] = 2; // 采蜜结束已发放蜜糖
 					$updateGooey['sent_bee_milk'] = $autoBeeMilk; // 采蜜结束发放的蜂王浆
@@ -82,9 +83,10 @@ class AutoGooey
 			     $countNum++;
 				}
 			}
-			return json('dispose '.$countNum.' the orders');
+
+			echo 'dispose '.$countNum." the orders\n";
 		}else{
-			return json('No dispose the order'); //没有可执行的订单
+			echo "No dispose the orders\n";
 		}
 
 	}

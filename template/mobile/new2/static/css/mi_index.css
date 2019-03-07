@@ -23,10 +23,10 @@
 }
 #container .wrap .head .suffer {
 	position: absolute;
-	top: 3%;
-	left: 17%;
+	top: 10%;
+	left: 1%;
 	display: inline-block;
-	width: 8%;
+	width: 16%;
 	height: .25rem;
 	background: #2e160a;
 	font-size: 12px;

@@ -46,10 +46,9 @@ img {
 #container .wrap .user-list .name {
 	position: absolute;
 	top: 25%;
-	left: 16%;
+	left: 18%;
 	font-size: .25rem;
 	font-weight: 900;
-	width: 15%;
 	line-height: .85rem;
 	text-align: center;
 	

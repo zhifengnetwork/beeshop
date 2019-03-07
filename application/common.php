@@ -24,6 +24,30 @@ function is_login(){
         return false;
     }
 }
+
+//获取推荐上级
+function get_uper_user($data)
+{
+    $recUser  = getAllUp($data['first_leader']);
+    return array('recUser'=>$recUser);
+}
+
+/*
+ * 获取所有上级
+ */
+function getAllUp($invite_id,$userList=array())
+{           
+    $field  = "user_id,first_leader";
+    $UpInfo = M('users')->field($field)->where('user_id',$invite_id)->find();
+    if($UpInfo)  //有上级
+    {
+        $userList[] = $UpInfo;                                                
+        getAllUp($UpInfo['first_leader'],$userList);
+    }
+    return $userList;     
+    
+}
+
 /**
  * 获取用户信息
  * @param $user_id_or_name  用户id 邮箱 手机 第三方id

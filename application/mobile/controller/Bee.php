@@ -76,6 +76,8 @@ class Bee extends MobileBase {
 
     // 游戏主页
     public function beeIndex(){
+        $code = new Code();
+        $test = $code->bonus();
         $level = 0;
         $mating = 0;
 
@@ -90,10 +92,12 @@ class Bee extends MobileBase {
         }
 
         $user_prop = M('user_bee_account')->where(array('uid' => $this->user_id))->find();
+        $user_bee = M('user_bee')->where(array('uid' => $this->user_id))->select();
         $user_prop['level'] = $level;
         $user_prop['mating'] = $mating;
 //        dump($user_prop['bee_milk']);exit;
         $this->assign('user_prop', $user_prop);
+        $this->assign('user_bee', count($user_bee));
 
          //增加头像
          $head_pic = session('user.head_pic');

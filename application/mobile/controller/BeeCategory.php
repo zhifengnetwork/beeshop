@@ -88,9 +88,11 @@ class BeeCategory extends MobileBase {
         // 获取一条满足采蜜记录
         $data = M('user_bee')->where($where)->find();
         if($data){
-            return json(['code'=>200,'msg'=>'获取成功','data'=>$data]);
+            // return json(['code'=>200,'msg'=>'获取成功','data'=>$data]);
+            $this->ajaxReturn(['code'=>200,'msg'=>'获取成功','data'=>$data]);
         }else{
-            return json(['code'=>'-1','msg'=>'你暂无工蜂']);
+            // return json(['code'=>'111111','msg'=>'你暂无工蜂111']);
+            $this->ajaxReturn(['code'=>'-1','msg'=>'你暂无工蜂']);
         }
     }
 
@@ -168,11 +170,19 @@ class BeeCategory extends MobileBase {
     }
 
 
-    /*
+       /*
     * 侦查蜂侦查操作60分钟内只能操作一次
     */
     public function checkBeeAction(){
 
+        $where1['uid'] = $this->user_id;
+        $where1['is_oviposition'] = 2; // 已孵化
+        $where1['depart_num'] = ['<', 60]; // 采蜜次数少于60的
+        // 获取一条满足采蜜记录
+        $data = M('user_bee')->where($where1)->find();
+        if(!$data){
+           return json(['code'=>'-1','msg'=>'暂无侦查蜂']);
+        }
         // 查询60分钟内是否侦查过
         $where['uid'] = $this->user_id;
         $where['type'] = 702;
@@ -200,6 +210,15 @@ class BeeCategory extends MobileBase {
     * 安保蜂安保操作60分钟内只能操作一次
     */
     public function securityBeeAction(){
+
+        $where1['uid'] = $this->user_id;
+        $where1['is_oviposition'] = 2; // 已孵化
+        $where1['depart_num'] = ['<', 60]; // 采蜜次数少于60的
+        // 获取一条满足采蜜记录
+        $data = M('user_bee')->where($where1)->find();
+        if(!$data){
+           return json(['code'=>'-1','msg'=>'暂无安保蜂']);
+        }
 
         // 查询60分钟内是否安保过
         $where['uid'] = $this->user_id;
@@ -230,6 +249,14 @@ class BeeCategory extends MobileBase {
     */
     public function houseBeeAction(){
 
+        $where1['uid'] = $this->user_id;
+        $where1['is_oviposition'] = 2; // 已孵化
+        $where1['depart_num'] = ['<', 60]; // 采蜜次数少于60的
+        // 获取一条满足采蜜记录
+        $data = M('user_bee')->where($where1)->find();
+        if(!$data){
+           return json(['code'=>'-1','msg'=>'暂无内勤蜂']);
+        }
         // 查询60分钟内是否安保过
         $where['uid'] = $this->user_id;
         $where['type'] = 704;
@@ -252,6 +279,7 @@ class BeeCategory extends MobileBase {
             return json(['code'=>200,'msg'=>'内勤失败,稍后再试']);
         }
     }
+
 
     
     // 道具日志流水

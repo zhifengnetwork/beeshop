@@ -102,7 +102,7 @@
                 <li><a href="javascript:void(0);" data-index='2' class="tab"><span>商品相册</span></a></li>
                 <li><a href="javascript:void(0);" data-index='3' class="tab"><span>商品模型</span></a></li>
                 <li><a href="javascript:void(0);" data-index='4' class="tab"><span>商品物流</span></a></li>
-                <li><a href="javascript:void(0);" data-index='5' class="tab"><span>积分折扣</span></a></li>                
+                <li><a href="javascript:void(0);" data-index='5' class="tab"><span>蜂王浆折扣</span></a></li>                
             </ul>
         </div>
     </div>
@@ -535,20 +535,20 @@
                         
             <dl class="row">
                 <dt class="tit">
-                    <label for="record_no">赠送积分</label>
+                    <label for="record_no">赠送蜂王浆</label>
                 </dt>
                 <dd class="opt">
-                    <input type="text" value="{$goodsInfo.give_integral}" name="give_integral" class="t_mane" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" />	订单完成后赠送积分
+                    <input type="text" value="{$goodsInfo.give_integral}" name="give_integral" class="t_mane" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" />	订单完成后赠送蜂王浆
                     <span class="err" id="err_give_integral" style="color:#F00; display:none;"></span>
                 </dd>
             </dl>  
             
             <dl class="row">
                 <dt class="tit">
-                    <label for="record_no">兑换积分</label>
+                    <label for="record_no">兑换蜂王浆</label>
                 </dt>
                 <dd class="opt">
-                    <input type="text" value="{$goodsInfo.exchange_integral}" name="exchange_integral" class="t_mane" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" />	如果设置0，则不支持积分抵扣
+                    <input type="text" value="{$goodsInfo.exchange_integral}" name="exchange_integral" class="t_mane" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')" onpaste="this.value=this.value.replace(/[^\d.]/g,'')" />	如果设置0，则不支持蜂王浆抵扣
                     <span class="err" id="err_exchange_integral" style="color:#F00; display:none;"></span>
                 </dd>
             </dl>
