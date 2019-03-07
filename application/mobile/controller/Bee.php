@@ -464,6 +464,8 @@ class Bee extends MobileBase {
                 } else {
                     M('user_bee_account')->where('uid',$userId)->update(['bee_milk'=>($prize_arr[$rid-1]['value']+$userBeeMilk['bee_milk']), 'update_time'=>time()]);
                 }
+
+                M('users')->where('user_id',$userId)->setInc('pay_points',$prize_arr[$rid-1]['value']);
             } else {
                 $bool = false;
             }
