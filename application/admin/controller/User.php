@@ -781,6 +781,63 @@ exit;
 		$this->assign('pager',$page);
 		$this->assign('list',$lists);
 		return $this->fetch();
-	}
+    }
+    
+    /**
+     * 投诉信息列表
+     */
+    public function complain() {
+        $field = 'complain.*, users.nickname';
+        $count = M('complain')->count();
+        $Page = new Page($count, 10);
+        $show = $Page->show();
+        $com_list = Db::name('complain complain')
+                ->join('users','users.user_id = complain.user_id')
+                ->field($field)
+                ->order("complain.complain_id desc")
+                ->limit($Page->firstRow . ',' . $Page->listRows)
+                ->select();
+        $this->assign('com_list',$com_list);
+        $this->assign('page',$show);
+        $this->assign('pager',$Page);
+        return $this->fetch();
+    }
+
+    /**
+     * 投诉删除
+     */
+    public function complain_delete() {
+        $id = I('del_id/d');
+        if ($id) {
+            //有投诉记录
+            $complain = Db::name('complain')->where('complain_id', $id)->find();
+            if($complain){
+                M('complain')->where(['complain_id' => $id])->delete();
+            }
+            exit(json_encode(1));
+        } else {
+            exit(json_encode(0));
+        }
+    }
+
+    /**
+     * 投诉查看
+     */
+    public function complain_check() {
+        $id = I('id');
+        //查询投诉记录
+        $field = 'complain.*, users.nickname ,users.head_pic';
+        $complain = Db::name('complain complain')
+                ->join('users','users.user_id = complain.user_id')
+                ->field($field)
+                ->where('complain.complain_id', $id)
+                ->find();
+        //将记录的状态改为已查看
+        if($complain){
+            Db::name('complain')->where('complain_id', $id)->update(['status'=>1]);
+        }
+        $this->assign('complain', $complain);
+        return $this->fetch();
+    }
 	
 }

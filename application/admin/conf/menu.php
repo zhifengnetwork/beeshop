@@ -23,6 +23,7 @@ return	array(
 						array('name'=>'汇款记录','act'=>'remittance','op'=>'User'),
 						//array('name'=>'会员整合','act'=>'integrate','op'=>'User'),
 						array('name'=>'会员签到','act'=>'signList','op'=>'User'),
+						array('name'=>'投诉信息','act'=>'complain','op'=>'User'),
 				)),
 				array('name' => '广告','child' => array(
 						array('name'=>'广告列表','act'=>'adList','op'=>'Ad'),
