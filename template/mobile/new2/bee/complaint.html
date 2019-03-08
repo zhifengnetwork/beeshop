@@ -63,11 +63,36 @@
 					</a>
 					<h2>投诉</h2>
 				</div>
-				
-				<textarea class="ku"></textarea>
-				<div class="refer">提交</div>
+				<form id="content">
+					<textarea class="ku" name="content"></textarea>
+					<div class="refer" onclick="sendContent();">提交</div>
+				</form>
 			</div>
 		</div>
 	</body>
 </html>
 <script type="text/javascript" src="__STATIC__/js/rem.js" ></script>
+<script src="__STATIC__/js/jquery-3.1.1.min.js" ></script>
+<script type="text/javascript" src="__STATIC__/js/layer/layer.js" ></script>
+<script type="text/javascript">
+function sendContent()
+{	
+	$.ajax({
+		type : 'POST',
+		url : "complaint_info",
+		data : $('#content').serialize(),
+		dataType :'JSON',
+		success : function(res){
+			if(res == 1){
+				layer.msg('提交成功');
+				window.location.href = "{:U('Bee/beeIndex')}";
+			}else{
+				layer.msg('提交失败');
+			}
+			setTimeout(function () {
+                layer.closeAll();
+            }, 1000);
+		}
+	});
+}
+</script>

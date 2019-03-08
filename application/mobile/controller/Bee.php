@@ -96,6 +96,23 @@ class Bee extends MobileBase {
         $user_prop['level'] = $level;
         $user_prop['mating'] = $mating;
 //        dump($user_prop['bee_milk']);exit;
+
+        //最新公告内容
+        $condition = array(
+            'article_cat.cat_name' => '游戏公告',
+            'article.is_open' => 1
+        );
+        $field = 'article.title, article.content';
+        $notice = M('article article')
+                ->join('article_cat', 'article_cat.cat_id = article.cat_id')
+                ->order('article.article_id desc')
+                ->field($field)
+                ->where($condition)
+                ->where('article.publish_time', '<', time())
+                ->find();
+        $notice['content'] = htmlspecialchars_decode($notice['content']);
+        
+        $this->assign('notice', $notice);
         $this->assign('user_prop', $user_prop);
         $this->assign('user_bee', count($user_bee));
 
@@ -545,6 +562,53 @@ class Bee extends MobileBase {
 
         return json($result);
     }
+
+    /**
+     * 公告列表(消息)
+     */ 
+    public function news(){
+        $condition = array(
+            'article_cat.cat_name' => '游戏公告',
+            'article.is_open' => 1
+        );
+        $field = 'article.title, article.content';
+        $noticeList = M('article article')
+                ->join('article_cat', 'article_cat.cat_id = article.cat_id')
+                ->order('article.article_id desc')
+                ->field($field)
+                ->where($condition)
+                ->where('article.publish_time', '<', time())
+                ->select();
     
+        foreach($noticeList as $key => $notice){
+            $noticeList[$key]['content'] = htmlspecialchars_decode($notice['content']);
+        }
+        $this->assign('noticeList', $noticeList);
+        return $this->fetch();
+    }
     
+    /**
+     * 投诉页面
+     */
+    public function complaint(){
+        return $this->fetch();
+    }
+
+    /**
+     * 投诉处理
+     */
+    public function complaint_info(){
+        $data = array();
+        $data['complain_content'] = I('content');
+        $data['user_id'] = session('user.user_id');
+        $data['user_mobile'] = session('user.mobile');
+        $data['complain_time'] = strtotime(date('Y-m-d H:i:s'));
+        $result = M('complain')->insert($data);
+        if(!$result){
+            $this->ajaxReturn(1);
+        }else{
+            $this->ajaxReturn(0);
+        }
+        
+    }
 }
