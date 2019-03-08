@@ -59,7 +59,7 @@
 							url:"{:url('music_type')}",
 							async:true,
 							data: {
-								type: 1,
+								type: 0,
 							},
 							success: function(req){
 								console.log(req);
@@ -71,7 +71,7 @@
 						
 						$(this).removeClass("wtf_c");
 						$('#wtf_label').removeClass("wtf_l");
-						
+						console.log('关闭背景音乐');
 					} else {
 						
 						/**
@@ -82,7 +82,7 @@
 							url:"{:url('music_type')}",
 							async:true,
 							data: {
-								type: 0,
+								type: 1,
 							},
 							success: function(req){
 								console.log(req);
@@ -94,7 +94,7 @@
 						
 						$(this).addClass("wtf_c");
 						$('#wtf_label').addClass("wtf_l");
-						
+						console.log('开启背景音乐');
 					}
 					
 				})

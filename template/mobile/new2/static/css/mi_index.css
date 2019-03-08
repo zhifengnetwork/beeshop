@@ -563,7 +563,7 @@ img {
 	height: 5rem;
 	background: url(/template/mobile/new2/static/images/imge/f_9.png) no-repeat;
 	background-size: 100% 100%;
-	font-size: .14rem;
+	font-size: 16px;
 	z-index: 10;
 }
 .t_Wrap p {

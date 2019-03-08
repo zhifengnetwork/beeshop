@@ -191,9 +191,9 @@ class BeeShop extends MobileBase {
     // 喂养
     public function bee_feed()
     {
-        $bee = M('user_bee')->where(array('uid' => $this->user_id))->count();
+        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1))->count();
         if($bee >= 1){
-            $level = M('user_bee')->where(array('uid' => $this->user_id,'level' => 1))->find();
+            $level = M('user_bee')->where(array('uid' => $this->user_id,'level' => 1, 'status' => 1))->find();
 
             if($level == null){
                 $data['msg'] = '您暂时没有幼蜂需要喂养！';
@@ -385,7 +385,7 @@ class BeeShop extends MobileBase {
     public function bee_mating()
     {
 
-        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'level' => 2, 'is_mating' => 0))->find();
+        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1, 'level' => 2, 'is_mating' => 0))->find();
 
         if($bee == null){
             $data['msg'] = '您没有可进行交配的蜂王！';

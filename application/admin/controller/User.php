@@ -737,11 +737,6 @@ exit;
             $list = Db::query('select u.user_id,u.nickname,u.mobile,uba.*,(select count(1) from tp_user_bee ub where u.user_id=ub.uid) nums
                             from tp_users u LEFT JOIN tp_user_bee_account uba on u.user_id=uba.uid '.$where);
         }else{
-
-            // 蜂王
-            $debbydata = M('user_bee')
-                ->field('id,uid,level')
-                ->select();
             
             // 用户+蜜蜂表
             $list = M('users')
@@ -753,7 +748,8 @@ exit;
          
             // 循环合并数组
             foreach ($list as $k => $v) {
-
+                $minDebbyNum = '';
+                $maxDebbyNum = '';
                 $minDebbyNum = M('user_bee')->where(array('id'=>$v['user_id'], 'level'=>1))->count('id');
                 $maxDebbyNum = M('user_bee')->where(array('id'=>$v['user_id'], 'level'=>2))->count('id');
                 $list[$k]['minDebbyNum'] = $minDebbyNum;

@@ -219,6 +219,7 @@ $(document).ready(function(){
 	
 	//右滑出
 	$(".hot").on("click", function() {
+		console.log('活动右弹出');
 		$(".activity").animate({
 			right: "0"
 		})

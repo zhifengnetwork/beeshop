@@ -92,8 +92,8 @@ class Bee extends MobileBase {
         }
 
         $user_prop = M('user_bee_account')->where(array('uid' => $this->user_id))->find();
-        $user_bee = M('user_bee')->where(array('uid' => $this->user_id))->select();
-        $user_prop['level'] = $level;
+        $user_bee = M('user_bee')->where(array('uid' => $this->user_id, 'level' => 1, 'status' => 1))->select(); //幼蜂
+        $user_prop['level'] = $level; // 蜂王
         $user_prop['mating'] = $mating;
 //        dump($user_prop['bee_milk']);exit;
         $this->assign('user_prop', $user_prop);
@@ -304,25 +304,31 @@ class Bee extends MobileBase {
             case 3:
                 //蜜糖所需总数
                 $nums = $_POST['exchange_nums'];
-                if ($bee_milk['bee_milk'] < $nums){
-                    $msg = "对不起，您的蜜糖数量不足".$nums."克!!";
+                $num = $nums/$this->config['eight_one_gooey'];
+                if(is_float($num))
+                {
+                    $msg = "对不起，无法进行兑换,蜜糖数量必须是".$this->config['eight_one_gooey']."的倍数";
                     return json(array('msg'=>$msg,'type'=>0));
                     exit();
                 }
-                $gooey = $bee_milk['gooey']-$nums;
+                if ($bee_milk['bee_milk'] < $this->config['eight_exchange_bee_milk']){
+                    $msg = "对不起，您的蜂王浆数量不足".$this->config['eight_exchange_bee_milk']."滴!!";
+                    return json(array('msg'=>$msg,'type'=>0));
+                    exit();
+                }
                 $data = array(
-                    "bee_milk"=>$bee_milk['bee_milk']-$_POST['exchange_nums'],
-                    "gooey" =>$bee_milk['gooey']+$this->config['eight_one_gooey']*$_POST['exchange_nums']
+                    "bee_milk"=>$bee_milk['bee_milk']-$num,
+                    "gooey" =>$bee_milk['gooey']+$nums
                 );
 //                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
-                $msg = "恭喜您，".$nums."滴蜂王浆兑".$this->config['eight_one_gooey']*$_POST['exchange_nums']."滴克蜜糖成功";
-                update_user($user_id,$nums,2);
+                $msg = "恭喜您，".$num."滴蜂王浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴克蜜糖成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
+                update_user($user_id,$this->config['eight_exchange_bee_milk'],2);
                 if ($update)
                 {
                     //增加蜂王浆兑换雄峰日志记录
-                    $this->add_bee_flow($user_id,801,"减少".$nums."蜜糖",2);
-                    $this->add_bee_flow($user_id,201,"增加".$this->config['eight_one_gooey']*$_POST['exchange_nums']."滴蜂王浆",1);
+                    $this->add_bee_flow($user_id,801,"减少".$nums."蜂王浆",2);
+                    $this->add_bee_flow($user_id,201,"增加".$this->config['eight_one_gooey']*$_POST['exchange_nums']."滴蜜糖",1);
                 }
                 break;
             case 4:
@@ -490,6 +496,7 @@ class Bee extends MobileBase {
                 } else {
                     M('user_bee_account')->where('uid',$userId)->update(['bee_milk'=>($prize_arr[$rid-1]['value']+$userBeeMilk['bee_milk']), 'update_time'=>time()]);
                 }
+                update_user($userId,$prize_arr[$rid-1]['value'],1);
             } else {
                 $bool = false;
             }

@@ -55,15 +55,18 @@ class BeeCategory extends MobileBase {
         $where = ' depart_num < 60 and status = 1 and uid='.$this->user_id;
         // 统计该用户蜜蜂种类数量
         $categoryData = Db::query('select sum(worker_bee) worker_bee,sum(scout_bee) scout_bee,sum(house_bee) house_bee,sum(security_bee) security_bee from tp_user_bee where'. $where);
+        $whereFw['uid'] = $this->user_id;
+        $whereFw['level'] = 2;
+        $whereFw['status'] = 1;
+        $fwData = M('user_bee')->where($whereFw)->count('id');
         if($categoryData){
 
             $wheres['uid'] = $this->user_id;
             $wheres['is_oviposition'] = 2; // 已孵化
             $wheres['depart_num'] = ['<', 60]; // 采蜜次数少于60的
             $oneDatas = M('user_bee')->field('uid, depart_time')->where($wheres)->order('depart_time desc')->find();
-            $fwData = M('user_bee')->where($wheres)->count('id');
-            $categoryData['fwNum'] = $fwData;
             $ifTime = $oneDatas['depart_time']+3600; // 一小时
+            $categoryData[0]['fwNum'] = $fwData;
             if(time()<$ifTime){
                 $flag = 1; // 正在采蜜中
             }else{
@@ -71,6 +74,7 @@ class BeeCategory extends MobileBase {
             }
         }else{
             $categoryData[0]['worker_bee'] = 0;
+            $categoryData[0]['fwNum'] = $fwData;
             $flag = 2; // 不在采蜜中
         }
         $this->assign('categoryData', $categoryData);
