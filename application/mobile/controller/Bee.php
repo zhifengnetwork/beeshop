@@ -98,18 +98,14 @@ class Bee extends MobileBase {
 //        dump($user_prop['bee_milk']);exit;
 
         //最新公告内容
-        $condition = array(
-            'article_cat.cat_name' => '游戏公告',
-            'article.is_open' => 1
-        );
-        $field = 'article.title, article.content';
-        $notice = M('article article')
-                ->join('article_cat', 'article_cat.cat_id = article.cat_id')
-                ->order('article.article_id desc')
-                ->field($field)
-                ->where($condition)
-                ->where('article.publish_time', '<', time())
+        $notice = M('article')
+                ->order('article_id desc')
+                ->field('title, content')
+                ->where('cat_id', 9)
+                ->where('is_open', 1)
+                ->where('publish_time', '<', time())
                 ->find();
+        //转换html标签
         $notice['content'] = htmlspecialchars_decode($notice['content']);
         
         $this->assign('notice', $notice);
@@ -574,19 +570,14 @@ class Bee extends MobileBase {
      * 公告列表(消息)
      */ 
     public function news(){
-        $condition = array(
-            'article_cat.cat_name' => '游戏公告',
-            'article.is_open' => 1
-        );
-        $field = 'article.title, article.content';
-        $noticeList = M('article article')
-                ->join('article_cat', 'article_cat.cat_id = article.cat_id')
-                ->order('article.article_id desc')
-                ->field($field)
-                ->where($condition)
-                ->where('article.publish_time', '<', time())
+        $noticeList = M('article')
+                ->order('article_id desc')
+                ->field('title, content')
+                ->where('is_open', 1)
+                ->where('cat_id',9)
+                ->where('publish_time', '<', time())
                 ->select();
-    
+        //循环转换html标签
         foreach($noticeList as $key => $notice){
             $noticeList[$key]['content'] = htmlspecialchars_decode($notice['content']);
         }
@@ -611,7 +602,7 @@ class Bee extends MobileBase {
         $data['user_mobile'] = session('user.mobile');
         $data['complain_time'] = strtotime(date('Y-m-d H:i:s'));
         $result = M('complain')->insert($data);
-        if(!$result){
+        if($result){
             $this->ajaxReturn(1);
         }else{
             $this->ajaxReturn(0);
