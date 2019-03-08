@@ -597,17 +597,21 @@ class Bee extends MobileBase {
      * 投诉处理
      */
     public function complaint_info(){
-        $data = array();
-        $data['complain_content'] = I('content');
-        $data['user_id'] = session('user.user_id');
-        $data['user_mobile'] = session('user.mobile');
-        $data['complain_time'] = strtotime(date('Y-m-d H:i:s'));
-        $result = M('complain')->insert($data);
-        if($result){
-            $this->ajaxReturn(1);
+        $content = I('content');
+        if($content){
+            $data = array();
+            $data['complain_content'] = $content;
+            $data['user_id'] = session('user.user_id');
+            $data['user_mobile'] = session('user.mobile');
+            $data['complain_time'] = strtotime(date('Y-m-d H:i:s'));
+            $result = M('complain')->insert($data);
+            if($result){
+                $this->ajaxReturn(1);
+            }else{
+                $this->ajaxReturn(0);
+            }
         }else{
-            $this->ajaxReturn(0);
+            $this->ajaxReturn(2);
         }
-        
     }
 }

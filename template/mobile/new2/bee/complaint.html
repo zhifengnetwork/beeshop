@@ -86,6 +86,8 @@ function sendContent()
 			if(res == 1){
 				layer.msg('提交成功');
 				window.location.href = "{:U('Bee/beeIndex')}";
+			}else if(res == 2){
+				layer.msg('请填写内容');
 			}else{
 				layer.msg('提交失败');
 			}
