@@ -52,7 +52,7 @@ class BeeCategory extends MobileBase {
     */ 
     public function beeCategory(){
 
-        $where = ' depart_num < 60 and status = 1 and uid='.$this->user_id;
+        $where = ' is_oviposition=2 and depart_num < 60 and status = 1 and uid='.$this->user_id;
         // 统计该用户蜜蜂种类数量
         $categoryData = Db::query('select sum(worker_bee) worker_bee,sum(scout_bee) scout_bee,sum(house_bee) house_bee,sum(security_bee) security_bee from tp_user_bee where'. $where);
         $whereFw['uid'] = $this->user_id;

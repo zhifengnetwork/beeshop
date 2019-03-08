@@ -453,6 +453,21 @@ class BeeShop extends MobileBase {
         return $row;
     }
 
+    // 孵化
+    public function bee_hatch()
+    {
+        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'is_mating' => 1, 'is_oviposition' => 1))->find();
+
+        if($bee == null){
+            $data['msg'] = '您没有可进行孵化的幼卵！';
+            exit(json_encode($data));
+        }
+
+        $row = M('user_bee')->where(array('id' => $bee['id']))->save(['is_oviposition' => 2]);
+
+        $data = ['status' => 1, 'msg' => '孵化成功'];
+        exit(json_encode($data));
+    }
 
     /*
      * 道具流水

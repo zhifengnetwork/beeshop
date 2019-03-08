@@ -733,11 +733,11 @@ exit;
         $count = M('users')->where($map)->count();
         $page = new Page($count,10);
         if($mobile){
+
             $where = " where u.mobile like '%$mobile%'";
             $list = Db::query('select u.user_id,u.nickname,u.mobile,uba.*,(select count(1) from tp_user_bee ub where u.user_id=ub.uid) nums
                             from tp_users u LEFT JOIN tp_user_bee_account uba on u.user_id=uba.uid '.$where);
         }else{
-            
             // 用户+蜜蜂表
             $list = M('users')
             ->alias('us')
@@ -745,18 +745,16 @@ exit;
             ->join('tp_user_bee_account' ,'us.user_id=tp_user_bee_account.uid','left')
             ->where($map)
             ->limit($page->firstRow.','.$page->listRows)->select();
-         
             // 循环合并数组
             foreach ($list as $k => $v) {
                 $minDebbyNum = '';
                 $maxDebbyNum = '';
-                $minDebbyNum = M('user_bee')->where(array('id'=>$v['user_id'], 'level'=>1))->count('id');
-                $maxDebbyNum = M('user_bee')->where(array('id'=>$v['user_id'], 'level'=>2))->count('id');
-                $list[$k]['minDebbyNum'] = $minDebbyNum;
-                $list[$k]['maxDebbyNum'] = $maxDebbyNum;
+                $minDebbyNum = M('user_bee')->where(array('uid'=>$v['user_id'], 'level'=>1))->count('uid');
+                $maxDebbyNum = M('user_bee')->where(array('uid'=>$v['user_id'], 'level'=>2))->count('uid');
+                $list[$k]['minDebbyNum'] = $minDebbyNum>0?$minDebbyNum:0;
+                $list[$k]['maxDebbyNum'] = $maxDebbyNum>0?$maxDebbyNum:0;
             }
         }
-
         $this->assign('page',$page->show());
         $this->assign('pager',$page);
         $this->assign('list',$list);

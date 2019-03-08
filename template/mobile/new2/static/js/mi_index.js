@@ -132,8 +132,24 @@
 		tank02.onclick = function() {
 	    	hintWrap02.style.display = 'block';
 	    }
+	    // 孵化
 		qtn02.onclick = function() {
-	    	hintWrap02.style.display = 'none';
+			$.ajax({
+				type : 'get',
+				url : '/index.php?m=Mobile&c=BeeShop&a=bee_hatch',
+				dataType : 'json',
+				success : function(data){
+					if(data.status == 1){
+	    				hintWrap02.style.display = 'none';
+						layer.msg(data.msg);
+					}else{
+						layer.msg(data.msg);
+					}
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					layer.msg('网络异常，请稍后重试');
+				}
+			})
 	    }
 		// 喂养
 		qtn.addEventListener('click',function() {

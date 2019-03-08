@@ -119,6 +119,10 @@ class Code extends MobileBase
 
             //不存在则创建个第三方账号
             M('OauthUsers')->save(array('oauth'=>'weixin' , 'openid'=>$openid ,'user_id'=>$user_id , 'unionid'=>$data['unionid'], 'oauth_child'=>'mp'));
+            $wx_user = M('wx_user')->find();
+            $jssdk = new JssdkLogic($wx_user['appid'],$wx_user['appsecret']);
+            $wx_content = "欢迎来到“九社优农”，您以成为平台第".$user_id."个会员";
+            $test= $jssdk->push_msg($openid,$wx_content);
         }
         
     }
