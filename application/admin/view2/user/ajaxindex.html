@@ -19,6 +19,13 @@
                     <div style="text-align: center; width: 50px;">{$list.total_amount}</div>
                 </td>
                 <td align="left" class="">
+                    <div style="text-align: center; width: 80px;">
+                        <if condition="$list.distribut_level eq 0"> 普通会员 
+                            <elseif condition="$list.distribut_level eq 1">养蜂学员
+                             <elseif condition="$list.distribut_level eq 2">蜂农  <else/>老蜂农</if>
+                    </div>
+                </td>
+                <td align="left" class="">
                     <div style="text-align: center; width: 150px;">{$list.email}
                         <if condition="($list['email_validated'] eq 0) AND ($list['email'])">
                             (未验证)
@@ -26,14 +33,15 @@
                     </div>
                 </td>
                 <td align="left" class="">
-                    <div style="text-align: center; width: 30px;">{$first_leader[$list[user_id]]['count']|default="0"}</div>
+                    <div style="text-align: center; width: 80px;">{$first_leader[$list[user_id]]['count']|default="0"}</div>
                 </td>
-                <td align="left" class="">
+
+               <!--  <td align="left" class="">
                     <div style="text-align: center; width: 30px;">{$second_leader[$list[user_id]]['count']|default="0"}</div>
                 </td>
                 <td align="left" class="">
                     <div style="text-align: center; width: 30px;">{$third_leader[$list[user_id]]['count']|default="0"}</div>
-                </td>
+                </td> -->
                 <td align="left" class="">
                     <div style="text-align: center; width: 80px;">{$list.mobile}
                         <if condition="($list['mobile_validated'] eq 0) AND ($list['mobile'])">

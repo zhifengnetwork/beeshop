@@ -251,9 +251,9 @@ class BeeCategory extends MobileBase {
         );
         $res = $this->insert_log($checkData);      
         if($res){
-            return json(['code'=>'-1','msg'=>'侦查蜂成功外出侦查']);
+            return json(['code'=>200,'msg'=>'侦查蜂成功外出侦查']);
         }else{
-            return json(['code'=>200,'msg'=>'侦查失败,稍后再试']);
+            return json(['code'=>'-1','msg'=>'侦查失败,稍后再试']);
         }
     }
 
@@ -288,9 +288,9 @@ class BeeCategory extends MobileBase {
         );
         $res = $this->insert_log($checkData);      
         if($res){
-            return json(['code'=>'-1','msg'=>'安保蜂成功外出安保']);
+            return json(['code'=>200,'msg'=>'安保蜂成功外出安保']);
         }else{
-            return json(['code'=>200,'msg'=>'安保失败,稍后再试']);
+            return json(['code'=>'-1','msg'=>'安保失败,稍后再试']);
         }
     }
 
@@ -325,9 +325,9 @@ class BeeCategory extends MobileBase {
         );
         $res = $this->insert_log($checkData);      
         if($res){
-            return json(['code'=>'-1','msg'=>'内勤蜂成功外出内勤']);
+            return json(['code'=>200,'msg'=>'内勤蜂成功外出内勤']);
         }else{
-            return json(['code'=>200,'msg'=>'内勤失败,稍后再试']);
+            return json(['code'=>'-1','msg'=>'内勤失败,稍后再试']);
         }
     }
 

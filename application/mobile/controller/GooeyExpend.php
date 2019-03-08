@@ -213,6 +213,80 @@ class GooeyExpend extends MobileBase {
             return json(['code'=>'-1','msg'=>'蜜蜂消耗露水失败']);
         }
     }
+
+    /*
+    * 打扫操作60分钟内只能操作一次 808打扫，809守卫
+    */
+    public function actionSweep(){
+
+        $where1['uid'] = $this->user_id;
+        $where1['is_oviposition'] = 2; // 已孵化
+        $where1['depart_num'] = ['<', 60]; // 采蜜次数少于60的
+        // 获取一条满足记录
+        $data = M('user_bee')->where($where1)->find();
+        if(!$data){
+           return json(['code'=>'-1','msg'=>'暂不需要打扫']);
+        }
+
+        // 查询60分钟内是否打扫过
+        $where['uid'] = $this->user_id;
+        $where['type'] = 808;
+        $checkOne = M('bee_flow')->field('uid,create_time')->where($where)->order('create_time desc')->find();
+        $checkTime = $checkOne['create_time']+3600; // +1小时
+        if(time()<$checkTime){
+            return json(['code'=>'-1','msg'=>'已打扫过...']);
+        }
+
+        $checkData = array(
+            'uid' => $this->user_id,
+            'type' => 808,
+            'create_time' => time(),
+            'note' => '打扫一次'
+        );
+        $res = $this->insert_log($checkData);      
+        if($res){
+            return json(['code'=>200,'msg'=>'打扫成功']);
+        }else{
+            return json(['code'=>'-1','msg'=>'打扫失败,稍后再试']);
+        }
+    }
+
+    /*
+    * 守卫操作60分钟内只能操作一次 808打扫，809守卫
+    */
+    public function actionGuard(){
+
+        $where1['uid'] = $this->user_id;
+        $where1['is_oviposition'] = 2; // 已孵化
+        $where1['depart_num'] = ['<', 60]; // 采蜜次数少于60的
+        // 获取一条满足记录
+        $data = M('user_bee')->where($where1)->find();
+        if(!$data){
+           return json(['code'=>'-1','msg'=>'暂不需要守卫']);
+        }
+
+        // 查询60分钟内是否守卫过
+        $where['uid'] = $this->user_id;
+        $where['type'] = 809;
+        $checkOne = M('bee_flow')->field('uid,create_time')->where($where)->order('create_time desc')->find();
+        $checkTime = $checkOne['create_time']+3600; // +1小时
+        if(time()<$checkTime){
+            return json(['code'=>'-1','msg'=>'正在守卫...']);
+        }
+
+        $checkData = array(
+            'uid' => $this->user_id,
+            'type' => 809,
+            'create_time' => time(),
+            'note' => '守卫一次'
+        );
+        $res = $this->insert_log($checkData);      
+        if($res){
+            return json(['code'=>200,'msg'=>'守卫成功']);
+        }else{
+            return json(['code'=>'-1','msg'=>'守卫失败,稍后再试']);
+        }
+    }
     
 
 

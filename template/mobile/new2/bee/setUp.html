@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<script src="__STATIC__/js/rem.js"></script>
+		<link rel="stylesheet" href="__STATIC__/css/mi_setUp.css" />
+
+	</head>
+
+	<body>
+		<div class="wtf_top">
+			<div class="wtf_wrap">
+				<div class="wtf_top_left">
+					<span>
+		  	 		    <a href="javascript:history.back(-1)">
+							<img src="__STATIC__/images/imge/fh.png"/>
+						</a>	
+		  	 		</span>
+					<p>设置</p>
+				</div>
+				<div class="wtf_banner">
+					<div class="wtf_wrap">
+						<div class="wtf_b_l">
+							<p>背景音乐</p>
+						</div>
+						<!--未开启-->
+						<div class="wtf_b_r" id="wtf_b_r">
+							<label class="wtf_label" id="wtf_label"></label>
+						</div>
+						
+						<!--已开启-->
+						<!--<div class="wtf_b_r wtf_c" id="wtf_b_r">
+							<label class="wtf_label wtf_l" id="wtf_label"></label>
+						</div>-->
+
+					</div>
+				</div>
+			</div>
+		</div>
+				
+		<script src="__STATIC__/js/jquery-3.1.1.min.js" ></script>
+		
+
+		<script type="text/javascript">
+			$(function() {
+				$('#wtf_b_r').click(function() {
+					if($(this).hasClass("wtf_c")) {
+						/*开启背景音乐*/
+						
+						/**
+						 * ajax
+						 * **/
+						$.ajax({
+							type:"post",
+							url:"{:url('music_type')}",
+							async:true,
+							data: {
+								type: 1,
+							},
+							success: function(req){
+								console.log(req);
+							},
+							error: function(){
+								console.log('请求错误');
+							},
+						});
+						
+						$(this).removeClass("wtf_c");
+						$('#wtf_label').removeClass("wtf_l");
+						
+					} else {
+						
+						/**
+						 * ajax
+						 * **/
+						$.ajax({
+							type:"post",
+							url:"{:url('music_type')}",
+							async:true,
+							data: {
+								type: 0,
+							},
+							success: function(req){
+								console.log(req);
+							},
+							error: function(){
+								console.log('请求错误');
+							},
+						});
+						
+						$(this).addClass("wtf_c");
+						$('#wtf_label').addClass("wtf_l");
+						
+					}
+					
+				})
+			})
+		</script>
+	</body>
+
+</html>

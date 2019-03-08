@@ -21,7 +21,7 @@ use think\Page;
 use think\Verify;
 use think\Db;
 use think\Cookie;
-use app\common\model\Code;
+
 class BeeShop extends MobileBase {
 
     public $user_id = 0;
@@ -102,7 +102,7 @@ class BeeShop extends MobileBase {
         Db::startTrans();
         try{
             //修改购买记录
-            M('users')->where('user_id', $this->user_id)->save(['is_bee'=>1]);
+            M('users')->where('user_id', $this->user_id)->save(['is_bee'=>1, 'adopt_time' => $this->time]);
             
             //赠送道具
             $count = M('user_bee_account')->where('uid','=',$this->user_id)->find();
@@ -177,8 +177,8 @@ class BeeShop extends MobileBase {
         ];
 
         $this->prop_log($log);
-        $cart = new Cart();
-        $cart->bonus();
+        $code = new Code();
+        $code->bonus();
 
         $data['status'] = 1;
         $data['msg'] = '购买成功';

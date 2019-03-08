@@ -722,66 +722,83 @@ exit;
 /* exit("请联系TPshop官网客服购买高级版支持此功能"); */
 exit;
     }
-	// 蜂王列表
-	public function userBee(){
-		$mobile = I('mobile');
-		$map = array();
-		if($mobile){
-			$map['mobile'] = array('like',"%$mobile%");
-		}  	
-		$count = M('users')->where($map)->count();
-		$page = new Page($count,10);
-		/* $lists  = Db::name('users')
-		->join('tp_user_bee',' __PREFIX__users.user_id =__PREFIX__user_bee.uid','left')
-		->join('tp_user_bee_account','__PREFIX__user_bee.uid = __PREFIX__user_bee_account.uid','left')
-		->field('*,count(__PREFIX__user_bee.uid) as nums')->where($map)
-		->group('__PREFIX__users.user_id')
-		->limit($page->firstRow.','.$page->listRows)->select(); */
-		
-		
-		/* $lists = Db::query('SELECT *,COUNT(__PREFIX__user_bee.uid) AS nums FROM (__PREFIX__users LEFT JOIN __PREFIX__user_bee ON __PREFIX__users.user_id=__PREFIX__user_bee.uid ) LEFT JOIN __PREFIX__user_bee_account ON __PREFIX__user_bee.uid=__PREFIX__user_bee_account.uid GROUP BY __PREFIX__users.user_id LIMIT '.$page->firstRow.','.$page->listRows); */
-		$list_a = Db::query('SELECT user_id,count(uid) as nums from tp_users
-							LEFT JOIN tp_user_bee on tp_users.user_id=tp_user_bee.uid
-							GROUP BY user_id');
-		$list_b = Db::name('users')
-		->join('tp_user_bee_account','tp_users.user_id=tp_user_bee_account.uid','left')
-		->group('user_id')->limit($page->firstRow.','.$page->listRows)->select();
-		$this->assign('list_c',$list_a);
-		// print_r($list_c['uid']);exit;
-		$this->assign('page',$page->show());
-		$this->assign('pager',$page);
-		$this->assign('list',$list_b);
-		/* $this->assign('list',$lists); */
-		return $this->fetch();
-	}
-	/* 蜂王记录表 */
-	public function beeFlow(){
-		$mobile = I('mobile');
-		$map = array();
-		if($mobile){
-			$map['mobile'] = array('like',"%$mobile%");
-			$map['type'] = '601';
-		}else{
-			$map['type'] = '601';
-		}
-		// print_r($map);exit;
-		$count = Db::name('users')
-		->join('tp_bee_flow',' __PREFIX__users.user_id =__PREFIX__bee_flow.bid')
-		->join('tp_user_bee','__PREFIX__user_bee.id = __PREFIX__bee_flow.bid')
-		->field('tp_bee_flow.id,nickname,tp_users.mobile,bid,tp_bee_flow.uid,tp_bee_flow.type,num,inc_or_dec,tp_bee_flow.status,create_time,note')->where($map)->count();
-		// print_r($map);exit;
-		$page = new Page($count,10);
-		$lists  = Db::name('users')
-		->join('tp_bee_flow',' __PREFIX__users.user_id =__PREFIX__bee_flow.bid')
-		->join('tp_user_bee','__PREFIX__user_bee.id = __PREFIX__bee_flow.bid')
-		->field('tp_bee_flow.id,nickname,tp_users.mobile,bid,tp_bee_flow.uid,tp_bee_flow.type,num,inc_or_dec,tp_bee_flow.status,create_time,note')->where($map)
-		->limit($page->firstRow.','.$page->listRows)->select();
-		// print($lists);exit;
-		$this->assign('page',$page->show());
-		$this->assign('pager',$page);
-		$this->assign('list',$lists);
-		return $this->fetch();
+    
+    // 蜂王列表
+    public function userBee(){
+        $mobile = I('mobile');
+        $map = array();
+        if($mobile){
+            $map['mobile'] = array('like',"%$mobile%");
+        }   
+        $count = M('users')->where($map)->count();
+        $page = new Page($count,10);
+        if($mobile){
+            $where = " where u.mobile like '%$mobile%'";
+            $list = Db::query('select u.user_id,u.nickname,u.mobile,uba.*,(select count(1) from tp_user_bee ub where u.user_id=ub.uid) nums
+                            from tp_users u LEFT JOIN tp_user_bee_account uba on u.user_id=uba.uid '.$where);
+        }else{
+
+            // 蜂王
+            $debbydata = M('user_bee')
+                ->field('id,uid,level')
+                ->select();
+            
+            // 用户+蜜蜂表
+            $list = M('users')
+            ->alias('us')
+            ->field('us.user_id,us.nickname,us.mobile,tp_user_bee_account.*')
+            ->join('tp_user_bee_account' ,'us.user_id=tp_user_bee_account.uid','left')
+            ->where($map)
+            ->limit($page->firstRow.','.$page->listRows)->select();
+         
+            // 循环合并数组
+            foreach ($list as $k => $v) {
+
+                $minDebbyNum = M('user_bee')->where(array('id'=>$v['user_id'], 'level'=>1))->count('id');
+                $maxDebbyNum = M('user_bee')->where(array('id'=>$v['user_id'], 'level'=>2))->count('id');
+                $list[$k]['minDebbyNum'] = $minDebbyNum;
+                $list[$k]['maxDebbyNum'] = $maxDebbyNum;
+            }
+        }
+
+        $this->assign('page',$page->show());
+        $this->assign('pager',$page);
+        $this->assign('list',$list);
+        return $this->fetch();
     }
+
+
+    /* 抽奖记录表 */
+    public function beeFlow(){
+        $mobile = I('mobile');
+        $map = array();
+        if($mobile){
+            $map['mobile'] = array('like',"%$mobile%");
+            $map['type'] = '601';
+        }else{
+            $map['type'] = '601';
+        }
+        $count = M('bee_flow')->where($map)->count();
+        $page = new Page($count,10);
+        // $lists  = Db::name('users')
+        // ->join('tp_bee_flow',' __PREFIX__users.user_id =__PREFIX__bee_flow.bid')
+        // ->join('tp_user_bee','__PREFIX__user_bee.id = __PREFIX__bee_flow.bid')
+        // ->field('tp_bee_flow.id,nickname,tp_users.mobile,bid,tp_bee_flow.uid,tp_bee_flow.type,num,inc_or_dec,tp_bee_flow.status,create_time,note')->where($map)
+        // ->limit($page->firstRow.','.$page->listRows)->select();
+
+         // 用户抽奖记录
+        $lists = M('users')
+        ->alias('us')
+        ->field('us.user_id,us.nickname,us.mobile,tp_bee_flow.*')
+        ->join('tp_bee_flow' ,'us.user_id=tp_bee_flow.uid','left')
+        ->where($map)
+        ->limit($page->firstRow.','.$page->listRows)->select();
+        $this->assign('page',$page->show());
+        $this->assign('pager',$page);
+        $this->assign('list',$lists);
+        return $this->fetch();
+    }
+    
     
     /**
      * 投诉信息列表

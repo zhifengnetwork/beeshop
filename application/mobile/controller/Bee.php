@@ -105,6 +105,22 @@ class Bee extends MobileBase {
          
         return $this->fetch('/bee/index');
     }
+
+    //设置
+    public function setUp(){
+        return $this->fetch();
+    }
+
+    public function music_type()
+    {
+        $user_id = session('user.user_id');
+        $user_music = M("users")->where('user_id',$user_id)->find();
+        if(empty($user_music['music_type'])){
+            $user_music['music_type'] = 0;
+        }
+        return json_encode(array("music_type"=>$user_music['music_type']));
+    }
+    
     private function user_find($user_id)
     {
     	$where = "uid = '".$user_id."'";

@@ -289,8 +289,7 @@
 					</div>
 					<!--确定-->
 					<div class="publicConfirmBut buyDBut"></div>
-					<div class="publicCancelBut buyCBut"></div>
-				</div>
+					<div class="publicCancelBut buyCBut"></div				</div>
 				
 				<!--雄蜂兑换框-->
 				<div class="star drone of" id="drone">
@@ -405,31 +404,6 @@
 					<div class="publicConfirmBut sunshineDBut"></div>
 					<div class="publicCancelBut sunshineCBut"></div>
 				</div>
-				
-				<!--打扫弹框-->
-				<div class="publicWrap tk">
-					<div class="publicAlertBox">
-						<!--<p class="publicATitle">打扫完成</p>-->
-						<p class="publicATitle">未派出内勤蜂，无法打扫。</p>
-						<!--<p class="publicATitle">内勤蜂在打扫中...</p>-->
-					</div>
-					<!--确定-->
-					<div class="publicConfirmBut xn"></div>
-					<div class="publicCancelBut qn"></div>
-				</div>
-				
-				<!--守卫-->
-				<div class="publicWrap guardWrap">
-					<div class="publicAlertBox">
-						<!--<p class="publicATitle">守卫完成</p>-->
-						<p class="publicATitle">未派出安保蜂，无法保卫。</p>
-						<!--<p class="publicATitle">保卫中...</p>-->
-					</div>
-					<!--确定-->
-					<div class="publicConfirmBut guardDBut"></div>
-					<div class="publicCancelBut guardCBut"></div>
-				</div>
-				
 				<!-- 活动 右弹出 -->
 				<div class="activity">
 					<div>
@@ -457,7 +431,7 @@
 				
 				<!--公告弹框-->
 				<div class="t_Wrap">
-					<p>您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)</p>
+					<p>{$notice.content}</p>
 					<div class="t_Xbtn"></div>
 					<div class="t_Qbtn"></div>
 				</div>
@@ -480,7 +454,7 @@
 					<!--栏目-->
 					<div class="sidebar">
 						<!--公告-->
-						<div class="notice">
+						<div class="notice nth">
 							<img src="__STATIC__/images/imge/16.png" />
 						</div>
 						<!--消息-->
@@ -497,7 +471,9 @@
 						</div>
 						<!--设置-->
 						<div class="notice">
-							<img src="__STATIC__/images/imge/19.png" />
+							<a href="{:U('Bee/setUp')}">
+								<img src="__STATIC__/images/imge/19.png" />
+							</a>
 						</div>
 					</div>
 					<!--公告-->
@@ -566,6 +542,43 @@
 			}
 		});
 	}
+	
+	// 打扫
+	$("#sweep").click(function(){
+
+		$.ajax({
+          type:"post",
+          url:"{:url('GooeyExpend/actionSweep')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(msg){
+			if(msg.code==200){
+	 			layer.msg(msg.msg);
+			}else{
+				layer.msg(msg.msg);
+	 			return false;
+			}
+          }
+        });
+	});
+
+	
+	// 守卫
+	$("#guardBut").click(function(){
+
+		$.ajax({
+          type:"post",
+          url:"{:url('GooeyExpend/actionGuard')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(msg){
+			if(msg.code==200){
+	 			layer.msg(msg.msg);
+			}else{
+				layer.msg(msg.msg);
+	 			return false;
+			}
+          }
+        });
+	});
 </script>
 <script type="text/javascript" src="__STATIC__/js/mi_index.js" ></script>
 <script type="text/javascript" src="__STATIC__/js/mi_rotate.js" ></script>

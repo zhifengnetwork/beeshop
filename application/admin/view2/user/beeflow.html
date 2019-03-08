@@ -6,8 +6,8 @@
 		<div class="fixed-bar">
 			<div class="item-title">
 				<div class="subject">
-					<h3>蜂王抽奖记录</h3>
-					<h5>网站系统蜂王抽奖索引与记录</h5>
+					<h3>用户抽奖记录</h3>
+					<h5>网站系统用户抽奖索引与记录</h5>
 				</div>
 			</div>
 		</div>
@@ -18,13 +18,13 @@
 				<span title="收起提示" id="explanationZoom" style="display: block;"></span>
 			</div>
 			<ul>
-				<li>蜂王抽奖记录， 蜂王数据查询</li>
+				<li>用户抽奖记录， 数据查询</li>
 			</ul>
 		</div>
 		<div class="flexigrid">
 			<div class="mDiv">
 				<div class="ftitle">
-					<h3>蜂王抽奖列表</h3>
+					<h3>用户抽奖列表</h3>
 					<h5>(共{$list|count}条记录)</h5>
 				</div>
 				<div title="刷新数据" class="pReload"><i class="fa fa-refresh"></i></div>
@@ -92,7 +92,7 @@
 										<div style="width: 24px;"><i class="ico-check"></i></div>
 									</td>
 									<td align="left" class="">
-										<div style="text-align: left; width: 50px;">{$vo.id}</div>
+										<div style="text-align: left; width: 50px;">{$k+1}</div>
 									</td>
 									<td align="left" class="">
 										<div style="text-align: left; width: 100px;">{$vo.nickname}</div>
@@ -104,7 +104,7 @@
 										<div style="text-align: center; width: 150px;">{$vo.num}</div>
 									</td>
 									<td align="center" class="">
-										<div style="text-align: center; width: 150px;">{$vo.create_time}</div>
+										<div style="text-align: center; width: 150px;">{$vo.create_time|date="Y-m-d H:i:s",###}</div>
 									</td>
 									<td align="center" class="">
 										<div style="text-align: center; width: 150px;">{$vo.note}</div>

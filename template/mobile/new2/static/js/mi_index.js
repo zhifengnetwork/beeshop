@@ -240,13 +240,13 @@ $(document).ready(function(){
 		$('.view').show();
 	})
 	//打扫(引用公共的弹框)
-	$('#sweep').on('click',function(){
-		$('.tk').show();
-	})
+	// $('#sweep').on('click',function(){
+	// 	$('.tk').show();
+	// })
 	//守卫(引用公共的弹框)
-	$('#guardBut').on('click',function(){
-		$('.guardWrap').show();
-	})
+	// $('#guardBut').on('click',function(){
+	// 	$('.guardWrap').show();
+	// })
 	//弹框（一行文字）-确认按钮
 	$('.publicConfirmBut').on('click',function(){
 		$('.publicWrap').hide();
@@ -268,7 +268,7 @@ $(document).ready(function(){
 			$('.t_Wrap').hide();
 			$('.t_view').hide();
 		})
-		$('.notice').on('click',function(){
+		$('.nth').on('click',function(){
 			$('.t_Wrap').show();
 			$('.t_view').show();
 			$('.newShow').animate({

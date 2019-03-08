@@ -59,6 +59,9 @@
 							<div style="text-align: center; width: 100px;" class="">手机号</div>
 						</th>
 						<th align="center" abbr="article_time" axis="col6" class="">
+							<div style="text-align: center; width: 100px;" class="">幼蜂数量</div>
+						</th>
+						<th align="center" abbr="article_time" axis="col6" class="">
 							<div style="text-align: center; width: 100px;" class="">蜂王数量</div>
 						</th>
 						<th align="center" abbr="article_time" axis="col6" class="">
@@ -96,7 +99,7 @@
 								<div style="width: 24px;"><i class="ico-check"></i></div>
 							</td>
 							<td align="left" class="">
-								<div style="text-align: left; width: 50px;">{$vo.user_id}</div>
+								<div style="text-align: left; width: 50px;">{$k+1}</div>
 							</td>
 							<td align="left" class="">
 								<div style="text-align: left; width: 100px;">{$vo.nickname}</div>
@@ -107,7 +110,10 @@
 								</div>
 							</td>
 							<td align="center" class="">
-								<div style="text-align: center; width: 100px;">{$vo.nums}</div>
+								<div style="text-align: center; width: 100px;">{$vo.minDebbyNum}</div>
+							</td>
+							<td align="center" class="">
+								<div style="text-align: center; width: 100px;">{$vo.maxDebbyNum}</div>
 							</td>
 							<td align="center" class="">
 								<div style="text-align: center; width: 150px;">{$vo.bee_milk}</div>
