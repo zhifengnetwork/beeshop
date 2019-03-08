@@ -576,6 +576,7 @@ class Bee extends MobileBase {
                 ->where('is_open', 1)
                 ->where('cat_id',9)
                 ->where('publish_time', '<', time())
+                ->limit(10)
                 ->select();
         //循环转换html标签
         foreach($noticeList as $key => $notice){
