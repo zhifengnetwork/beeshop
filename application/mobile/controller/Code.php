@@ -69,31 +69,23 @@ class Code extends MobileBase
         if($EventKey==$FromUserName) return false;
         $this->register($EventKey);//上级
         $this->register($FromUserName);//下级
-        $this->write_log('===========');
 
         //写表
         $user = new Users();
         $user_id = $user->where(['openid'=>$EventKey])->value('user_id');
-        $this->write_log('=====6666======');
-
-        $this->write_log($user_id);
         $flas = $user->where(['openid'=>$FromUserName])->save(['first_leader'=>$user_id]);
-        $this->write_log('===555555========');
-        
-        $this->write_log(json_encode($flas));
         if($flas){
             $this->config = tpCache('game'); //配置信息
             // 如果有微信公众号 则推送一条消息到微信
             $user = M('users')->where(['user_id'=>$user_id])->find();
             $oauth_users = M('users')->where(['openid'=>$FromUserName])->find();
-            $this->write_log(json_encode($user));
             if($user)
             {
                 $wx_user = M('wx_user')->find();
                 $jssdk = new JssdkLogic($wx_user['appid'],$wx_user['appsecret']);
-                $wx_content = "你刚刚推荐".$oauth_users['nickname']."用户关注公众号,平台奖励".$this->config['nine_give_bee_milk']."滴蜂王浆,".$this->config['nine_random_sun']."克阳光值,".$this->config['nine_random_water']."滴露水";
+                $wx_content = "你刚刚推荐“".$oauth_users['nickname']."”用户关注公众号,平台奖励".$this->config['nine_give_bee_milk']."滴蜂王浆,".$this->config['nine_random_sun']."克阳光值,".$this->config['nine_random_water']."滴露水";
                 $test= $jssdk->push_msg($user['openid'],$wx_content);
-                $this->write_log($test);$this->write_log($wx_content);
+
             }
             //添加奖励
             $this->add_bee($user_id);
@@ -106,7 +98,6 @@ class Code extends MobileBase
     //查询users信息是否有注册
     public function register($openid)
     {
-        $this->write_log("添加新用户");
         $user = M('users')->where("openid",$openid)->find();
         if (empty($user)) {
             //通过  openid + access_token 获取 用户信息

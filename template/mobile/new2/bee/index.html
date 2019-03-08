@@ -137,7 +137,7 @@
 					</div>
 				</div>
 				
-				<!--添加-->
+				<!--添加-蒙版弹框-->
 				<div class="bgColor"></div>
 				
 				<!--蜂箱-->
@@ -269,7 +269,7 @@
 					</div>
 				</div>
 				<!--认养弹框-->
-				<div class="star of" id="star">
+				<div class="star of" id="star" style="display: none;">
 					<form action="{:U('Mobile/Payment/beePay')}" method="post" name="cart4_form" id="cart4_form">
 						<div class="case gouMai">
 							<div class="what">
@@ -290,7 +290,7 @@
 					<!--确定-->
 					<div class="publicConfirmBut buyDBut"></div>
 					<div class="publicCancelBut buyCBut"></div>
-				
+				</div>
 				<!--雄蜂兑换框-->
 				<div class="star drone of" id="drone">
 					<div class="case box gouMai">
@@ -364,7 +364,7 @@
 				</div>
 				
 				<!--露水兑换框-->
-				<div class="star drone of" id="sui">
+				<div class="star drone of" id="sui" style="display: none;">
 					<div class="case box">
 						<div class="what hint">
 							<p>您想兑换的露水为<input class="price" name="sui" value="1" /></p>
@@ -385,7 +385,7 @@
 				</div>
 				
 				<!--阳光值兑换框-->
-				<div class="star drone of" id="rey">
+				<div class="star drone of" id="rey" style="display: none;">
 					<div class="case box">
 						<div class="what hint">
 							<p>您想兑换的阳光为<input class="price" name="rey" value="1" /></p>
@@ -437,7 +437,8 @@
 				</div>
 				<!--背影-->
 				<div class="t_view"></div>
-			</div>
+			<!--</div>-->
+			
 		</div>
 		
 		<!--左侧弹出-->
@@ -507,6 +508,28 @@
 	</body>
 </html>
 <script>
+
+	$(document).ready(function(){
+
+		var hive = {$user_prop.bee_hive ? $user_prop.bee_hive : 0};
+		var level = {$user_prop.level};
+		var mating = {$user_prop.mating};
+
+		if( hive > 0){
+			tank.style.display = 'block';
+		}
+		if( level > 0){
+			hintWrap.style.display = 'none';
+			tank01.style.display = 'block';
+			tank.style.display = 'none';
+		}
+		if( mating > 0){
+			hintWrap01.style.display = 'none';
+			tank02.style.display = 'block';
+		}
+
+	});
+	
 	function ajaxPost(num){
 		if (num == 1) {
 			var type = 1;

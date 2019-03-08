@@ -26,6 +26,17 @@ $.ajax({
 					strAudio += '<source src="/template/mobile/new2/static/images/imge/gequ.mp3" type="audio/mpeg">';
 				strAudio += '</audio>';
 			$('body').append(strAudio);
+			/*背景音乐*/
+			document.addEventListener('DOMContentLoaded', function() {
+				function audioAutoPlay() {
+					var audio = document.getElementById('musicAudio');
+					audio.play();
+					document.addEventListener("WeixinJSBridgeReady", function() {
+						audio.play();
+					}, false);
+				}
+				audioAutoPlay();
+			}); 
 		}else {
 			console.log('音乐关闭');
 		}
@@ -35,16 +46,3 @@ $.ajax({
 	},
 });
 
-
-
-/*背景音乐*/
-document.addEventListener('DOMContentLoaded', function() {
-	function audioAutoPlay() {
-		var audio = document.getElementById('musicAudio');
-		audio.play();
-		document.addEventListener("WeixinJSBridgeReady", function() {
-			audio.play();
-		}, false);
-	}
-	audioAutoPlay();
-}); 
