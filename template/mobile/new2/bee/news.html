@@ -104,9 +104,13 @@
 					<li><span>3.</span>xrthntcyjmnyk</li>
 					<li><span>4.</span>rhbtrfghnmk</li>
 					<li><span>5.</span>tgrsxhytd5rj</li> -->
-					<volist name="noticeList" id='item'>
-						<li class="t_ht"><a href="javascript:" onclick="getContent('{$item.content}');"><span>{$i}.{$item.title}</span></a></li>
-					</volist>
+					<empty name="noticeList">
+						<p>目前没有消息！</p>
+					<else/>
+						<volist name="noticeList" id='item'>
+							<li class="t_ht"><a href="javascript:" onclick="getContent('{$item.content}');"><span>{$i}.{$item.title}</span></a></li>
+						</volist>
+					</empty>
 				</ul>
 				
 				<!--公告弹框-->
