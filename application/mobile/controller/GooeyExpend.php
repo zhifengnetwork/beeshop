@@ -66,13 +66,13 @@ class GooeyExpend extends MobileBase {
 
         // 执行喂养操作
         $decRes = M('user_bee_account')->where(['uid'=>$this->user_id])->setDec('bee_milk', $beeMilkNum);
-        $resU = M('users')->where(['user_id', $this->user_id])->setInc('pay_points', $beeMilkNum); // 蜂王浆users表字段
+        $resU = M('users')->where(['user_id'=>$this->user_id])->setDec('pay_points', $beeMilkNum); // 蜂王浆users表字段
         if(!$decRes){
             return json(['code'=>'-1','msg'=>'喂养失败,稍后再试']);
         }
         // 插入喂养记录
         $logs = array(
-            'uid' => $v['uid'],
+            'uid' => $this->user_id,
             'type' => 804,
             'inc_or_dec' => 2,
             'num' => $beeMilkNum,

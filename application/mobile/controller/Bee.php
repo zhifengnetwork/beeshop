@@ -83,18 +83,22 @@ class Bee extends MobileBase {
 
         $bee = M('user_bee')->where(array('uid' => $this->user_id,'status'=>1))->select();
         foreach($bee as $key => $value){
-            if($value['level'] == 2){
-                $level = count($key);
+            if($value['level'] == 1){
+                $young = count($key);
             }
-            if($value['is_mating'] == 1){
-                $mating = count($key);
-            }
+            // if($value['level'] == 2){
+            //     $level = count($key);
+            // }
+            // if($value['is_mating'] == 1){
+            //     $mating = count($key);
+            // }
         }
 
         $user_prop = M('user_bee_account')->where(array('uid' => $this->user_id))->find();
-        $user_bee = M('user_bee')->where(array('uid' => $this->user_id, 'level' => 1, 'status' => 1))->select(); //幼蜂
-        $user_prop['level'] = $level; // 蜂王
-        $user_prop['mating'] = $mating;
+        $user_bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1))->select(); //幼蜂
+        $user_prop['young'] = $young; // 幼蜂
+        // $user_prop['level'] = $level; // 蜂王
+        // $user_prop['mating'] = $mating;
 //        dump($user_prop['bee_milk']);exit;
 
         //最新公告内容
@@ -107,10 +111,9 @@ class Bee extends MobileBase {
                 ->find();
         //转换html标签
         $notice['content'] = htmlspecialchars_decode($notice['content']);
-        
         $this->assign('notice', $notice);
         $this->assign('user_prop', $user_prop);
-        $this->assign('user_bee', count($user_bee));
+        $this->assign('user_bee', $user_bee);
 
          //增加头像
          $head_pic = session('user.head_pic');

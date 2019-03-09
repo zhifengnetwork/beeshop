@@ -7,7 +7,7 @@
 #container .wrap {
 	position: relative;
 	height: 100%;
-	background: url(/template/mobile/new2/static/images/imge/bj02.png) no-repeat;
+	background: url(/template/mobile/new2/static/images/imge/bj003.png) no-repeat;
 	background-size: 100% 100%;
 }
 /*头像*/
@@ -79,11 +79,11 @@
 	background-size: 100% 100%;
 }
 #container .wrap .head .cost li .tu_5 {
-	background: url(/template/mobile/new2/static/images/imge/f_sf.png) no-repeat;
+	background: url(/template/mobile/new2/static/images/imge/t_yf.png) no-repeat;
 	background-size: 100% 100%;
 }
 #container .wrap .head .cost li .tu_6 {
-	background: url(/template/mobile/new2/static/images/imge/fw.png) no-repeat;
+	background: url(/template/mobile/new2/static/images/imge/f_sf.png) no-repeat;
 	background-size: 100% 100%;
 }
 /*用户资料*/
@@ -146,9 +146,9 @@ img {
 .tank {
 	display: none;
 	position: absolute;
-	top: 55%;
-	left: 43%;
-	width: 10%;
+	top: 54%;
+	left: 32%;
+	width: 40%;
 	font-size: 0;
 }
 .tank_1 {
@@ -589,4 +589,91 @@ img {
 	height: 1rem;
 	background: url(/template/mobile/new2/static/images/imge/f_8.png) no-repeat;
 	background-size: 100% 100%;
+}
+
+/*下拉导航*/
+.dropWrap {
+	display: none;
+	position: fixed;
+	bottom: 0;
+	background: url(/template/mobile/new2/static/images/imge/t_bj_01.png) no-repeat;
+	width: 7.58rem;
+	height: 6.6rem;
+	background-size: 100%;
+	z-index: 99;
+}
+.dropWrap .mar {
+	height: 4.8rem;
+	margin: 0 auto;
+	border-radius: 5px 5px 0 0;
+	width: 92%;
+	margin-top: 1.5rem;
+	overflow-y: auto;
+	z-index: 96;
+	position: absolute;
+	bottom: 0.2rem;
+	left: 50%;
+	margin-left: -46%;
+}
+.dropWrap .t_peak-1 {
+	margin: 0 0 2% 0;
+	height: 1rem;
+	background: url(/template/mobile/new2/static/images/imge/t_fey.png) no-repeat;
+	background-size: 100% 100%;
+}
+.dropWrap .t_peak-2 {
+	margin: 0 0 2% 0;
+	height: 1rem;
+	background: url(/template/mobile/new2/static/images/imge/t_sf1.png) no-repeat;
+	background-size: 100% 100%;
+}
+.dropWrap .t_peak-3 {
+	margin: 0 0 2% 0;
+	height: 1rem;
+	background: url(/template/mobile/new2/static/images/imge/t_fw1.png) no-repeat;
+	background-size: 100% 100%;
+}
+.t_peakBtn-1 {
+	margin: 3% 3% 0 0;
+	float: right;
+	width: 20%;
+	height: .65rem;
+	background: url(/template/mobile/new2/static/images/imge/t_wy01.png) no-repeat;
+	background-size: 100% 100%;
+}
+.t_peakBtn-2 {
+	margin: 3% 3% 0 0;
+	float: right;
+	width: 20%;
+	height: .65rem;
+	background: url(/template/mobile/new2/static/images/imge/t_jp01.png) no-repeat;
+	background-size: 100% 100%;
+}
+.t_peakBtn-3 {
+	margin: 3% 3% 0 0;
+	float: right;
+	width: 20%;
+	height: .65rem;
+	background: url(/template/mobile/new2/static/images/imge/t_fh01.png) no-repeat;
+	background-size: 100% 100%;
+}
+.t_peakBtn-4 {
+	margin: 3% 3% 0 0;
+	float: right;
+	width: 20%;
+	height: .65rem;
+	background: url(/template/mobile/new2/static/images/imge/7.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+/*下拉导航-背影*/
+.selectBox {
+	display: none;
+	z-index:1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
 }

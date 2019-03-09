@@ -52,7 +52,7 @@
 						</li>
 						<li>
 							<div class="tu_5"></div>
-							<span class="num">{$user_bee ? $user_bee : 0 }</span>
+							<span class="num">{$user_prop.young ? $user_prop.young : 0 }</span>
 						</li>
 						<li>
 							<div class="tu_6"></div>
@@ -142,44 +142,38 @@
 				
 				<!--蜂箱-->
 				<div class="tank" id="tank">
-					<img src="__STATIC__/images/imge/feng_z.png" />
-				</div>
-				<div class="tank_1" id="tank_1">
-					<img src="__STATIC__/images/imge/feng_z2.png" />
-				</div>
-				<div class="tank_2" id="tank_2">
-					<img src="__STATIC__/images/imge/feng_z1.png" />
+					<img src="__STATIC__/images/imge/fx_3.png" />
 				</div>
 				
-				<!--提示框-->
+				<!--喂养-提示框-->
 				<div class="hint-wrap" id="hint-wrap">
 					<div class="hint">
-						<p>您是否选择喂养蜂王幼蜂成长为蜂王？蜂王可与雄蜂交配产卵和管理蜂箱。(喂养幼蜂需要5滴蜂王浆，5滴水，10克阳光值)</p>
+						<p>您是否选择喂养蜂王幼蜂成长为蜂王？蜂王可与雄蜂交配产卵和管理蜂箱。（喂养幼蜂需要5滴蜂王浆，5滴水，10克阳光值）</p>
 					</div>
 					<div class="x-tn" id="x-tn"></div>
 					<div class="q-tn" id="q-tn"></div>
 				</div>
-				<!--提示框1-->
-				<div class="hint-wrap" id="hint-wrap_1">
+				<!--交配-提示框-->
+				<div class="hint-wrap hint-wrap_1" id="hint-wrap_1">
 					<div class="hint" id="hin">
-						<p>您是否选择兑换雄蜂供蜂王结合产卵？可一次产卵15000只。(99滴蜂王浆兑换一只雄蜂)</p>
+						<p>您是否选择雄蜂供蜂王结合产卵？可一次产卵15000只。（99滴蜂王浆兑换一只雄蜂）</p>
 					</div>
 					<div class="x-tn" id="x-tn_1"></div>
 					<div class="q-tn" id="q-tn_1"></div>
 				</div>
 				<!--提示框2-->
-				<div class="hint-wrap" id="hint-wrap_2">
+				<div class="hint-wrap hint-wrap_2" id="hint-wrap_2">
 					<div class="hint" id="hw">
-						<p>您将失去100阳光值和100水,幼卵孵化成12000只(侦查蜂1500只,内勤蜂500只,安保蜂10000只,是否执行？)</p>
+						<p>您是否选择将幼卵孵化成12000只（侦查蜂1500只,内勤蜂500只,安保蜂10000只,是否执行？）</p>
 					</div>
 					<div class="x-tn" id="x-tn_2"></div>
 					<div class="q-tn" id="q-tn_2"></div>
 				</div>
 				
 				<!--扩建-->
-				<div class="extend">
+				<!--<div class="extend">
 					<img src="__STATIC__/images/imge/kj.png" />
-				</div>
+				</div>-->
 				
 				<!--合成-->
 				<!--<div class="synth">
@@ -273,7 +267,7 @@
 					<form action="{:U('Mobile/Payment/beePay')}" method="post" name="cart4_form" id="cart4_form">
 						<div class="case gouMai">
 							<div class="what">
-								<p>您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)</p>
+								<p>您是否花费99元认养一只蜂王幼峰?认养后赠送：5滴蜂王浆、10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)</p>
                                 <input type="hidden" value="pay_code=weixin" class="c_checkbox_t" name="pay_radio" style="display:none;"/>
 							</div>
 						</div>
@@ -295,7 +289,7 @@
 				<div class="star drone of" id="drone">
 					<div class="case box gouMai">
 						<div class="what hint">
-							<p>您是否兑换雄蜂供蜂王结合产卵?可一次性产卵15000只.(99滴蜂王浆兑一只雄蜂)</p>
+							<p>您是否购买雄蜂供蜂王结合产卵?可一次性产卵15000只.</p>
 						</div>
 					</div>
 					<div class="x-btn"></div>
@@ -310,15 +304,6 @@
 					</div>
 					<div class="x-btn"></div>
 					<div class="q-btn" onclick="ajaxPost(1)"></div>
-				</div>
-				<!--雄蜂兑换-失败弹框-->
-				<div class="publicWrap droneWrap">
-					<div class="publicAlertBox">
-						<p class="publicATitle">蜂王浆不足，兑换失败。</p>
-					</div>
-					<!--确定-->
-					<div class="publicConfirmBut droneDBut"></div>
-					<div class="publicCancelBut droneCBut"></div>
 				</div>
 				
 				<!--蜂王浆兑换框-->
@@ -437,7 +422,36 @@
 				</div>
 				<!--背影-->
 				<div class="t_view"></div>
-			<!--</div>-->
+				
+				
+				<!--蜂箱幼蜂-->
+				<div class="dropWrap">
+					<div class="mar">
+
+		            	<foreach name="user_bee" item="vo" key="k">
+		            		<if condition="$vo['level'] eq 1">
+								<div class="t_peak-1">
+									<div class="t_peakBtn-1" ></div>
+								</div>
+							<elseif condition="$vo['level'] eq 2 and $vo['is_mating'] eq 0" />
+								<div class="t_peak-3">
+									<div class="t_peakBtn-2"></div>
+								</div>
+							<elseif condition="$vo['level'] eq 2 and $vo['is_oviposition'] eq 1" />
+								<div class="t_peak-3">
+									<div class="t_peakBtn-3"></div>
+								</div>
+							<elseif condition="$vo['level'] eq 2 and $vo['is_oviposition'] eq 2"/>
+								<div class="t_peak-3">
+									<a href="{:U('beeCategory/beeCategory')}"><div class="t_peakBtn-4"></div></a>
+								</div>
+							</if>
+						</foreach>
+
+					</div>
+				</div>
+				<!--下拉导航-背影-->
+				<div class="selectBox"></div>
 			
 		</div>
 		
@@ -507,26 +521,28 @@
 		
 	</body>
 </html>
+
+<script src="__STATIC__/js/rem.js"></script>
+<script src="__STATIC__/js/jquery-1.8.2.min.js" ></script>
+<script src="__STATIC__/js/mi_jquery.min.js" ></script>
+<script type="text/javascript" src="__STATIC__/js/layer/layer.js" ></script>
 <script>
 
 	$(document).ready(function(){
 
 		var hive = {$user_prop.bee_hive ? $user_prop.bee_hive : 0};
-		var level = {$user_prop.level};
-		var mating = {$user_prop.mating};
+		// var level = {$user_prop.level};
+		// var mating = {$user_prop.mating};
 
 		if( hive > 0){
 			tank.style.display = 'block';
 		}
-		if( level > 0){
-			hintWrap.style.display = 'none';
-			tank01.style.display = 'block';
-			tank.style.display = 'none';
-		}
-		if( mating > 0){
-			hintWrap01.style.display = 'none';
-			tank02.style.display = 'block';
-		}
+		// if( level > 0){
+		// 	hintWrap.style.display = 'none';
+		// }
+		// if( mating > 0){
+		// 	hintWrap01.style.display = 'none';
+		// }
 
 	});
 	

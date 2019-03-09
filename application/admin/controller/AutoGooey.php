@@ -48,11 +48,11 @@ class AutoGooey
 					$autoBeeMilk = $v['bee_num']*2; // 采蜜蜂王的数量*2(100克蜜糖=2滴蜂王券)
 					$res1 = Db::name('user_bee_account')->where('uid', $v['uid'])->setInc('gooey', $gainTotalGooey); // 蜜糖
 					$res2 = Db::name('user_bee_account')->where('uid', $v['uid'])->setInc('bee_milk', $autoBeeMilk); // 蜂王浆
-					$resU = Db::name('users')->where('user_id', $v['uid'])->setInc('pay_points', $autoBeeMilk); // 蜂王浆users表字段
+					$resU = Db::name('users')->where(['user_id'=>$v['uid']])->setInc('pay_points', $autoBeeMilk); // 蜂王浆users表字段
 					// 修改当前订单
 					$updateGooey['is_out'] = 2; // 采蜜结束已发放蜜糖
 					$updateGooey['sent_bee_milk'] = $autoBeeMilk; // 采蜜结束发放的蜂王浆
-					$updateGooey['day_mikl_time'] = time(); // 发放蜂王券时间
+					$updateGooey['day_milk_time'] = time(); // 发放蜂王券时间
 					$updateGooey['sent_honey_time'] = time(); // 发放本次采蜜的蜜糖时间
 					$res3 = Db::name('get_gooey')->where('uid', $v['uid'])->update($updateGooey);
 					// var_dump($updateGooey);

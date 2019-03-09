@@ -51,7 +51,6 @@ class BeeCategory extends MobileBase {
     * 3、获取最近一次采蜜时间+1小时倒计时。剩余倒计时时间=(采蜜时间+1小时倒计时)-当前时间
     */ 
     public function beeCategory(){
-
         $where = ' is_oviposition=2 and depart_num < 60 and status = 1 and uid='.$this->user_id;
         // 统计该用户蜜蜂种类数量
         $categoryData = Db::query('select sum(worker_bee) worker_bee,sum(scout_bee) scout_bee,sum(house_bee) house_bee,sum(security_bee) security_bee from tp_user_bee where'. $where);
@@ -109,14 +108,14 @@ class BeeCategory extends MobileBase {
 
         // 执行喂养操作
         $decRes = M('user_bee_account')->where(['uid'=>$this->user_id])->setDec('bee_milk', $beeMilkNum);
-        $resU = M('users')->where(['user_id', $this->user_id])->setInc('pay_points', $beeMilkNum); // 蜂王浆users表字段
+        $resU = M('users')->where(['user_id'=>$this->user_id])->setInc('pay_points', $beeMilkNum); // 蜂王浆users表字段
 
         if(!$decRes){
             return json(['code'=>'-1','msg'=>'喂养失败,稍后再试']);
         }
         // 插入喂养记录
         $logs = array(
-            'uid' => $v['uid'],
+            'uid' => $this->user_id,
             'type' => 804,
             'inc_or_dec' => 2,
             'num' => $beeMilkNum,
@@ -143,11 +142,9 @@ class BeeCategory extends MobileBase {
         // 获取一条满足采蜜记录
         $data = M('user_bee')->where($where)->find();
         if($data){
-            // return json(['code'=>200,'msg'=>'获取成功','data'=>$data]);
-            $this->ajaxReturn(['code'=>200,'msg'=>'获取成功','data'=>$data]);
+            return json(['code'=>200,'msg'=>'获取成功','data'=>$data]);
         }else{
-            // return json(['code'=>'111111','msg'=>'你暂无工蜂111']);
-            $this->ajaxReturn(['code'=>'-1','msg'=>'你暂无工蜂']);
+            return json(['code'=>'-1','msg'=>'你暂无工蜂']);
         }
     }
 
