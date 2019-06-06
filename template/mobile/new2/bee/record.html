@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width user-scalable=no initial-scale=1.0 maximum-scale=1.0 minimum-scale=1.0">
+		<title>九九蜂王平台</title>
+		<script type="text/javascript" src="__STATIC__/js/rem.js" ></script>
+		<link rel="stylesheet" type="text/css" href="__STATIC__/css/mi_style.css"/>
+	</head>
+	<style>
+		.wraper {
+			width: 100%;
+			height: 13.34rem;
+			background: url(/template/mobile/new2/static/images/imge/v2.jpg) no-repeat;
+			background-size: 100% 100%;
+			box-sizing: border-box;
+			-webkit-box-sizing:border-box ;	
+			overflow: hidden;
+		}
+		.art {
+			text-align: center;
+			font-size: 0;
+			background: #f6ee0e;
+		}
+		.art a {
+			position: absolute;
+			top:3px;
+			left: 5%;
+			display: inline-block;
+			width: 10%;
+			font-size: 0;
+		}
+		
+		.head-wrap {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+		}
+		
+		h2 {
+			display: inline-block;
+			font-size: .45rem;
+			line-height: .85rem;
+		}
+		img {
+			width: 100%;
+		}
+		/*列表 wrap*/
+		.dataWrap {
+			padding: .87rem 0 .5rem 0;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			width: 100%;
+			height: 100%;
+			overflow-y: auto;
+		}
+		.dataTerm{
+			margin: 0 auto;
+			width: 90%;
+			height: .6rem;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			border-bottom: .01rem solid #666;
+		}
+		
+		.dataTerm:last-child {
+			border-bottom: none;
+		}
+		
+		.dataTermNum {
+			float: left;
+			width: 15%;
+			height: 100%;
+			text-align: center;
+			font-size: .32rem;
+			line-height: .6rem;
+		}
+		.dataTermText {
+			float: left;
+			width: 85%;
+			height: 100%;
+			font-size: .34rem;
+			line-height: .6rem;
+			letter-spacing: .02rem;
+		}
+	</style>
+	<body>
+		<div id="container">
+			<div class="wraper">
+				<!--头部-->
+				<div class="head-wrap">
+					<div class="art">
+						<a href="javascript:history.back(-1)">
+							<img src="__STATIC__/images/imge/fh.png"/>
+						</a>
+						<h2>转账记录</h2>
+					</div>
+				</div>
+		        <!--<div class="tbody-zp zp">
+						<foreach name="list" item="li">
+							<li>
+								<div>{$li[note]}</div>
+							</li>
+						</foreach>
+
+		                
+		
+		        </div>-->
+		        <!--互转记录 wrap-->
+	        	<div class="dataWrap">
+	        		<!--循环 项-->
+					<foreach name="list" item="li">
+			       	<div class="dataTerm">
+			       		<p class="dataTermNum">{$li[ordernum]}</p>
+			       		<p class="dataTermText">{$li[note]}</p>
+			       	</div>
+					</foreach>
+		        </div>
+	        </div>
+		</div>
+		<script src="__STATIC__/js/mi_jquery.min.js" ></script>
+		
+		<script>
+			/*此处参数是判断是否重复的请求 避免数据多加载*/
+			var loadingdelay = true;
+			/*请求数据页数*/
+			var page = 2;
+			$('.dataWrap').on("scroll", function(event) {
+				/*文档(页面)高度*/
+				var h = $(document).height();
+				/*可视窗口的高度*/
+				var wh = $(window).height();
+				console.log('一直在滚动！');
+				if($(window).scrollTop() >= h - wh - 50 && loadingdelay) {
+					loadingdelay = false;
+					console.log(page);
+					//发送Ajax
+					$.ajax({
+						type: "POST",
+						url: '{:url(\'Bee/ajax_transfer_accounts_log\')}',
+						cache: false,
+						data: {
+							page: page,is_ajax:1
+						},
+						dataType: 'json',
+						success: function(data) {
+							/*数据拼接*/
+							var strData = "";
+							console.log(data)
+							if(data.length) {
+								for(var i=0;i<data.length;i++){
+									strData += '<div class="dataTerm">';
+									strData += '<p class="dataTermNum">'+data[i].ordernum+'</p>';
+									strData += '<p class="dataTermText">'+data[i].note+'</p>';
+									strData += '</div>';
+								}
+
+								/*追加数据*/
+								$('.dataWrap').append(strData);
+
+								page++;
+								loadingdelay = true;
+
+							} else {
+								loadingdelay = true;
+								return false;
+							}
+						},
+						error: function(error){
+							loadingdelay = true;
+						}
+					});
+
+				}
+			});
+		</script>
+	</body>
+</html>

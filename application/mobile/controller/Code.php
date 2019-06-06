@@ -18,6 +18,7 @@ class Code extends MobileBase
     {
     
         $openid = session('user.openid');
+//        $logo=session('user.head_pic');
         if(I('test') == 1){
             //测试
             $openid = 'testopenid';
@@ -43,6 +44,53 @@ class Code extends MobileBase
 
         $result['openid'] = $openid;
         $result['img'] = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=".$result['ticket'];
+
+
+
+//        $rootPath = 'public/upload/';
+//        $path = 'Qrcode/'.date("Y-m-d").'/';
+//        $fileName = uniqid();
+//        if (!is_dir($rootPath.$path))
+//        {
+//            mkdir($rootPath.$path,0777,true);
+//        }
+//        $originalUrl = $path.$fileName.'.png';
+//
+//        Vendor('phpqrcode.phpqrcode');
+//        $object = new \QRcode();
+//        $errorCorrectionLevel = 'L';    //容错级别
+//        $matrixPointSize = 20;            //生成图片大小（这个值可以通过参数传进来判断）
+//        $object->png($data,$rootPath.$originalUrl,$errorCorrectionLevel, $matrixPointSize, 2);
+//
+//        //判断是否生成带logo的二维码
+//        if(file_exists($logo))
+//        {
+//            $QR = imagecreatefromstring(file_get_contents($rootPath.$originalUrl));        //目标图象连接资源。
+//            $logo = imagecreatefromstring(file_get_contents($logo));    //源图象连接资源。
+//
+//            $QR_width = imagesx($QR);            //二维码图片宽度
+//            $QR_height = imagesy($QR);            //二维码图片高度
+//            $logo_width = imagesx($logo);        //logo图片宽度
+//            $logo_height = imagesy($logo);        //logo图片高度
+//            $logo_qr_width = $QR_width / 4;       //组合之后logo的宽度(占二维码的1/5)
+//            $scale = $logo_width/$logo_qr_width;       //logo的宽度缩放比(本身宽度/组合后的宽度)
+//            $logo_qr_height = $logo_height/$scale;  //组合之后logo的高度
+//            $from_width = ($QR_width - $logo_qr_width) / 2;   //组合之后logo左上角所在坐标点
+//
+//            //重新组合图片并调整大小
+//            //imagecopyresampled() 将一幅图像(源图象)中的一块正方形区域拷贝到另一个图像中
+//            imagecopyresampled($QR, $logo, $from_width, $from_width, 0, 0, $logo_qr_width,$logo_qr_height, $logo_width, $logo_height);
+//
+//            //输出图片
+//            imagepng($QR, $rootPath.$originalUrl);
+//            imagedestroy($QR);
+//            imagedestroy($logo);
+//        }
+//
+//        $result['errcode'] = 0;
+//        $result['errmsg'] = 'ok';
+//        $result['data'] = $originalUrl;
+//        return $result;
 
         $model = new UserCode();
         $model->openid = $openid;
@@ -83,7 +131,8 @@ class Code extends MobileBase
             {
                 $wx_user = M('wx_user')->find();
                 $jssdk = new JssdkLogic($wx_user['appid'],$wx_user['appsecret']);
-                $wx_content = "你刚刚推荐“".$oauth_users['nickname']."”用户关注公众号,平台奖励".$this->config['nine_give_bee_milk']."滴蜂王浆,".$this->config['nine_random_sun']."克阳光值,".$this->config['nine_random_water']."滴露水";
+//                $wx_content = "您刚推荐的朋友“".$oauth_users['nickname']."”用户关注公众号,平台奖励".$this->config['nine_give_bee_milk']."滴蜂王浆,".$this->config['nine_random_sun']."克阳光值,".$this->config['nine_random_water']."滴露水";
+                $wx_content = "您刚推荐的朋友“".$oauth_users['nickname']."”，加入了九九蜂王台，一起开启养蜂之旅吧！";
                 $test= $jssdk->push_msg($user['openid'],$wx_content);
 
             }

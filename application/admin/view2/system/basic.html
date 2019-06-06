@@ -146,18 +146,18 @@
                     <p class="notic">商家中心右下侧显示，方便商家遇到问题时咨询</p>
                 </dd>
             </dl>
-			<dl class="row">
-                <dt class="tit">第三方登录是否必须绑定账号</dt>
-                <dd class="opt">
-                    <div class="onoff">
-                        <label for="is_bind_account1" class="cb-enable <if condition='$config[is_bind_account] eq 1'>selected</if>">是</label>
-                        <label for="is_bind_account0" class="cb-disable <if condition='$config[is_bind_account] eq 0'>selected</if>">否</label>
-                        <input id="is_bind_account1" name="is_bind_account" checked="checked" value="1" type="radio">
-                        <input id="is_bind_account0" name="is_bind_account" value="0" type="radio">
-                    </div>
-                    <p class="notic">否: 第三方账号首次登录时会自动创建账号, 不需要额外绑定账号<br/>是:(推荐)第三方账号首次登录时必须先绑定一个注册账号, 否则无法购买商品(优点:可以避免微商城, PC端产生多账户问题)</p>
-                </dd>
-            </dl>
+			<!--<dl class="row" style="display: none;">-->
+                <!--<dt class="tit">第三方登录是否必须绑定账号</dt>-->
+                <!--<dd class="opt">-->
+                    <!--<div class="onoff">-->
+                        <!--<label for="is_bind_account1" class="cb-enable <if condition='$config[is_bind_account] eq 1'>selected</if>">是</label>-->
+                        <!--<label for="is_bind_account0" class="cb-disable <if condition='$config[is_bind_account] eq 0'>selected</if>">否</label>-->
+                        <!--<input id="is_bind_account1" name="is_bind_account" checked="checked" value="1" type="radio">-->
+                        <!--<input id="is_bind_account0" name="is_bind_account" value="0" type="radio">-->
+                    <!--</div>-->
+                    <!--<p class="notic">否: 第三方账号首次登录时会自动创建账号, 不需要额外绑定账号<br/>是:(推荐)第三方账号首次登录时必须先绑定一个注册账号, 否则无法购买商品(优点:可以避免微商城, PC端产生多账户问题)</p>-->
+                <!--</dd>-->
+            <!--</dl>-->
             <div class="bot"><a href="JavaScript:void(0);" class="ncap-btn-big ncap-btn-green" onclick="document.form1.submit()">确认提交</a></div>
         </div>
     </form>

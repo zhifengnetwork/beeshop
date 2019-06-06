@@ -45,21 +45,41 @@
 		<script src="__STATIC__/js/jquery-3.1.1.min.js" ></script>
 		
 
-		<script type="text/javascript">
+		<script>
+			/*背景音乐-状态*/
+			$.ajax({
+				type: "post",
+				url: "/mobile/bee/type",
+				async: true,
+				data: null,
+				success: function(req){
+					console.log('后台传的值:',$.parseJSON(req)['music_type']);
+					if($.parseJSON(req)['music_type'] == 2){
+						$('.wtf_b_r').addClass('wtf_c');
+						$('.wtf_label').addClass('wtf_l');
+					}
+				},
+				error: function(){
+					console.log('请求错误');
+				},
+			});
+				
 			$(function() {
+				
+				
+				/*背景音乐-切换*/
 				$('#wtf_b_r').click(function() {
 					if($(this).hasClass("wtf_c")) {
 						/*开启背景音乐*/
-						
 						/**
 						 * ajax
 						 * **/
 						$.ajax({
-							type:"post",
+							type: "POST",
 							url:"{:url('music_type')}",
 							async:true,
 							data: {
-								type: 0,
+								type: 1,
 							},
 							success: function(req){
 								console.log(req);
@@ -82,7 +102,7 @@
 							url:"{:url('music_type')}",
 							async:true,
 							data: {
-								type: 1,
+								type: 2,
 							},
 							success: function(req){
 								console.log(req);

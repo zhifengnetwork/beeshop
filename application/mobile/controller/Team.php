@@ -410,9 +410,9 @@ class Team extends MobileBase
             $this->ajaxReturn(['status' => 0, 'msg' => '购买数已超过该活动单次购买限制数('.$team['buy_limit'].'个)', 'result' => []]);
         }
 
-        //已经使用优惠券/积分/余额支付的订单不能更改数量
+        //已经使用优惠券/蜂王券/余额支付的订单不能更改数量
         if($orderGoods['goods_num'] != $goods_num && $order['order_amount'] != $order['total_amount']){
-            $this->ajaxReturn(['status' => 0, 'msg' => '使用优惠券/积分/余额支付的订单不能更改数量', 'result' => []]);
+            $this->ajaxReturn(['status' => 0, 'msg' => '使用优惠券/蜂王券/余额支付的订单不能更改数量', 'result' => []]);
         }
 
         //使用余额,检查使用余额条件
@@ -420,18 +420,18 @@ class Team extends MobileBase
             $this->ajaxReturn(['status' => 0, 'msg' => '你的账户可用余额为:'.$this->user['user_money'].'元', 'result' => []]);
         }
 
-        //使用积分检查,检查使用积分条件
+        //使用蜂王券检查,检查使用蜂王券条件
         if($pay_points){
-            $use_percent_point = tpCache('shopping.point_use_percent');     //最大使用限制: 最大使用积分比例, 例如: 为50时, 未50% , 那么积分支付抵扣金额不能超过应付金额的50%
+            $use_percent_point = tpCache('shopping.point_use_percent');     //最大使用限制: 最大使用蜂王券比例, 例如: 为50时, 未50% , 那么蜂王券支付抵扣金额不能超过应付金额的50%
             if($use_percent_point == 0){
-                $this->ajaxReturn(['status' => 0, 'msg' => '该笔订单不能使用积分', 'result' => []]);
+                $this->ajaxReturn(['status' => 0, 'msg' => '该笔订单不能使用蜂王券', 'result' => []]);
             }
             if ($pay_points > $this->user['pay_points']){
-                $this->ajaxReturn(['status' => 0, 'msg' => '你的账户可用积分为:'.$this->user['pay_points'], 'result' => []]);
+                $this->ajaxReturn(['status' => 0, 'msg' => '你的账户可用蜂王券为:'.$this->user['pay_points'], 'result' => []]);
             }
-            $min_use_limit_point = tpCache('shopping.point_min_limit'); //最低使用额度: 如果拥有的积分小于该值, 不可使用
+            $min_use_limit_point = tpCache('shopping.point_min_limit'); //最低使用额度: 如果拥有的蜂王券小于该值, 不可使用
             if ($min_use_limit_point > 0 && $pay_points < $min_use_limit_point) {
-                $this->ajaxReturn(['status' => 0, 'msg' => '您使用的积分必须大于'.$min_use_limit_point.'才可以使用', 'result' => []]);
+                $this->ajaxReturn(['status' => 0, 'msg' => '您使用的蜂王券必须大于'.$min_use_limit_point.'才可以使用', 'result' => []]);
             }
         }
         //获取拼单信息，并检查拼单,是否能拼
@@ -462,14 +462,14 @@ class Team extends MobileBase
             $TeamOrderLogic->useShipping($shipping_code, $userAddress); //选择物流
         }
         $TeamOrderLogic->useUserMoney($user_money);//使用余额
-        $TeamOrderLogic->usePayPoints($pay_points);//使用积分
+        $TeamOrderLogic->usePayPoints($pay_points);//使用蜂王券
         $finalOrder = $TeamOrderLogic->getOrder();
         $finalOrderGoods = $TeamOrderLogic->getOrderGoods();
         // 确认订单
         if ($act == 'submit_order') {
             if($user_money>0 || $pay_points){
                 if($this->user['is_lock'] == 1){
-                    $this->ajaxReturn(['status' => 0, 'msg' => '账号异常已被锁定，不能使用积分或余额支付！', 'result' => []]);// 用户被冻结不能使用余额支付
+                    $this->ajaxReturn(['status' => 0, 'msg' => '账号异常已被锁定，不能使用蜂王券或余额支付！', 'result' => []]);// 用户被冻结不能使用余额支付
                 }
                 if(empty($this->user['paypwd'])){
                     $this->ajaxReturn(['status' => 0, 'msg' => '请先设置支付密码！', 'result' => []]);
@@ -487,7 +487,7 @@ class Team extends MobileBase
             $TeamOrderLogic->deductCouponById($coupon_id);//扣除优惠券
             $integral = $finalOrder->integral - (int)$orderInfo['integral'];
             if($integral > 0){
-                Db::name('users')->where('user_id',$this->user_id)->setDec('pay_points',$integral);//扣除积分
+                Db::name('users')->where('user_id',$this->user_id)->setDec('pay_points',$integral);//扣除蜂王券
             }
             $user_money = $finalOrder->user_money - (float)$orderInfo['user_money'];
             if($user_money > 0){
@@ -496,7 +496,7 @@ class Team extends MobileBase
             $TeamOrderLogic->accountLog($integral, $user_money); //记录log 日志
             $TeamOrderLogic->pushUserMsg();// 如果有微信公众号 则推送一条消息到微信
             $TeamOrderLogic->pushSellerMsg();//用户下单, 发送短信给商家
-            // 如果应付金额为0  可能是余额支付 + 积分 + 优惠券 这里订单支付状态直接变成已支付
+            // 如果应付金额为0  可能是余额支付 + 蜂王券 + 优惠券 这里订单支付状态直接变成已支付
             $msg = '确认订单成功';
             if ($finalOrder['order_amount'] == 0) {
                 update_pay_status($finalOrder['order_sn']); // 这里刚刚下的订单必须从主库里面去查

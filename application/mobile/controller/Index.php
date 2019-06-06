@@ -85,7 +85,8 @@ class Index extends MobileBase {
     
     public function ajaxGetMore(){
     	$p = I('p/d',1);
-        $where = ['is_recommend'=>1,'is_on_sale'=>1,'virtual_indate'=>['exp',' = 0 OR virtual_indate > '.time()]];
+//        $where = ['is_recommend'=>1,'is_on_sale'=>1,'virtual_indate'=>['exp',' = 0 OR virtual_indate > '.time()]];
+        $where = ['is_recommend'=>1,'is_on_sale'=>1];
     	$favourite_goods = Db::name('goods')->where($where)->order('goods_id DESC')->page($p,C('PAGESIZE'))->cache(true,TPSHOP_CACHE_TIME)->select();//首页推荐商品
     	$this->assign('favourite_goods',$favourite_goods);
     	return $this->fetch();

@@ -1,5 +1,5 @@
-<include file="public/header" title="积分商城" body=""/>
-<include file="public/header_nav" title="积分商城"  href="javascript:history.back(-1)" />
+<include file="public/header" title="蜂王券商城" body=""/>
+<include file="public/header_nav" title="蜂王券商城"  href="javascript:history.back(-1)" />
     <nav class="storenav grst p">
         <ul>
             <li <if condition="$Request.param.rank eq ''">class="red"</if>>
@@ -10,7 +10,7 @@
                 <i></i>
             </li>
             <li <if condition="$Request.param.rank eq 'integral'">class="red"</if>>
-                <a href="{:U('Mobile/Goods/integralMall',array('rank'=>'integral'))}"><span>积分值</span></a>
+                <a href="{:U('Mobile/Goods/integralMall',array('rank'=>'integral'))}"><span>蜂王券值</span></a>
                 <i></i>
             </li>
         </ul>
@@ -21,7 +21,7 @@
             <div class="sc_list se_sclist paycloseto">
                 <div class="maleri30">
                     <div class="shopimg fl">
-                        <img src="{$good.goods_id|goods_thum_images=400,400}">
+                        <img src="{$good['original_img']}">
                     </div>
                     <div class="deleshow fr">
                         <a href="{:U('Mobile/Goods/goodsInfo', array('id'=>$good[goods_id]))}">
@@ -31,7 +31,7 @@
                             <div class="prices">
                                 <p class="sc_pri">
                                     <span>{:round($good[shop_price]-$good[exchange_integral]/$point_rate,2)}</span>
-                                    <span class="cobl">+{$good[exchange_integral]}积分</span></p>
+                                    <span class="cobl">+{$good[exchange_integral]}蜂王券</span></p>
                             </div>
                         </a>
                         <div class="qxatten">
@@ -68,9 +68,9 @@
     function ajax_sourch_submit(){
         ++page;
         <if condition='$Request.param.rank'>
-            var url = '/index.php/Mobile/Goods/integralMall/p/' + page +'rank/'+ '{$Request.param.rank}';
+            var url = "{:U('mobile/Goods/integralMall')}/p/" + page +'rank/'+ '{$Request.param.rank}';
         <else/>
-            var url = '/index.php/Mobile/Goods/integralMall/p/' + page;
+            var url = "{:U('mobile/Goods/integralMall')}/p/" + page;
         </if>
 
         $.ajax({

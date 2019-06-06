@@ -19,11 +19,11 @@
 }
 #container .wrap .head a {
 	position: absolute;
-	top: 8%;
+	top: 0;
 	left: 5%;
 	display: inline-block;
 	font-size: 0;
-	width: 8%;
+	width: 10%;
 }
 img {
 	width: 100%;

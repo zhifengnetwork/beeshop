@@ -24,7 +24,7 @@ function is_login(){
         return false;
     }
 }
-//同步users的积分字段 $type 1:添加,2:减少
+//同步users的蜂王券字段 $type 1:添加,2:减少
 function update_user($user_id,$bee_nums,$type){
     
     $user_find = M('users')->where('user_id',$user_id)->find();
@@ -38,10 +38,20 @@ function update_user($user_id,$bee_nums,$type){
             'pay_points'=>$user_find['pay_points']-$bee_nums
         );
     }
-    
-    if ($user_find['pay_points'] <0) return false;
-   
-    M('users')->where('user_id',$user_id)->update($data);
+
+    if ($user_find['pay_points'] <0 || $user_find['pay_points']<$bee_nums) return false;
+
+    $result = M('users')->update([$data,'user_id'=>$user_id]);
+    return $result;
+//    if($type==1 && $bee_nums==1){
+//        return M('users')->where(['user_id'=>$user_id])->setInc('pay_points');
+//    }elseif ($type==2 && $bee_nums==1){
+//        return M('users')->where(['user_id'=>$user_id])->setDec('pay_points');
+//    }elseif ($type==1){
+//        return M('users')->where(['user_id'=>$user_id])->setInc('pay_points',$bee_nums);
+//    }else{
+//        return M('users')->where(['user_id'=>$user_id])->setDec('pay_points',$bee_nums);
+//    }
 }
 
 //获取推荐上级
@@ -54,7 +64,7 @@ function get_uper_user($data)
 /*
  * 获取所有上级
  */
-function getAllUp($invite_id,$userList=array())
+function getAllUp($invite_id,&$userList=array())
 {           
     $field  = "user_id,first_leader";
     $UpInfo = M('users')->field($field)->where('user_id',$invite_id)->find();
@@ -655,7 +665,7 @@ function tpCache($config_key,$data = array()){
  * 记录帐户变动
  * @param   int     $user_id        用户id
  * @param   float   $user_money     可用余额变动
- * @param   int     $pay_points     消费积分变动
+ * @param   int     $pay_points     消费蜂王券变动
  * @param   string  $desc    变动说明
  * @param   float   distribut_money 分佣金额
  * @param int $order_id 订单id
@@ -1029,7 +1039,7 @@ function confirm_order($id,$user_id = 0){
 }
 
 /**
- * 下单赠送活动：优惠券，积分
+ * 下单赠送活动：优惠券，蜂王券
  * @param $order|订单数组
  */
 function order_give($order)
@@ -1088,15 +1098,15 @@ function order_give($order)
                     }
                 }
             }
-            //购买商品送积分
+            //购买商品送蜂王券
             if ($prom_order['type'] == 2) {
-                accountLog($order['user_id'], 0, $prom_order['expression'], "订单活动赠送积分");
+                accountLog($order['user_id'], 0, $prom_order['expression'], "订单活动赠送蜂王券");
             }
             break;
 //        }
     }
     $points = M('order_goods')->where("order_id", $order['order_id'])->sum("give_integral * goods_num");
-    $points && accountLog($order['user_id'], 0, $points, "下单赠送积分", 0, $order['order_id'], $order['order_sn']);
+    $points && accountLog($order['user_id'], 0, $points, "下单赠送蜂王券", 0, $order['order_id'], $order['order_sn']);
 }
 
 
@@ -1107,7 +1117,7 @@ function order_give($order)
  */
 function get_order_promotion($order_amount)
 {
-//    $parse_type = array('0'=>'满额打折','1'=>'满额优惠金额','2'=>'满额送倍数积分','3'=>'满额送优惠券','4'=>'满额免运费');
+//    $parse_type = array('0'=>'满额打折','1'=>'满额优惠金额','2'=>'满额送倍数蜂王券','3'=>'满额送优惠券','4'=>'满额免运费');
     $now = time();
     $prom = M('prom_order')->where("type<2 and end_time>$now and start_time<$now and money<=$order_amount")->order('money desc')->find();
     $res = array('order_amount' => $order_amount, 'order_prom_id' => 0, 'order_prom_amount' => 0);
@@ -1134,7 +1144,7 @@ function get_order_promotion($order_amount)
  * @param int $province 省份
  * @param int $city 城市
  * @param int $district 县
- * @param int $pay_points 积分
+ * @param int $pay_points 蜂王券
  * @param int $user_money 余额
  * @param int $coupon_id 优惠券
  * @return array
@@ -1148,29 +1158,29 @@ function calculate_price($user_id = 0, $order_goods, $shipping_code = '', $shipp
     if (empty($order_goods)){
         return array('status' => -9, 'msg' => '商品列表不能为空', 'result' => '');
     }
-    $use_percent_point = tpCache('shopping.point_use_percent') / 100;     //最大使用限制: 最大使用积分比例, 例如: 为50时, 未50% , 那么积分支付抵扣金额不能超过应付金额的50%
-    /*判断能否使用积分
-     1..积分低于point_min_limit时,不可使用
-     2.在不使用积分的情况下, 计算商品应付金额
-     3.原则上, 积分支付不能超过商品应付金额的50%, 该值可在平台设置
+    $use_percent_point = tpCache('shopping.point_use_percent') / 100;     //最大使用限制: 最大使用蜂王券比例, 例如: 为50时, 未50% , 那么蜂王券支付抵扣金额不能超过应付金额的50%
+    /*判断能否使用蜂王券
+     1..蜂王券低于point_min_limit时,不可使用
+     2.在不使用蜂王券的情况下, 计算商品应付金额
+     3.原则上, 蜂王券支付不能超过商品应付金额的50%, 该值可在平台设置
      @{ */
-    $point_rate = tpCache('shopping.point_rate'); //兑换比例: 如果拥有的积分小于该值, 不可使用
-    $min_use_limit_point = tpCache('shopping.point_min_limit'); //最低使用额度: 如果拥有的积分小于该值, 不可使用
+    $point_rate = tpCache('shopping.point_rate'); //兑换比例: 如果拥有的蜂王券小于该值, 不可使用
+    $min_use_limit_point = tpCache('shopping.point_min_limit'); //最低使用额度: 如果拥有的蜂王券小于该值, 不可使用
     
     if ($min_use_limit_point > 0 && $pay_points > 0 && $pay_points < $min_use_limit_point) {
-        return array('status' => -1, 'msg' => "您使用的积分必须大于{$min_use_limit_point}才可以使用", 'result' => ''); // 返回结果状态
+        return array('status' => -1, 'msg' => "您使用的蜂王券必须大于{$min_use_limit_point}才可以使用", 'result' => ''); // 返回结果状态
     }
-    // 计算该笔订单最多使用多少积分
+    // 计算该笔订单最多使用多少蜂王券
     if(($use_percent_point !=1 ) && $pay_points > $result['order_integral']) {
-        return array('status'=>-1,'msg'=>"该笔订单, 您使用的积分不能大于{$result['order_integral']}",'result'=>'积分'); // 返回结果状态
+        return array('status'=>-1,'msg'=>"该笔订单, 您使用的蜂王券不能大于{$result['order_integral']}",'result'=>'蜂王券'); // 返回结果状态
     }
 
     if(($pay_points > 0 && $use_percent_point == 0) ||  ($pay_points >0 && $result['order_integral']==0)){
-        return array('status' => -1, 'msg' => "该笔订单不能使用积分", 'result' => '积分'); // 返回结果状态
+        return array('status' => -1, 'msg' => "该笔订单不能使用蜂王券", 'result' => '蜂王券'); // 返回结果状态
     }
 
     if ($pay_points && ($pay_points > $user['pay_points']))
-        return array('status' => -5, 'msg' => "你的账户可用积分为:" . $user['pay_points'], 'result' => ''); // 返回结果状态
+        return array('status' => -5, 'msg' => "你的账户可用蜂王券为:" . $user['pay_points'], 'result' => ''); // 返回结果状态
     if ($user_money && ($user_money > $user['user_money']))
         return array('status' => -6, 'msg' => "你的账户可用余额为:" . $user['user_money'], 'result' => ''); // 返回结果状态
 
@@ -1187,9 +1197,9 @@ function calculate_price($user_id = 0, $order_goods, $shipping_code = '', $shipp
         //如果商品不是包邮的
         if ($goods_arr[$val['goods_id']]['is_free_shipping'] == 0)
             $goods_weight += $goods_arr[$val['goods_id']]['weight'] * $val['goods_num']; //累积商品重量 每种商品的重量 * 数量
-        //计算订单可用积分
+        //计算订单可用蜂王券
         if($goods_arr[$val['goods_id']]['exchange_integral']>0){
-            //商品设置了积分兑换就用商品本身的积分。
+            //商品设置了蜂王券兑换就用商品本身的蜂王券。
             $result['order_integral'] +=  $goods_arr[$val['goods_id']]['exchange_integral'];
         }else{
             //没有就按照会员价与平台设置的比例来计算。
@@ -1219,22 +1229,22 @@ function calculate_price($user_id = 0, $order_goods, $shipping_code = '', $shipp
     }
 
     $order_amount = $goods_price + $shipping_price - $coupon_price; // 应付金额 = 商品价格 + 物流费 - 优惠券
-    $user_money = ($user_money > $order_amount) ? $order_amount : $user_money;  // 余额支付余额不能大于应付金额，原理等同于积分
+    $user_money = ($user_money > $order_amount) ? $order_amount : $user_money;  // 余额支付余额不能大于应付金额，原理等同于蜂王券
     $order_amount = $order_amount - $user_money;  //余额支付抵应付金额 （如果未付完，剩余多少没付）
 
-    // 积分支付 100 积分等于 1块钱
+    // 蜂王券支付 100 蜂王券等于 1块钱
     if($pay_points  > floor($order_amount * $point_rate)){
         $pay_points = floor($order_amount * $point_rate);
     }
 
     $integral_money = ($pay_points / $point_rate);
-    $order_amount = $order_amount - $integral_money; //  积分抵消应付金额 （如果未付完，剩余多少没付）
+    $order_amount = $order_amount - $integral_money; //  蜂王券抵消应付金额 （如果未付完，剩余多少没付）
 
     $total_amount = $goods_price + $shipping_price;  //订单总价
 
     // 订单满额优惠活动
     $order_prom = get_order_promotion($goods_price);
-    //订单总价  应付金额  物流费  商品总价 节约金额 共多少件商品 积分  余额  优惠券
+    //订单总价  应付金额  物流费  商品总价 节约金额 共多少件商品 蜂王券  余额  优惠券
     $result = array(
         'total_amount' => $total_amount, // 订单总价
         'order_amount' => round($order_amount-$order_prom['order_prom_amount'], 2), // 应付金额(要减去优惠的钱)
@@ -1242,7 +1252,7 @@ function calculate_price($user_id = 0, $order_goods, $shipping_code = '', $shipp
         'goods_price' => $goods_price, // 商品总价
         'cut_fee' => $cut_fee, // 共节约多少钱
         'anum' => $anum, // 商品总共数量
-        'integral_money' => $integral_money,  // 积分抵消金额
+        'integral_money' => $integral_money,  // 蜂王券抵消金额
         'user_money' => $user_money, // 使用余额
         'coupon_price' => $coupon_price,// 优惠券抵消金额
         'order_prom_id' => $order_prom['order_prom_id'],

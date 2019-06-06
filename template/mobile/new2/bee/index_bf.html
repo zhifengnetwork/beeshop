@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width user-scalable=no initial-scale=1.0 maximum-scale=1.0 minimum-scale=1.0">
+		<title>九九蜂王平台</title>
+		<script src="__STATIC__/js/rem.js"></script>
+		<script src="__STATIC__/js/jquery-3.1.1.min.js" ></script>
+		<script src="__STATIC__/js/mi_public.js?v=1552464938"></script>
+		<link rel="stylesheet" href="__STATIC__/css/mi_style.css"/>
+		<link rel="stylesheet" href="__STATIC__/css/mi_index.css"/>
+		<link rel="stylesheet" href="__STATIC__/css/mi_rotate.css"/>
+		<link rel="stylesheet" href="__STATIC__/css/mi_user.css"/>
+		<link rel="stylesheet" href="__STATIC__/css/mi_public.css"/>
+		<!--<meta name="author" content=""/>
+		<meta name="copyright" content=""/>
+		<meta name="description" content=""/>-->
+	</head>
+	<body>
+		<div id="container">
+			<div class="wrap">
+				<div class="head">
+					<!--头像-->
+					<div class="via headS">
+						<img src="{$user.head_pic}" />
+					</div>
+					<div class="suffer">
+						<if condition="($user.distribut_level == 1)"> 蜂农学员
+						<elseif condition="$user.distribut_level eq 2"/>蜂农
+						<elseif condition="$user.distribut_level eq 3"/>老蜂农
+						<else /> 养蜂学员
+						</if>
+					</div>
+					<!--经验值-->
+					<ul class="cost">
+						<li>
+							<div class="tu_1"></div>
+							<span class="num">{$user_prop.bee_milk ? $user_prop.bee_milk : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_2"></div>
+							<span class="num">{$user_prop.water ? $user_prop.water : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_3"></div>
+							<span class="num">{$user_prop.sun_value ? $user_prop.sun_value : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_4"></div>
+							<span class="num">{$user_prop.gooey ? $user_prop.gooey : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_5"></div>
+							<span class="num">{$user_prop.young ? $user_prop.young : 0 }</span>
+						</li>
+						<li>
+							<div class="tu_6"></div>
+							<span class="num">{$user_prop.drone ? $user_prop.drone : 0 }</span>
+						</li>
+					</ul>
+				</div>
+				
+				
+				<!--用户资料-->
+				<div class="next">
+					<!--<a class="icon" href="{:U('Bee/userInfo')}">-->
+						<img src="__STATIC__/images/imge/10.png" />
+					<!--</a>-->
+				</div>
+				
+				<!--活动-->
+				<div class="hot ht">
+					<a class="astir">
+						<img src="__STATIC__/images/imge/hd.png" />
+					</a>
+				</div>
+				<!--礼包-->
+				<div class="hot_1 ht">
+					<a class="cf">
+						<img src="__STATIC__/images/imge/lb.png"/>
+					</a>
+				</div>
+				<!--邀请好友-->
+				<div class="hot_2 ht">
+					<a class="call" href="{:U('Bee/beeInvite')}">
+						 <img src="__STATIC__/images/imge/yq.png" />
+					</a>
+				</div>
+				
+				<!--好友,打扫,守卫,地图,转盘,分类-->
+				<div class="sidebar">
+					<div class="iv">
+						<a class="bull" href="{:U('Bee/beeFriend')}">
+							<img src="__STATIC__/images/imge/hy.png" />
+						</a>
+					</div>
+					<!--打扫-->
+					<div id="sweep" class="iv">
+						<a class="bull">
+							<img src="__STATIC__/images/imge/ds.png" />
+						</a>
+					</div>
+					<!--守卫-->
+					<div class="iv" id="guardBut">
+						<a class="bull">
+							<img src="__STATIC__/images/imge/sw.png" />
+						</a>
+					</div>
+					<!--地图-->
+					<!--<div class="iv">
+						<a class="bull">
+							<img src="__STATIC__/images/imge/dt.png" />
+						</a>
+					</div>-->
+					
+					<div class="shows iv">
+						<a class="bull" id="prize">
+							<img src="__STATIC__/images/imge/zp.png" />
+						</a>
+					</div>
+					
+					<!--moudel添加-->
+					<div class='content'>
+					  	<canvas id='canvas-bg' class='canvasII' width="300" height="300"></canvas>
+					  	<div class='canvasI' id='rotate'>
+					  		<canvas id="canvas-one" class='canvasI' width="280" height="280"></canvas>
+					  	</div>
+					  	<img class='start' src='__STATIC__/images/imge/choujiang.png' id="start" />
+					</div>
+					
+					<!--分类-->
+					<div>
+						<a class="bull" href="{:U('beeCategory/beeCategory')}">
+							<img src="__STATIC__/images/imge/f_l.png" />
+						</a>
+					</div>
+				</div>
+				
+				<!--添加-蒙版弹框-->
+				<div class="bgColor"></div>
+				
+				<!--蜂箱-->
+				<div class="tank" id="tank">
+					<img src="__STATIC__/images/imge/fx_3.png" />
+				</div>
+				
+				<!--喂养-提示框-->
+				<div class="hint-wrap" id="hint-wrap">
+					<div class="hint">
+						<p>您是否选择喂养蜂王幼蜂成长为蜂王？蜂王可与雄蜂交配产卵和管理蜂箱。（喂养幼蜂需要5滴蜂王浆，5滴水，10克阳光值）</p>
+					</div>
+					<div class="x-tn" id="x-tn"></div>
+					<div class="q-tn" id="q-tn"></div>
+				</div>
+				<!--交配-提示框-->
+				<div class="hint-wrap hint-wrap_1" id="hint-wrap_1">
+					<div class="hint" id="hin">
+						<p>您是否选择雄蜂供蜂王结合产卵？可一次产卵15000只。（99滴蜂王浆兑换一只雄蜂）</p>
+					</div>
+					<div class="x-tn" id="x-tn_1"></div>
+					<div class="q-tn" id="q-tn_1"></div>
+				</div>
+				<!--提示框2-->
+				<div class="hint-wrap hint-wrap_2" id="hint-wrap_2">
+					<div class="hint" id="hw">
+						<p>您是否选择将幼卵孵化成12000只（侦查蜂1500只,内勤蜂500只,安保蜂10000只,是否执行？）</p>
+					</div>
+					<div class="x-tn" id="x-tn_2"></div>
+					<div class="q-tn" id="q-tn_2"></div>
+				</div>
+				
+				<!--扩建-->
+				<!--<div class="extend">
+					<img src="__STATIC__/images/imge/kj.png" />
+				</div>-->
+				
+				<!--合成-->
+				<!--<div class="synth">
+					<a>
+						<img src="__STATIC__/images/imge/hc.png" />
+					</a>
+				</div>-->
+				<!--商店-->
+				<div class="shop" id="shop">
+					<a>
+						<img src="__STATIC__/images/imge/shoper.png" />
+					</a>
+				</div>
+				<!--商店弹框-->
+				<div class="storeList" id="storeList">
+					<div class="tier" id="tier">
+						<div class="list-wrap">
+							<div class="list">
+								<div class="you">
+									<img src="__STATIC__/images/imge/yf.png" />
+									<!--蜂王幼峰-->
+									<div class="g_btn" id="yf">
+										<img src="__STATIC__/images/imge/gm.png" />
+									</div>
+								</div>
+								
+								<div class="you">
+									<img src="__STATIC__/images/imge/sf.png" />
+									<!--雄蜂-购买-->
+									<div class="g_btn" id="xf">
+										<img src="__STATIC__/images/imge/gm.png" />
+									</div>
+									<!--雄蜂-兑换-->
+									<div class="g_btn droneExchange" id="droneChange">
+										<img  src="__STATIC__/images/imge/dh.png" />
+									</div>
+								</div>
+								
+								<div class="you">
+									<img src="__STATIC__/images/imge/fd.png" />
+									<!--蜂王浆-->
+									<div class="g_btn" id="the">
+										<img src="__STATIC__/images/imge/dh.png" />
+									</div>
+								</div>
+								
+								<div class="you">
+									<img src="__STATIC__/images/imge/md.png" />
+									<!--蜜糖-->
+									<div class="g_btn" id="geo">
+										<img src="__STATIC__/images/imge/dh.png" />
+									</div>
+								</div>
+								
+								<div class="you">
+									<img src="__STATIC__/images/imge/ld.png" />
+									<!--露水-->
+									<div class="g_btn" id="lu">
+										<img src="__STATIC__/images/imge/dh.png" />
+									</div>
+								</div>
+								
+								<div class="you">
+									<img src="__STATIC__/images/imge/gd.png" />
+									<!--阳光值-->
+									<div class="g_btn" id="sun">
+										<img src="__STATIC__/images/imge/dh.png" />
+									</div>
+								</div>
+								<!--商品兑换-->
+								<div class="trait">
+									<img src="__STATIC__/images/imge/ts.png" />
+									<div class="d_btn">
+										<a href="{:U('Goods/integralMall')}">
+											<img src="__STATIC__/images/imge/dh.png" />
+										</a>
+										<!--href="{:U('Goods/integralMall')}"-->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					<div class="none" id="none">
+						<img src="__STATIC__/images/imge/f_7.png" />
+					</div>
+				</div>
+				<!--认养弹框-->
+				<div class="star of" id="star" style="display: none;">
+					<form action="{:U('Mobile/Payment/beePay')}" method="post" name="cart4_form" id="cart4_form">
+						<div class="case gouMai">
+							<div class="what">
+								<p>您是否花费99元认养一只蜂王幼峰?认养后赠送：5滴蜂王浆、10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)</p>
+                                <input type="hidden" value="pay_code=weixin" name="pay_radio" style="display:none;"/>
+                                <input type="hidden" value="youngBee" name="beeType" style="display:none;"/>
+							</div>
+						</div>
+						<div class="x-btn"></div>
+						<div class="q-btn" id="qbtn"></div>
+					</form>
+				</div>
+
+				<!--雄蜂购买框-->
+				<div class="star drone of" id="drone">
+					<form action="{:U('Mobile/Payment/beePay')}" method="post" name="cart5_form" id="cart5_form">
+						<div class="case box gouMai">
+							<div class="what hint">
+								<p>您是否购买雄蜂供蜂王结合产卵?</p>
+                                <input type="hidden" value="pay_code=weixin" name="pay_radio" style="display:none;"/>
+                                <input type="hidden" value="maleBee" name="beeType" style="display:none;"/>
+							</div>
+						</div>
+						<div class="x-btn"></div>
+						<div class="q-btn" id="buy"></div>
+					</form>
+				</div>
+				<!--雄蜂兑换框-->
+				<div class="star drone of" id="droneChangeAlert">
+					<div class="case box">
+						<div class="what hint">
+							<p>您是否用99滴蜂王浆兑换一只雄蜂 (雄蜂供蜂王结合产卵,可一次性产卵15000只。)</p>
+						</div>
+					</div>
+					<div class="x-btn"></div>
+					<div class="q-btn" onclick="ajaxPost(1)"></div>
+				</div>
+				
+				<!--蜂王浆兑换框-->
+				<div class="star drone of" id="qee">
+					<div class="case box">
+						<div class="what hint">
+							<p>您想兑换的蜂王浆为<input class="price" name="qee" value="1"/></p>
+							<p>(50克蜜糖可以兑换1滴蜂王浆)</p>
+						</div>
+					</div>
+					<div class="x-btn"></div>
+					<div class="q-btn" onclick="ajaxPost(2)"></div>
+				</div>
+				<!--蜂王浆兑换-失败弹框-->
+				<div class="publicWrap slurryWrap">
+					<div class="publicAlertBox">
+						<p class="publicATitle">蜜糖不足，兑换失败。</p>
+					</div>
+					<!--确定-->
+					<div class="publicConfirmBut slurryDBut"></div>
+					<div class="publicCancelBut slurryCBut"></div>
+				</div>
+				
+				<!--蜜糖兑换框-->
+				<div class="star drone of" id="mi">
+					<div class="case box">
+						<div class="what hint">
+							<p>您想兑换的蜜糖为<input class="price" name="mi" value="50" /></p>
+							<p>(1滴蜂王浆可以兑换50克蜜糖)</p>
+						</div>
+					</div>
+					<div class="x-btn"></div>
+					<div class="q-btn" onclick="ajaxPost(3)"></div>
+				</div>
+				<!--蜜糖兑换-失败弹框-->
+				<div class="publicWrap honeyWrap">
+					<div class="publicAlertBox">
+						<p class="publicATitle">蜂王浆不足，兑换失败。</p>
+					</div>
+					<!--确定-->
+					<div class="publicConfirmBut honeyDBut"></div>
+					<div class="publicCancelBut honeyCBut"></div>
+				</div>
+				
+				<!--露水兑换框-->
+				<div class="star drone of" id="sui" style="display: none;">
+					<div class="case box">
+						<div class="what hint">
+							<p>您想兑换的露水为<input class="price" name="sui" value="1" /></p>
+							<p>(5克蜜糖可以兑换1滴露水)</p>
+						</div>
+					</div>
+					<div class="x-btn"></div>
+					<div class="q-btn" onclick="ajaxPost(4)"></div>
+				</div>
+				<!--露水兑换-失败弹框-->
+				<div class="publicWrap dewWrap">
+					<div class="publicAlertBox">
+						<p class="publicATitle">蜜糖不足，兑换失败。</p>
+					</div>
+					<!--确定-->
+					<div class="publicConfirmBut dewDBut"></div>
+					<div class="publicCancelBut dewCBut"></div>
+				</div>
+				
+				<!--阳光值兑换框-->
+				<div class="star drone of" id="rey" style="display: none;">
+					<div class="case box">
+						<div class="what hint">
+							<p>您想兑换的阳光为<input class="price" name="rey" value="1" /></p>
+							<p>(5克蜜糖可以兑换1克阳光值)</p>
+						</div>
+					</div>
+					<div class="x-btn"></div>
+					<div class="q-btn" onclick="ajaxPost(5)"></div>
+				</div>
+				<!--阳光值兑换-失败弹框-->
+				<div class="publicWrap sunshineWrap">
+					<div class="publicAlertBox">
+						<p class="publicATitle">蜜糖不足，兑换失败。</p>
+					</div>
+					<!--确定-->
+					<div class="publicConfirmBut sunshineDBut"></div>
+					<div class="publicCancelBut sunshineCBut"></div>
+				</div>
+				<!-- 活动 右弹出 -->
+				<div class="activity">
+					<div>
+						<img src="__STATIC__/images/imge/tk.png" alt="">
+						<p>太空之旅</p>
+						<span>剩余时间：0天9时47分32秒</span>	
+					</div>
+					<div>
+						<img src="__STATIC__/images/imge/bz.png" alt="">
+						<p>保卫大作战</p>
+						<span>剩余时间：3天15时25分05秒</span>
+					</div>
+					<div>
+						<img src="__STATIC__/images/imge/yw.png" alt="">
+						<p>野外冒险</p>
+						<span>剩余时间：7天20时21分6秒</span>
+					</div>
+					<div>
+						<img src="__STATIC__/images/imge/cl.png" alt="">
+						<p>丛林探险</p>
+						<span>剩余时间：5天4时53分25秒</span>
+					</div>
+					<div class="back"></div>
+				</div>
+				
+				<!--公告弹框-->
+				<div class="t_Wrap">
+					<div class="auto">
+						<empty name="notice">
+							<p class="noticeTWTitle">目前没有新公告！</p>
+						<else/>
+							<p class="noticeTWTitle">{$notice.title}</p >
+							<p>{$notice.content}</p>
+						</empty>
+					</div>
+					<div class="t_Xbtn"></div>
+					<div class="t_Qbtn"></div>
+				</div>
+				<!--背影-->
+				<div class="t_view"></div>
+				
+				
+				<!--蜂箱幼蜂-->
+				<div class="dropWrap">
+					<div class="mar">
+
+		            	<foreach name="user_bee" item="vo" key="k">
+		            		<if condition="$vo['level'] eq 1">
+								<div class="t_peak-1">
+									<div class="t_peakBtn-1" ></div>
+								</div>
+							<elseif condition="$vo['level'] eq 2 and $vo['is_mating'] eq 0" />
+								<div class="t_peak-3">
+									<div class="t_peakBtn-2"></div>
+								</div>
+							<elseif condition="$vo['level'] eq 2 and $vo['is_oviposition'] eq 1" />
+								<div class="t_peak-3">
+									<div class="t_peakBtn-3"></div>
+								</div>
+							<elseif condition="$vo['level'] eq 2 and $vo['is_oviposition'] eq 2"/>
+								<div class="t_peak-3">
+									<a href="{:U('beeCategory/beeCategory')}"><div class="t_peakBtn-4"></div></a>
+								</div>
+							</if>
+						</foreach>
+
+					</div>
+				</div>
+				<!--下拉导航-背影-->
+				<div class="selectBox"></div>
+			
+		</div>
+		
+		<!--左侧弹出-->
+		<div class="newShow">
+			<div id="wrapper">
+				<div class="head">
+					<div class="userName">
+						<a>
+							<img src="{$user.head_pic}" />
+						</a>
+						<p>{$user.nickname}</p>
+						<p>ID: {$myUid}</p>
+					</div>
+					<!--农场-logo-->
+					<div class="jiu_logo">
+						<img src="__STATIC__/images/imge/logo.png" />
+					</div>
+					
+					<!--栏目-->
+					<div class="sidebar">
+						<!--公告-->
+						<div class="notice nth">
+							<img src="__STATIC__/images/imge/16.png" />
+						</div>
+						<!--消息-->
+						<div class="notice">
+							<a href="{:U('Mobile/Bee/news')}">
+								<img src="__STATIC__/images/imge/17.png" />
+							</a>	
+						</div>
+						<!--投诉-->
+						<div class="notice">
+							<a href="{:U('Mobile/Bee/complaint')}">
+								<img src="__STATIC__/images/imge/18.png" />
+							</a>
+						</div>
+						<!--设置-->
+						<div class="notice">
+							<a href="{:U('Bee/setUp')}">
+								<img src="__STATIC__/images/imge/19.png" />
+							</a>
+						</div>
+					</div>
+					<!--公告-->
+					<!--<div class="noticeTextWrap">-->
+						<!--title-->
+						<!--<p class="noticeTWTitle">游戏公告内容</p >
+						<p>“九九蜂王台”是九社优农利用“互联网+”技术，推出的一款“精准订单农业”项目，九社优农根据消费者需求，与优质蜜源的农村合作社签订订单采购，通过平台发布让消费者在互动过程中了解采蜜、酿蜜过程，同时又能买到天然、无公害、安全的蜂蜜。</p >
+					</div>-->
+				</div>
+			</div>
+		</div>
+		
+		<!--礼包弹窗-->
+		<div class="event">
+			<div>
+				<div class="yan">
+					<p>阳光大礼包(阳光值100)</p>
+					<div class="get"></div>
+				</div>
+				
+				<div class="shui">
+					<p>水分礼包(水分值100)</p>
+					<div class="get_1"></div>
+				</div>
+			</div>
+		</div>
+		<!--背影-->
+		<div class="view"></div>
+		
+		<!--背景音乐-->
+		<audio id="musicAudio" autoplay="autoplay" loop="loop" hidden="">
+			<source src="/template/mobile/new2/static/images/imge/gequ.mp3" type="audio/mpeg">
+		</audio>
+	</body>
+</html>
+
+<!--<script src="__STATIC__/js/jquery-1.8.2.min.js" ></script>-->
+<!--<script src="__STATIC__/js/mi_jquery.min.js" ></script>-->
+<script src="__STATIC__/js/layer/layer.js" ></script>
+<!--<script src="__STATIC__/js/jquery-3.1.1.min.js" ></script>-->
+
+<script>
+
+	$(document).ready(function(){
+
+		var hive = {$user_prop.bee_hive ? $user_prop.bee_hive : 0};
+		// var level = {$user_prop.level};
+		// var mating = {$user_prop.mating};
+
+		if( hive > 0){
+			tank.style.display = 'block';
+		}
+		// if( level > 0){
+		// 	hintWrap.style.display = 'none';
+		// }
+		// if( mating > 0){
+		// 	hintWrap01.style.display = 'none';
+		// }
+
+	});
+	
+	function ajaxPost(num){
+		if (num == 1) {
+			var type = 1;
+			var exchange_nums = 1;
+		}else if (num == 2) {
+			var type = 2;
+			var exchange_nums = $("input[name='qee']").val()
+		}else if(num == 3){
+			var type = 3;
+			var exchange_nums = $("input[name='mi']").val()
+		}else if(num == 4){
+			var type = 4
+			var exchange_nums = $("input[name='sui']").val()
+		}else if(num == 5){
+			var type = 5;
+			var exchange_nums = $("input[name='rey']").val()
+		}
+		// console.log(formData);
+		$.ajax({
+			type:"post",
+			url:"{:url('beeExchange')}",
+			data:{
+				type:type,
+				exchange_nums:exchange_nums
+			},
+			success:function(data){
+				if (data.type==0) {
+					layer.msg(data.msg);
+				}else{
+					layer.msg(data.msg);
+					setTimeout(function(){window.location.reload();},3000);
+				}
+			}
+		});
+	}
+	
+	// 打扫
+	$("#sweep").click(function(){
+
+		$.ajax({
+          type:"post",
+          url:"{:url('GooeyExpend/actionSweep')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(msg){
+			if(msg.code==200){
+	 			layer.msg(msg.msg);
+			}else{
+				layer.msg(msg.msg);
+	 			return false;
+			}
+          }
+        });
+	});
+
+	
+	// 守卫
+	$("#guardBut").click(function(){
+
+		$.ajax({
+          type:"post",
+          url:"{:url('GooeyExpend/actionGuard')}",   //数据传输的控制器方法
+          data:{type:1}, //这里data传递过去的是序列化以后的字符串
+          success:function(msg){
+			if(msg.code==200){
+	 			layer.msg(msg.msg);
+			}else{
+				layer.msg(msg.msg);
+	 			return false;
+			}
+          }
+        });
+	});
+</script>
+<script src="__STATIC__/js/mi_index.js" ></script>
+<script src="__STATIC__/js/mi_rotate.js" ></script>

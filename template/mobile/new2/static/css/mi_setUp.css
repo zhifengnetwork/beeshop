@@ -6,7 +6,7 @@ body{max-width:7.5rem;min-width:3.2rem;width:7.5rem;margin:0 auto;background:#f5
 
 .wtf_wrap {width: 7.5rem;margin: 0 auto;overflow: hidden;}
 .wtf_top {width: 100%;height: 0.86rem;background: #fff;position: relative;}
-.wtf_top span{display: block;position: absolute;left: 0.3rem;top: 50%;transform: translateY(-50%);width: 8%;}
+.wtf_top span{display: block;position: absolute;left: 0.3rem;top: 50%;transform: translateY(-50%);width: 10%;}
 .wtf_top span img{width: 100%;}
 .wtf_top p{text-align: center;font-size: 0.23rem;color: #333;line-height: 0.86rem;}
 

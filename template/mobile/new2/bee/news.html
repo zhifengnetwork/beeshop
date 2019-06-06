@@ -9,7 +9,6 @@
 	</head>
 	<style>
 		.wrap {
-			position: relative;
 			width: 100%;
 			height: 13.34rem;
 			background: url(/template/mobile/new2/static/images/imge/v2.jpg) no-repeat;
@@ -23,7 +22,14 @@
 			font-size: .3rem;
 			line-height: .45rem;
 		}
-		
+		.auto {
+			position: absolute;
+			top: 30%;
+			left: 10%;
+			width: 80%;
+			height: 2.35rem;
+			overflow-y: auto;
+		}
 		.t_view {
 			display: none;
 			position: absolute;
@@ -37,25 +43,14 @@
 		.t_Wrap {
 			display: none;
 			position: absolute;
-			top: 25%;
+			top: 20%;
 			left: 13%;
 			width: 75%;
 			height: 5rem;
 			background: url(/template/mobile/new2/static/images/imge/f_9.png) no-repeat;
 			background-size: 100% 100%;
-			font-size: 12px;
+			font-size: 14px;
 			z-index: 10;
-		}
-		.auto {
-			position: absolute;
-			top: 30%;
-			left: 10%;
-			/*width: 80%;*/
-			height: 2.35rem;
-			overflow-y: auto;
-		}
-		.t_Wrap p {
-			width: 80%;
 		}
 		.t_Xbtn {
 			position: absolute;
@@ -76,7 +71,11 @@
 			background-size: 100% 100%;
 		}
 		.art {
-			
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: .85rem;
 			text-align: center;
 			font-size: 0;
 		}
@@ -89,7 +88,7 @@
 			font-size: 0;
 		}
 		h2 {
-			float: right;
+			float: left;
     		width: 100%;
 			display: inline-block;
 			font-size: .45rem;
@@ -101,11 +100,19 @@
 			width: 100%;
 		}
 		ul {
+			margin: 12% 0 0 0;
 			clear: both;
 		}
 		ul li a {
 			color: #000;
 			font-weight: 600;
+		}
+		.up {
+			font-size: 16px;
+		}
+		#title {
+			font-size: .35rem;
+			text-align: center;
 		}
 	</style>
 	<body>
@@ -115,26 +122,30 @@
 					<a href="javascript:history.back(-1)">
 						<img src="__STATIC__/images/imge/fh.png"/>
 					</a>
-					
+					<h2>公告</h2>
 				</div>
-				<h2>公告</h2>
+				
 				<ul>
-					<volist name="noticeList" id='item'>
-						<li class="t_ht"><a href="javascript:" onclick="getContent('{$item.content}');"><span>{$i}.{$item.title}</span></a></li>
-					</volist>
+					<!-- <li class="t_ht"><span>1.</span>dgrdhtrfgjnytjmku</li>
+					<li><span>2.</span>jnrtfgjnyhkm</li>
+					<li><span>3.</span>xrthntcyjmnyk</li>
+					<li><span>4.</span>rhbtrfghnmk</li>
+					<li><span>5.</span>tgrsxhytd5rj</li> -->
+					<empty name="noticeList">
+						<p class="up">目前没有消息！</p>
+					<else/>
+						<volist name="noticeList" id='item'>
+							<li class="t_ht"><a href="javascript:" onclick="getContent('{$item.title}', '{$item.content}');"><span>{$i}.{$item.title}</span></a></li>
+						</volist>
+					</empty>
 				</ul>
 				
 				<!--公告弹框-->
 				<div class="t_Wrap">
 					<div class="auto">
-						<p id='content'>您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)</p>
-						<p>您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)
-						您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)
-						您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)
-						您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)
-						您是否花费99元认养一只蜂王幼峰?认养后赠送一个蜂箱,5滴蜂王浆,10滴水和20克阳光值.(一个ID最多只能认养50只蜂王幼蜂.您已认养0/50只幼蜂)
-						</p>
-					</div>
+						<p id='title'></p>
+						<p id='content'></p>
+					</div>	
 					<div class="t_Xbtn"></div>
 					<div class="t_Qbtn"></div>
 				</div>
@@ -162,9 +173,9 @@
 			$('.t_view').show();
 		})
 
-		function getContent(data)
+		function getContent(title, content)
 		{
-			$('#content').html(data);
+			$('#title').text(title);
+			$('#content').html(content);
 		}
-		
 </script>

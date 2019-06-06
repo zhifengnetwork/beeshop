@@ -1,4 +1,8 @@
-﻿#container {
+﻿* {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color:transparent;
+}
+#container {
 	position: relative;
 	width: 100%;
     height: 13.34rem;
@@ -7,7 +11,7 @@
 #container .wrap {
 	position: relative;
 	height: 100%;
-	background: url(/template/mobile/new2/static/images/imge/bj003.png) no-repeat;
+	background: url(/template/mobile/new2/static/images/imge/zuixin-bj.png) no-repeat;
 	background-size: 100% 100%;
 }
 /*头像*/
@@ -91,7 +95,7 @@
 	font-size: 0;
 	position: absolute;
 	top: 16%;
-	left: 1%;
+	left: 2%;
 	width: 12%;
 }
 #container .wrap .next .icon {
@@ -128,7 +132,7 @@
 /*好友，打扫，守卫，地图，转盘*/
 #container .wrap .sidebar {
 	position: absolute;
-	top: 22%;
+	top: 18%;
 	right: 6%;
 	width: 13%;
 }
@@ -137,10 +141,28 @@
 	font-size: 0;
 }
 #container .wrap .sidebar .iv {
-	margin: 0 0 .5rem 0;
+	position: relative;
+	margin: 0 0 .35rem 0;
+}
+
+/*转盘提示*/
+.times {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: .35rem;
+	height: .35rem;
+	background: red;
+	font-size: 12px;
+	color: #fff;
+	line-height: .35rem;
+	text-align: center;
+	border-radius: 50%;
+	font-weight: 900;
 }
 img {
 	width: 100%;
+	
 }
 /*峰箱*/
 .tank {
@@ -185,7 +207,7 @@ img {
 	height: 5rem;
 	background: url(/template/mobile/new2/static/images/imge/f_95.png) no-repeat;
 	background-size: 100% 100%;
-	font-size: .14rem;
+	font-size: 16px;
 }
 #container .wrap .hint-wrap .hint p {
 	margin: 85px 0 0 23px;
@@ -243,10 +265,15 @@ img {
 
 /*商店*/
 #container .wrap .shop {
+	width: 115%;
+}
+
+/*互转*/
+#container .wrap .hz {
 	position: absolute;
-	bottom: 10%;
-	right: 25%;
-	width: 17%;
+	top: 13%;
+	right: 30%;
+	width: 12%;
 }
 #container .wrap .shop a {
 	display: block;
@@ -563,15 +590,19 @@ img {
 	height: 5rem;
 	background: url(/template/mobile/new2/static/images/imge/f_9.png) no-repeat;
 	background-size: 100% 100%;
-	font-size: 16px;
+	font-size: 14px;
 	z-index: 10;
 }
-.t_Wrap p {
+
+.auto {
 	position: absolute;
 	top: 30%;
 	left: 8%;
 	width: 80%;
+	height: 2.15rem;
+	overflow-y: auto;
 }
+
 .t_Xbtn {
 	position: absolute;
 	top: 12%;
@@ -595,7 +626,7 @@ img {
 .dropWrap {
 	display: none;
 	position: fixed;
-	bottom: 0;
+	bottom: -13.34rem;
 	background: url(/template/mobile/new2/static/images/imge/t_bj_01.png) no-repeat;
 	width: 7.58rem;
 	height: 6.6rem;
@@ -633,6 +664,14 @@ img {
 	background: url(/template/mobile/new2/static/images/imge/t_fw1.png) no-repeat;
 	background-size: 100% 100%;
 }
+/*工蜂喂养*/
+.dropWrap .t_peak-5 {
+	margin: 0 0 2% 0;
+	height: 1rem;
+	background: url(/template/mobile/new2/static/images/imge/gf01.png) no-repeat;
+	background-size: 100% 100%;
+}
+
 .t_peakBtn-1 {
 	margin: 3% 3% 0 0;
 	float: right;
@@ -665,6 +704,15 @@ img {
 	background: url(/template/mobile/new2/static/images/imge/7.png) no-repeat;
 	background-size: 100% 100%;
 }
+/*工蜂喂养*/
+.t_peakBtn-5 {
+	margin: 3% 3% 0 0;
+	float: right;
+	width: 20%;
+	height: .65rem;
+	background: url(/template/mobile/new2/static/images/imge/t_wy.png) no-repeat;
+	background-size: 100% 100%;
+}
 
 /*下拉导航-背影*/
 .selectBox {
@@ -676,4 +724,127 @@ img {
 	width: 100%;
 	height: 100%;
 	background: rgba(0,0,0,0.4);
+}
+
+/*互转弹框*/
+.t-box {
+	display: none;
+	position: absolute;
+	top: 20%;
+	left: 16%;
+	z-index: 5;
+	width: 65%;
+	height: 6.5rem;
+	background: url(/template/mobile/new2/static/images/imge/jl_01.png) no-repeat;
+	background-size: 100% 100%;
+}
+.t-box a {
+	margin: 5% 0 0 60%;
+	display: block;
+	width: 35%;
+	height: .45rem;
+	background: linear-gradient(#ffe324,#ffb533);
+    background: -webkit-linear-gradient(#ffe324,#ffb533);
+	font-size: .25rem;
+	text-align: center;
+	line-height: .45rem;
+	border-radius: 5px;
+	color: #000;
+}
+.inp-wrap {
+	margin: 10% 0 0 20%;
+}
+.inp-wrap input {
+	border: none;
+	outline: none;
+}
+.y-inp,.j-inp {
+	width: 75%;
+	height: .85rem;
+	text-indent: 10%;
+	font-size: .26rem;
+}
+.t-inp {
+    width: 75%;
+    height: .85rem;
+    background: linear-gradient(#ffcb52,#ff7b02);
+    background: -webkit-linear-gradient(#ffcb52,#ff7b02);
+    border-radius: 5px;
+    font-size: .35rem;
+    font-weight: 900;
+    text-align: center;
+    line-height: .85rem;
+}
+.v-vive {
+	display: none;
+	z-index:1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+}
+
+/*新手提示框*/
+.reminder {
+	display: none;
+	position: absolute;
+	top: 13%;
+	left: 8%;
+	z-index: 50;
+	width: 85%;
+	height: 2.5rem;
+	background: url(/template/mobile/new2/static/images/imge/tsy.png) no-repeat;
+	background-size: 100% 100%;
+}
+.reminder p {
+	margin: 8% 0 0 29%;
+	width: 70%;
+	font-size: 14px;
+}
+.show {
+	display: none;
+	z-index:1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+}
+.show p {
+	margin: 57% 0 0 56%;
+	font-size: 14px;
+	color: #fff;
+}
+/*蜂王*/
+.wasp {
+	margin: 0 0 2%;	
+	height: 1.15rem;
+	background: url(/template/mobile/new2/static/images/imge/t_fw1.png) no-repeat;
+	background-size: 100% 100%;
+}
+.wasp div {
+	display: inline-block;
+	vertical-align: top;
+}
+/*.wasp .tu {
+	margin: 1% 0 0 6%;
+	width: 12%;
+	font-size: 0;
+}*/
+.wasp .skill {
+	margin-left: 35%;
+	width: 25%;
+	height: 1.15rem;
+	font-size: .4rem;
+	text-align: center;
+	line-height: 1.15rem;
+	font-weight: 500;
+}
+.wasp .cai {
+	margin: 3% 0 0 12%;
+	width: 20%;
+	font-size: 0;
 }

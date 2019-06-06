@@ -24,6 +24,7 @@ class GooeyExpend extends MobileBase {
     public $user_id = 0;
     public $user = array();
     public $config = array();
+    public $accTime = 60 ; //3600
 
     public function _initialize()
     {
@@ -50,12 +51,28 @@ class GooeyExpend extends MobileBase {
     * 喂养蜂王浆的数量后台设置
     */
     public function feedDebby(){
-
+        
+        // 判断当天是否达到后台设置次数
+        $t = time();
+        $start_time = mktime(0,0,0,date('m'),date('d'),date('Y'));;  //当天开始时间
         // 获取bee_flow记录判断当天是否已经喂养过一次
-        $flowData = M('bee_flow')->where(['uid'=>$this->user_id, 'type'=>804])->whereTime('create_time', 'today')->find();
-        if($flowData){
-            return json(['code'=>'-1','msg'=>'蜂王今天喂食过了哦']);
+        // $where1['uid'] = $this->user_id;
+        // $where1['type'] = 804; // 标记
+        // $where1['create_time'] = ['>', $start_time]; 
+        // $flowData = M('bee_flow')->where($where1)->count('id');
+        // if($flowData){
+        //     return json(['code'=>'-1','msg'=>'蜂王喂食过了哦']);
+        // }
+       
+        $five_can_num = $this->config['five_can_num']?$this->config['five_can_num']:6;
+        $where2['uid'] = $this->user_id;
+        $where2['type'] = 804; // 标记
+        $where2['create_time'] = ['>', $start_time]; 
+        $getData = M('bee_flow')->where($where2)->count('id');
+        if($getData>=$five_can_num){
+            return json(['code'=>'-1','msg'=>'今天已超出最大操作次数...']);
         }
+
         // 判断当前用户的蜂王浆是否足够
         $beeMilkNum = $this->config['seven_bee_milk_days']?$this->config['seven_bee_milk_days']:1;
 
@@ -99,6 +116,18 @@ class GooeyExpend extends MobileBase {
         if($flowData){
             return json(['code'=>'-1','msg'=>'工蜂今天喂食过了哦']);
         }
+
+        // 判断当天是否达到后台设置次数
+        $t = time();
+        $start_time = mktime(0,0,0,date('m'),date('d'),date('Y'));;  //当天开始时间
+        $five_can_num = $this->config['five_can_num']?$this->config['five_can_num']:6;
+        $where2['uid'] = $this->user_id;
+        $where2['type'] = 805; // 标记
+        $where2['create_time'] = ['>', $start_time]; 
+        $getData = M('bee_flow')->where($where2)->count('id');
+        if($getData>=$five_can_num){
+            return json(['code'=>'-1','msg'=>'今天已超出最大操作次数...']);
+        }
         // 判断当前用户的蜜糖是否足够
         $beeGooeyNum = $this->config['seven_gooey_days']?$this->config['seven_gooey_days']:1;
 
@@ -106,6 +135,8 @@ class GooeyExpend extends MobileBase {
         if($beeGooey['gooey']<$beeGooeyNum){
             return json(['code'=>'-1','msg'=>'你的蜜糖不足哦']);
         }
+
+
 
         // 执行喂养操作
         $decRes = M('user_bee_account')->where(['uid'=>$this->user_id])->setDec('gooey', $beeGooeyNum);
@@ -232,7 +263,7 @@ class GooeyExpend extends MobileBase {
         $where['uid'] = $this->user_id;
         $where['type'] = 808;
         $checkOne = M('bee_flow')->field('uid,create_time')->where($where)->order('create_time desc')->find();
-        $checkTime = $checkOne['create_time']+3600; // +1小时
+        $checkTime = $checkOne['create_time']+$this->accTime; // +1小时
         if(time()<$checkTime){
             return json(['code'=>'-1','msg'=>'已打扫过...']);
         }
@@ -269,7 +300,7 @@ class GooeyExpend extends MobileBase {
         $where['uid'] = $this->user_id;
         $where['type'] = 809;
         $checkOne = M('bee_flow')->field('uid,create_time')->where($where)->order('create_time desc')->find();
-        $checkTime = $checkOne['create_time']+3600; // +1小时
+        $checkTime = $checkOne['create_time']+$this->accTime; // +1小时
         if(time()<$checkTime){
             return json(['code'=>'-1','msg'=>'正在守卫...']);
         }

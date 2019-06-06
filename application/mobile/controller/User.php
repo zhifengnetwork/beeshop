@@ -79,6 +79,8 @@ class User extends MobileBase
         $user = $logic->get_info($user_id); //当前登录用户信息
         $comment_count = M('comment')->where("user_id", $user_id)->count();   // 我的评论数
         $level_name = M('user_level')->where("level_id", $this->user['level'])->getField('level_name'); // 等级名称
+        //获取蜂王浆数据
+        $bee_milk=M('user_bee_account')->where('uid',$user_id)->getField('bee_milk');
         //获取用户信息的数量
         $messageLogic = new MessageLogic();
         $user_message_count = $messageLogic->getUserMessageCount();
@@ -86,6 +88,7 @@ class User extends MobileBase
         $this->assign('level_name', $level_name);
         $this->assign('comment_count', $comment_count);
         $this->assign('user',$user['result']);
+        $this->assign('bee_milk',$bee_milk);
         return $this->fetch();
     }
 

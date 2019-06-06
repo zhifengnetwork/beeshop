@@ -98,11 +98,14 @@ class weixin extends Model
     	} elseif (stripos($order['order_sn'],'Bee') !== false){
             $go_url = U('Mobile/BeeShop/bee_raise',array('oid'=>$order['order_sn']));
             $back_url = U('Mobile/Bee/beeIndex');
+        } elseif (stripos($order['order_sn'],'Male') !== false){
+            $go_url = U('Mobile/BeeShop/drone_buy');
+            $back_url = U('Mobile/Bee/beeIndex');
         }else{
     		$go_url = U('Mobile/User/order_detail',array('id'=>$order['order_id']));
     		$back_url = U('Mobile/Cart/cart4',array('order_id'=>$order['order_id']));
     	}
-        
+
         //①、获取用户openid
         $tools = new JsApiPay();
         //$openId = $tools->GetOpenid();

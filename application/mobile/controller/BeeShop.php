@@ -90,7 +90,7 @@ class BeeShop extends MobileBase {
 
         $order_id = I('oid');
 
-        $paymentList = M('user_bee')->where(['order_sn'=>$order_id,'status'=>1])->select();
+        $paymentList = M('user_bee')->where(['order_sn'=>$order_id,'status'=>1,'die_status'=>0])->select();
         if ($paymentList == null) {
             $data['status'] = 0;
             $data['msg'] = '支付失败';
@@ -110,6 +110,7 @@ class BeeShop extends MobileBase {
                 $prop = [
                     'bee_hive' => $count['bee_hive'] + $this->config['one_give_hive'] == '' ? 0 : $this->config['one_give_hive'], //蜂箱
                     'bee_milk' => $count['bee_milk'] + $this->config['one_bee_milk'], //蜂王浆
+                    'gooey' => $count['gooey'] + $this->config['one_gooey'], //蜜糖
                     'water' => $count['water'] + $this->config['one_water'], //水
                     'sun_value' => $count['sun_value'] + $this->config['one_sun'], //阳光
                     'update_time' => time()
@@ -121,6 +122,7 @@ class BeeShop extends MobileBase {
                     'uid' => $this->user_id,
                     'bee_hive' => $this->config['one_give_hive'], //蜂箱
                     'bee_milk' => $this->config['one_bee_milk'], //蜂王浆
+                    'gooey' => $this->config['one_gooey'], //蜜糖
                     'water' => $this->config['one_water'], //水
                     'sun_value' => $this->config['one_sun'], //阳光
                     'create_time' => time()
@@ -129,7 +131,7 @@ class BeeShop extends MobileBase {
                 $id = $row;
             }
             // 添加积分
-            $this->userPoints( 1, $this->config['one_bee_milk']);
+//            $this->userPoints( 1, $this->config['one_bee_milk']);
             
             M('user_bee')->where(['order_sn'=>$order_id])->save(['status'=>1]);
 
@@ -174,6 +176,14 @@ class BeeShop extends MobileBase {
             'create_time' => time(),
             'note' => '购买幼蜂赠送'
             ],
+            ['bid' => $id,
+            'uid' => $this->user_id,
+            'type' => 202,
+            'inc_or_dec' => 1,
+            'num' => $this->config['one_gooey'],
+            'create_time' => time(),
+            'note' => '购买幼蜂赠送蜜糖'
+            ]
         ];
 
         $this->prop_log($log);
@@ -191,9 +201,9 @@ class BeeShop extends MobileBase {
     // 喂养
     public function bee_feed()
     {
-        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1))->count();
+        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1,'die_status'=>0))->count();
         if($bee >= 1){
-            $level = M('user_bee')->where(array('uid' => $this->user_id,'level' => 1, 'status' => 1))->find();
+            $level = M('user_bee')->where(array('uid' => $this->user_id,'level' => 1, 'status' => 1,'die_status'=>0))->find();
 
             if($level == null){
                 $data['msg'] = '您暂时没有幼蜂需要喂养！';
@@ -256,6 +266,9 @@ class BeeShop extends MobileBase {
                     ],
                 ];
                 $this->prop_log($log);
+                //喂养消耗了蜂王浆同时需要消耗会员积分
+//                $this->userPoints(2,$this->config['two_fee_bee_milk']);
+                Db::commit();
 
             } catch (\Exception $e) {
                 Db::rollback();
@@ -280,14 +293,12 @@ class BeeShop extends MobileBase {
         $count = M('user_bee_account')->where('uid','=',$this->user_id)->find();
 
         if ($type == 1){
-            // 购买
+            // 余额购买
             $pay = $this->bee_pay($this->config['one_bee_money']);
             if($pay['status'] != 1){
                 $this->ajaxReturn($pay);
                 exit;
             }
-
-            $this->drone_buy($count);
 
             $data['msg'] = '购买成功';
         } else {
@@ -337,13 +348,17 @@ class BeeShop extends MobileBase {
             ],
         ];
         $this->prop_log($log);
+        //消耗了蜂王浆需要减会员积分
+//        $this->userPoints(2,$this->config['three_drip_bee_milk']);
 
         return $row;
     }
 
     // 购买雄蜂
-    public function drone_buy($data)
+    public function drone_buy()
     {
+
+        $data = M('user_bee_account')->where('uid','=',$this->user_id)->find();
 
         if ($data != null){
             $prop = [
@@ -377,15 +392,82 @@ class BeeShop extends MobileBase {
 
         $this->prop_log($log);
 
-        return ture;
+        $data['status'] = 1;
+        $data['msg'] = '购买成功';
+        $data['go_url'] = U('Mobile/Bee/beeIndex');
+
+        $this->assign('data', $data); 
+        return $this->fetch('/bee/succeed');
 
     }
 
-    // 交配
+//    // 交配
+//    public function bee_mating()
+//    {
+//
+//        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1, 'level' => 2, 'is_mating' => 0))->find();
+//
+//        if($bee == null){
+//            $data['msg'] = '您没有可进行交配的蜂王！';
+//            exit(json_encode($data));
+//        }
+//
+//        $user_prop = M('user_bee_account')->where(array('uid' => $this->user_id))->where('drone','>=',1)->find();
+//
+//        if($user_prop == null){
+//            $data['msg'] = '请先购买雄蜂！';
+//            exit(json_encode($data));
+//        }
+//
+//        //事务
+//        Db::startTrans();
+//        try{
+//
+//            $prop = [
+//                'drone' => $user_prop['drone'] - 1, //雄蜂
+//                'update_time' => time()
+//            ];
+//
+//            M('user_bee_account')->where(array('uid' => $this->user_id))->save($prop);
+//            M('user_bee')->where(array('id' => $bee['id']))->save(['is_mating'=>1]);
+//            M('users')->where(array('user_id' => $this->user_id))->setInc('draw_num');
+//
+//            $this->lay_eggs($bee); // 产卵
+//
+//        } catch (\Exception $e) {
+//            Db::rollback();
+//        }
+//
+//        //道具日志
+//        $log = [
+//            ['bid' => $bee['id'],
+//            'uid' => $this->user_id,
+//            'type' => 501,
+//            'inc_or_dec' => 2,
+//            'num' => 1,
+//            'create_time' => time(),
+//            'note' => '交配'
+//            ],
+//            ['bid' => $bee['id'],
+//            'uid' => $this->user_id,
+//            'type' => 111,
+//            'inc_or_dec' => 1,
+//            'num' => 1,
+//            'create_time' => time(),
+//            'note' => '完成交配赠送抽奖1次'
+//            ],
+//        ];
+//
+//        $this->prop_log($log);
+//
+//        $data = ['status' => 1, 'msg' => '交配成功'];
+//        exit(json_encode($data));
+//    }
+    // 20190322 新的交配  下一级成功送上一级抽奖次数
     public function bee_mating()
     {
 
-        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1, 'level' => 2, 'is_mating' => 0))->find();
+        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1, 'level' => 2, 'is_mating' => 0,'die_status'=>0))->find();
 
         if($bee == null){
             $data['msg'] = '您没有可进行交配的蜂王！';
@@ -398,7 +480,11 @@ class BeeShop extends MobileBase {
             $data['msg'] = '请先购买雄蜂！';
             exit(json_encode($data));
         }
-
+        //获取当前用户的上级uid
+        $first_leader=M('users')->where(array('user_id'=>$this->user_id))->field('first_leader')->find();
+//        $mmp[]=['depart_num','<',60];
+//        $mmp[]=['uid','<',$this->user_id];
+        $is_need=M("user_bee")->where('depart_num','<',60)->where(['uid'=>$first_leader['first_leader'],'die_status'=>0])->count();
         //事务
         Db::startTrans();
         try{
@@ -410,25 +496,45 @@ class BeeShop extends MobileBase {
 
             M('user_bee_account')->where(array('uid' => $this->user_id))->save($prop);
             M('user_bee')->where(array('id' => $bee['id']))->save(['is_mating'=>1]);
-
+            if($is_need && $first_leader['first_leader']!=0){
+                M('users')->where(array('user_id' => $first_leader['first_leader']))->setInc('draw_num');
+            }
             $this->lay_eggs($bee); // 产卵
-
+            Db::commit();
         } catch (\Exception $e) {
             Db::rollback();
         }
 
         //道具日志
-        $log = [
-            ['bid' => $bee['id'],
-            'uid' => $this->user_id,
-            'type' => 501,
-            'inc_or_dec' => 2,
-            'num' => 1,
-            'create_time' => time(),
-            'note' => '交配'
-            ],
-        ];
-
+        if($first_leader['first_leader']==0){
+            $log = ['bid' => $bee['id'],
+                    'uid' => $this->user_id,
+                    'type' => 501,
+                    'inc_or_dec' => 2,
+                    'num' => 1,
+                    'create_time' => time(),
+                    'note' => '交配'
+                ];
+        }else{
+            $log = [
+                ['bid' => $bee['id'],
+                    'uid' => $this->user_id,
+                    'type' => 501,
+                    'inc_or_dec' => 2,
+                    'num' => 1,
+                    'create_time' => time(),
+                    'note' => '交配'
+                ],
+                ['bid' => $bee['id'],
+                    'uid' => $this->user_id,
+                    'type' => 111,
+                    'inc_or_dec' => 1,
+                    'num' => 1,
+                    'create_time' => time(),
+                    'note' => '完成交配赠送上一级用户'.$first_leader['first_leader'].'抽奖1次'
+                ],
+            ];
+        }
         $this->prop_log($log);
 
         $data = ['status' => 1, 'msg' => '交配成功'];
@@ -456,7 +562,7 @@ class BeeShop extends MobileBase {
     // 孵化
     public function bee_hatch()
     {
-        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'is_mating' => 1, 'is_oviposition' => 1))->find();
+        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'is_mating' => 1, 'is_oviposition' => 1,'die_status'=>0))->find();
 
         if($bee == null){
             $data['msg'] = '您没有可进行孵化的幼卵！';

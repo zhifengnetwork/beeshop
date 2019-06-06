@@ -23,7 +23,7 @@ use think\Db;
 
 
 /**
- * 积分商品
+ * 蜂王券商品
  * Class IntegralLogic
  * @package app\common\logic
  */
@@ -77,7 +77,7 @@ class IntegralLogic extends Model
             return ['status' => 0, 'msg' => '商品已下架'];
         }
         if ($this->goods['exchange_integral'] <= 0) {
-            return ['status' => 0, 'msg' => '该商品不属于积分兑换商品'];
+            return ['status' => 0, 'msg' => '该商品不属于蜂王券兑换商品'];
         }
         if ($this->goods['store_count'] == 0) {
             return ['status' => 0, 'msg' => '商品库存为零'];
@@ -101,9 +101,9 @@ class IntegralLogic extends Model
             }
         }
         $integral_use_enable = tpCache('shopping.integral_use_enable');
-        //购买设置必须使用积分购买，而用户的积分不足以支付
+        //购买设置必须使用蜂王券购买，而用户的蜂王券不足以支付
         if ($total_integral > $this->user['pay_points'] && $integral_use_enable == 1) {
-            return ['status' => 0, 'msg' => "你的账户可用积分为:" . $this->user['pay_points']];
+            return ['status' => 0, 'msg' => "你的账户可用蜂王券为:" . $this->user['pay_points']];
         }
         return ['status' => 1, 'msg' => '购买成功', 'result' => ['url' => U('Cart/integral', $urlParam)]];//返回购买链接
     }
@@ -114,8 +114,8 @@ class IntegralLogic extends Model
         $this->structure = [
             'shipping_price' => 0, // 物流费
             'user_money' => 0, // 使用用户余额
-            'integral_money' => 0, // 总积分支付的金额
-            'total_integral' => 0, // 总积分支付
+            'integral_money' => 0, // 总蜂王券支付的金额
+            'total_integral' => 0, // 总蜂王券支付
             'simple_goods_price'=> 0,//单个商品价格
             'goods_price' => 0,// 总商品价格
             'order_amount'=>0,
@@ -144,14 +144,14 @@ class IntegralLogic extends Model
         if($this->userMoney > $this->user['user_money']){
             return ['status' => -6, 'msg' => "你的账户可用余额为:" . $this->user['user_money'], 'result' => ''];
         }
-        $total_integral = $this->goods['exchange_integral'] * $this->buyNum;//需要兑换的总积分
+        $total_integral = $this->goods['exchange_integral'] * $this->buyNum;//需要兑换的总蜂王券
         if($total_integral <= $this->user['pay_points']){
-            $this->structure['total_integral'] = $this->goods['exchange_integral'] * $this->buyNum;//需要兑换的总积分
+            $this->structure['total_integral'] = $this->goods['exchange_integral'] * $this->buyNum;//需要兑换的总蜂王券
             $point_rate = tpCache('shopping.point_rate'); //兑换比例
-            $this->structure['integral_money'] = $this->structure['total_integral'] / $point_rate;//总积分兑换成的金额
+            $this->structure['integral_money'] = $this->structure['total_integral'] / $point_rate;//总蜂王券兑换成的金额
         }else{
-            $this->structure['total_integral'] = 0;//需要兑换的总积分
-            $this->structure['integral_money'] = 0;//总积分兑换成的金额
+            $this->structure['total_integral'] = 0;//需要兑换的总蜂王券
+            $this->structure['integral_money'] = 0;//总蜂王券兑换成的金额
         }
 
         $exchange_integral_money = $this->structure['goods_price'] - $this->structure['integral_money'] + $this->structure['shipping_price'];//要需要支付的金额
@@ -182,11 +182,11 @@ class IntegralLogic extends Model
             'shipping_name'    =>$shipping['name'], //'物流名称',
             'invoice_title'    =>$invoice_title, //'发票抬头',
             'user_note'        =>$user_note, //'给卖家留言',
-            'goods_price'      =>$this->structure['goods_price'],//积分商品价格',
+            'goods_price'      =>$this->structure['goods_price'],//蜂王券商品价格',
             'shipping_price'   =>$this->structure['shipping_price'],//物流价格,
             'user_money'       =>$this->structure['user_money'], // 当前订单使用的余额数量
-            'integral'         =>$this->structure['total_integral'], // 使用的积分数量
-            'integral_money'   =>$this->structure['integral_money'],//使用积分抵多少钱,
+            'integral'         =>$this->structure['total_integral'], // 使用的蜂王券数量
+            'integral_money'   =>$this->structure['integral_money'],//使用蜂王券抵多少钱,
             'total_amount'     =>$this->structure['goods_price'] + $this->structure['shipping_price'],// 订单总额 = 商品总价 + 物流费
             'order_amount'     =>$this->structure['order_amount'],//'应付款金额',
             'add_time'         =>time(), // 下单时间
@@ -214,7 +214,7 @@ class IntegralLogic extends Model
             'goods_price'  => $this->structure['simple_goods_price'],// 商品价
             'member_goods_price'  => $this->structure['simple_goods_price'],// 会员折扣价
             'cost_price'  => $this->goods['cost_price'],// 成本价
-            'give_integral'  => $this->goods['give_integral'],// 购买商品赠送积分
+            'give_integral'  => $this->goods['give_integral'],// 购买商品赠送蜂王券
         ];
         if(empty($this->specGoodsPrice)){
             $orderGoodsData['sku'] = $this->goods['sku'];// 商品条码
@@ -227,15 +227,15 @@ class IntegralLogic extends Model
         if(tpCache('shopping.reduce') == 1) {
             minus_stock($order);//下单减库存
         }
-        // 如果应付金额为0  可能是余额支付 + 积分 + 优惠券 这里订单支付状态直接变成已支付
+        // 如果应付金额为0  可能是余额支付 + 蜂王券 + 优惠券 这里订单支付状态直接变成已支付
         if ($this->structure['order_amount'] == 0) {
             update_pay_status($order_sn); // 这里刚刚下的订单必须从主库里面去查
         }
 
-        // 3 扣除积分 扣除余额
+        // 3 扣除蜂王券 扣除余额
         $user = Users::get($this->user['user_id']);
         if($this->structure['total_integral'] > 0){
-            $user->pay_points = $user->pay_points - $this->structure['total_integral'];// 用户的积分减
+            $user->pay_points = $user->pay_points - $this->structure['total_integral'];// 用户的蜂王券减
             $this->user_bee($this->user['user_id'],$this->structure['total_integral']);
         }
 

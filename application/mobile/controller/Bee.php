@@ -11,7 +11,7 @@
  * ============================================================================
  * $Author: IT宇宙人 2015-08-10 $
  */
-namespace app\mobile\controller; 
+namespace app\mobile\controller;
 use app\common\logic\GoodsPromFactory;
 use app\common\logic\SearchWordLogic;
 use app\common\logic\GoodsLogic;
@@ -80,11 +80,25 @@ class Bee extends MobileBase {
         $test = $code->bonus();
         $level = 0;
         $mating = 0;
-
-        $bee = M('user_bee')->where(array('uid' => $this->user_id,'status'=>1))->select();
+        //是否有工蜂
+        $is_workbee=0;
+        //是否有侦查蜂
+        $is_scoutbee=0;
+        //蜂王数量
+        $queen_num=0;
+        $queen_num = M('user_bee')->where(['uid'=>$this->user_id, 'level'=>2,'die_status'=>0])->count();
+        $bee = M('user_bee')->where(array('uid' => $this->user_id,'status'=>1,'die_status'=>0))->select();
+        //幼峰数量
+        $young=0;
         foreach($bee as $key => $value){
             if($value['level'] == 1){
-                $young = count($key);
+                $young++;
+            }
+            if($value['worker_bee']>0){
+                $is_workbee=1;
+            }
+            if($value['scout_bee']){
+                $is_scoutbee=1;
             }
             // if($value['level'] == 2){
             //     $level = count($key);
@@ -95,11 +109,12 @@ class Bee extends MobileBase {
         }
 
         $user_prop = M('user_bee_account')->where(array('uid' => $this->user_id))->find();
-        $user_bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1))->select(); //幼蜂
+        $user_bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1,'die_status'=>0))->select(); //幼蜂
         $user_prop['young'] = $young; // 幼蜂
         // $user_prop['level'] = $level; // 蜂王
         // $user_prop['mating'] = $mating;
 //        dump($user_prop['bee_milk']);exit;
+
 
         //最新公告内容
         $notice = M('article')
@@ -109,8 +124,13 @@ class Bee extends MobileBase {
                 ->where('is_open', 1)
                 ->where('publish_time', '<', time())
                 ->find();
-        //转换html标签
-        $notice['content'] = htmlspecialchars_decode($notice['content']);
+        if($notice){
+            //转换html标签
+            $notice['content'] = htmlspecialchars_decode($notice['content']);
+        }
+        if(empty($user_bee)){
+//            $user_bee
+        }
         $this->assign('notice', $notice);
         $this->assign('user_prop', $user_prop);
         $this->assign('user_bee', $user_bee);
@@ -118,23 +138,81 @@ class Bee extends MobileBase {
          //增加头像
          $head_pic = session('user.head_pic');
          $this->assign('head_pic',$head_pic);
+         $this->assign('myUid',session('user.user_id'));
+
+         $this->assign('is_workbee',$is_workbee);
+         $this->assign('is_scoutbee',$is_scoutbee);
+
+         //距离丰收节还有几天
+        $days=60-M('bee_flow')->where(['type'=>701,'uid' => $this->user_id])->count();
+        $this->assign('day',$days);
+
+        //防止重复提交
+        $token=mt_rand(888,88888888);
+        session('token',$token);
+        $this->assign('token',$token);
+
+        //查询该用户有没有派遣过侦查蜂
+        $is_send=M('bee_flow')->where(['type'=>702,'uid'=>$this->user_id])->count();
+        $this->assign('is_send',$is_send);
+        //查询该用户有没有派遣过工蜂采蜜
+        $is_work=M('bee_flow')->where(['type'=>701,'uid'=>$this->user_id])->count();
+        $this->assign('is_work',$is_work);
+        //查询第一次采蜜之后有没有酿蜜
+        if(isset($is_work) && $is_work==1){
+            $is_make=M('bee_flow')->where(['type'=>802,'uid'=>$this->user_id])->count();
+            $this->assign('is_make',$is_make);
+        }
+        //获取额外抽奖次数
+        $draw_num=M("users")->where(['user_id'=>$this->user_id])->field('draw_num')->find();
+        $this->assign('draw_num',$draw_num['draw_num']);
+
+        $this->assign('queen_num',$queen_num);
+
+
          
         return $this->fetch('/bee/index');
     }
 
     //设置
     public function setUp(){
+        
         return $this->fetch();
+    }
+
+    public function type(){
+        $user_id = session('user.user_id');
+        $user_music = M("users")->where('user_id',$user_id)->find();
+        return json_encode(array("music_type"=>$user_music['music_type']));
     }
 
     public function music_type()
     {
+        // dump($_POST['type']);die;
         $user_id = session('user.user_id');
         $user_music = M("users")->where('user_id',$user_id)->find();
-        if(empty($user_music['music_type'])){
-            $user_music['music_type'] = 0;
+        if($_POST['type']){
+            
+            $data = array(
+                "music_type" => $_POST['type']
+            );
+            $res = M('users')->where('user_id',$user_id)->update($data);
+            if($res)
+            {
+                $msg = "关闭音乐成功";
+                
+            }else{
+                $msg = "关闭音乐失败!!!";
+            }
+            // dump($res);
+            return json_encode(array('msg'=>$msg,'music_type'=>$_POST['type']));
+        }else{
+            if(empty($user_music['music_type'])){
+                $user_music['music_type'] = 0;
+            }
+            return json_encode(array("music_type"=>$user_music['music_type']));
         }
-        return json_encode(array("music_type"=>$user_music['music_type']));
+        
     }
     
     private function user_find($user_id)
@@ -156,10 +234,23 @@ class Bee extends MobileBase {
     */ 
     public function beeFriend(){
         $user_id = session('user.user_id');
+        $user=array();
+        $my_user=array();
+        $other_user=array();
         $user = M('users')->where('first_leader',$user_id)->select();
+        $my_user = M('users')->where('user_id',$user_id)->find();
+        $other_user = M('users')->where('user_id',$my_user['first_leader'])->select();
+        $user=array_merge($user,$other_user);
         if ($user){
+//            foreach ($user as $key=>$value){
+//                $res=M('user_code')->where(['id'=>$value['user_id']])->find();
+//                if(isset($res) && !empty($res)){
+//                    $user[$key]['head_pic']=$res['img'];
+//                }
+//            }
             $this->assign("users",$user);
         }
+        $this->assign("myUid",$user_id);
         return $this->fetch('/bee/friend');
     }
 
@@ -182,8 +273,8 @@ class Bee extends MobileBase {
             }
             if($user['bee_milk']>=$money_nums)
             {
-                //同步积分字段
-                update_user($user_id,$money_nums,2);
+                //同步积分字段   20190326  客户改需求
+//                update_user($user_id,$money_nums,2);
                 //减少
                 $data_user = array(
                     "bee_milk" => $user['bee_milk']-$money_nums,
@@ -214,7 +305,7 @@ class Bee extends MobileBase {
                     );
                     $zj_bee = M("user_bee_account")->where('uid',$first_leader)->update($leader_data);
                 }
-                update_user($first_leader,$money_nums,1);
+//                update_user($first_leader,$money_nums,1);
                 if ($js_bee && $zj_bee){
                     $this->add_bee_flow($user_id,"222","赠送用户".$first_leader.",".$money_nums."滴蜂王浆",2);
                     $this->add_bee_flow($user_id,"222","用户".$first_leader."获得".$user_id."赠送的".$money_nums."滴蜂王浆",1);
@@ -285,7 +376,7 @@ class Bee extends MobileBase {
                 );
                 $msg = "恭喜您，".$bee_num."滴蜂王浆兑换一只雄峰成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
-                update_user($user_id,$bee_num,2);
+//                update_user($user_id,$bee_num,2);
 
                 if ($update)
                 {
@@ -309,7 +400,7 @@ class Bee extends MobileBase {
                 );
                 $msg = "恭喜您，".$nums."克蜜糖兑换".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
-                update_user($user_id,$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums'],1);
+//                update_user($user_id,$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums'],1);
                 if ($update)
                 {
                     //增加蜂王浆兑换雄峰日志记录
@@ -339,7 +430,7 @@ class Bee extends MobileBase {
 //                $note = $nums."克蜜糖浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴蜂王浆成功";
                 $msg = "恭喜您，".$num."滴蜂王浆兑".$this->config['eight_exchange_bee_milk']*$_POST['exchange_nums']."滴克蜜糖成功";
                 $update = $bee_account->where('uid',$user_id)->setField($data);
-                update_user($user_id,$this->config['eight_exchange_bee_milk'],2);
+//                update_user($user_id,$this->config['eight_exchange_bee_milk'],2);
                 if ($update)
                 {
                     //增加蜂王浆兑换雄峰日志记录
@@ -468,8 +559,15 @@ class Bee extends MobileBase {
 
         //判断是否有抽奖机会
         if ($prize_num>=$this->config['prize_count']) {
-            $msg = "你没有抽奖机会了哦";
-            return json(array('is_prize'=>$isPrize,'msg'=>$msg));
+            // 获取users表里面的抽奖记录数，如果当天抽奖次数用完，则查看users里面是否存在可抽奖数
+            $drawNum = M('users')->field('user_id,draw_num')->where('user_id', $this->user_id)->find();
+            if($drawNum['draw_num']<=0){
+                $msg = "你没有抽奖机会了哦";
+                return json(array('is_prize'=>$isPrize,'msg'=>$msg));
+            }
+            if($drawNum['draw_num']>=1){
+                $drawRes = M('users')->where('user_id', $this->user_id)->setDec('draw_num', 1);
+            }
         }
 
         $rid = $this->getRand($arr);   //根据概率获取奖项id
@@ -512,7 +610,7 @@ class Bee extends MobileBase {
                 } else {
                     M('user_bee_account')->where('uid',$userId)->update(['bee_milk'=>($prize_arr[$rid-1]['value']+$userBeeMilk['bee_milk']), 'update_time'=>time()]);
                 }
-                update_user($userId,$prize_arr[$rid-1]['value'],1);
+//                update_user($userId,$prize_arr[$rid-1]['value'],1);
             } else {
                 $bool = false;
             }
@@ -615,6 +713,236 @@ class Bee extends MobileBase {
             }
         }else{
             $this->ajaxReturn(2);
+        }
+    }
+    //ajax看uid是否存在
+    public function ajax_uid_find()
+    {
+        $user_id=I('uid');
+        $self_id=session('user.user_id');
+//        var_dump($self_id);die;
+        if(empty($user_id) || $user_id<=0 || $user_id==$self_id){
+            $this->ajaxReturn(0);
+        }
+        $where = "uid = '".$user_id."'";
+        $file = Db::name('user_bee_account')->where($where)->find();
+        if(empty($file)){
+            $this->ajaxReturn(0);
+        }else{
+            $this->ajaxReturn(1);
+        }
+
+    }
+    //ajax看余额是否充足
+    public function ajax_user_money_find(){
+        $user_id=I('uid');
+        $user_money=I('user_money');
+        $self_id=session('user.user_id');
+        if(empty($user_id) || $user_id<=0 || empty($user_money) || $user_money<=0 || $user_id==$self_id){
+            $this->ajaxReturn(0);
+        }
+        $where = "uid = '".$self_id."' and bee_milk>='".$user_money."'";
+        $file = Db::name('user_bee_account')->where($where)->find();
+//        $this->ajaxReturn($file);
+        if(empty($file)){
+            $this->ajaxReturn(0);
+        }else{
+            $this->ajaxReturn(1);
+        }
+    }
+    //转账操作
+    public function ajax_transfer_accounts(){
+        //防止重复提交
+        $token=I('token');
+//        var_dump($_SESSION);
+//        var_dump($token);die;
+        if($token!=session('token')){
+            header('location:'.U('Mobile/Bee/beeIndex'));
+        }
+        $user_id=I('uid');
+        $self_id=session('user.user_id');
+//        var_dump($self_id);die;
+        $user_money=I('user_money');
+        if(empty($user_id) || $user_id<=0 || empty($user_money) || $user_money<=0 || $user_id==$self_id){
+            $this->ajaxReturn(0);
+        }
+        //开启事务
+        Db::startTrans();
+        if($user_money==1){
+            $result1=M('user_bee_account')->where(['uid'=>$user_id])->setInc('bee_milk');
+            $result2=M('user_bee_account')->where(['uid'=>$self_id])->setDec('bee_milk');
+        }else{
+            $result1=M('user_bee_account')->where(['uid'=>$user_id])->setInc('bee_milk',$user_money);
+            $result2=M('user_bee_account')->where(['uid'=>$self_id])->setDec('bee_milk',$user_money);
+        }
+        //同时处理会员消费积分
+//        $result5=update_user($user_id,$user_money,1);
+//        $result6=update_user($self_id,$user_money,2);
+        $data = array();
+        $data['uid'] = $user_id;
+        $data['type'] = 810;
+        $data['inc_or_dec'] = 1;
+        $data['num'] = $user_money;
+        $data['create_time']=time();
+        $data['note']='用户ID为'.$self_id.'向我转账蜂王浆'.$user_money.'个';
+        $result3 = M('bee_flow')->insert($data);
+        $data1 = array();
+        $data1['uid'] = $self_id;
+        $data1['type'] = 810;
+        $data1['inc_or_dec'] = 2;
+        $data1['num'] = $user_money;
+        $data1['create_time']=time();
+        $data1['note']='我向ID为'.$user_id.'的用户转账蜂王浆'.$user_money.'个';
+        $result4 = M('bee_flow')->insert($data1);
+//        echo $result1."~~~~~~~~~~~~~".$result2."~~~~~~~~~~~~~~~~~".$result3."~~~~~~~~~~~~~~~~~~~~".$result4;die;
+        if($result1 && $result2 && $result3 && $result4){
+            Db::commit();
+            $this->ajaxReturn(1);
+        }else{
+            Db::rollback();
+            $this->ajaxReturn(0);
+        }
+    }
+    //转账记录
+    public function ajax_transfer_accounts_log(){
+        $self_id=session('user.user_id');
+        $p=I('page',1);
+        $count =  M('bee_flow')->where(['uid'=>$self_id])->count();
+        $pagesize = C('PAGESIZE');  //每页显示数
+        $page = new Page($count,$pagesize); // 实例化分页类 传入总记录数和每页显示的记录数
+        $show = $page->show();  // 分页显示输出
+        $this->assign('page',$show);    // 赋值分页输出
+        $list=M('bee_flow')->where(['uid'=>$self_id,'inc_or_dec'=>2,'type'=>810])->order('create_time desc')->page($p, 20)->select();
+        $startnum=($p-1)*20+1;
+        foreach($list as $key=>$value){
+            $list[$key]['ordernum']=$startnum;
+            $startnum++;
+        }
+        $this->assign('list',$list);
+//        var_dump($show);
+//        var_dump($page);die;
+        if(I('is_ajax')){
+            $this->ajaxReturn($list);
+        }else{
+            return $this->fetch('bee/record');
+        }
+
+    }
+    // 喂养工蜂
+    public function bee_feed()
+    {
+        //查询一下有没有工蜂
+        $bee_num=M('user_bee')->where(['uid'=>$this->user_id,'status'=>1,'die_status'=>0])->where('worker_bee','>','0')->where('depart_num','<','60')->count();
+        if(!$bee_num){
+            $data['msg']='你还没工蜂哦！';
+            exit(json_encode($data));
+        }
+        //查一下喂养的次数是否超过了最大限制
+        $start_time=time()-86400;
+        $feed_where['create_time']=array('gt',strtotime(date('Y-m-d 00:00:00',time())));
+        $feed_num=M('bee_flow')->where(['uid'=>$this->user_id,'type'=>811,'status'=>1])->where($feed_where)->count();
+//        var_dump($feed_num);
+        if($feed_num>$this->config['five_can_num']){
+            $data['msg']='今天的喂养次数已经超过了最大限制！';
+            exit(json_encode($data));
+        }
+        $feed_where['create_time']=array('gt',$start_time);
+        //先喂养蜂王才能喂养工蜂
+        $feed_time=M('bee_flow')->where(['uid'=>$this->user_id,'type'=>811,'status'=>1])->find();
+        if(isset($feed_time)){
+            $fw_num=M('bee_flow')->where(['uid'=>$this->user_id,'type'=>804,'status'=>1])->where($feed_where)->count();
+            if($fw_num==0){
+                $data['msg']='请先喂养蜂王！';
+                exit(json_encode($data));
+            }
+        }else{
+            $fw_num1=M('bee_flow')->where(['uid'=>$this->user_id,'type'=>804,'status'=>1])->where($feed_where)->count();
+            if($fw_num1==0){
+                $data['msg']='请先喂养蜂王！';
+                exit(json_encode($data));
+            }
+        }
+        //判定一次喂养之后有没有进行采蜜等操作
+        $last_feed=M('bee_flow')->where(['uid'=>$this->user_id,'type'=>811,'status'=>1])->where($feed_where)->order('create_time desc')->find();
+        if(isset($last_feed)){
+            $gather_where['create_time']=array('gt',$last_feed['create_time']);
+            $last_gather=M('bee_flow')->where(['uid'=>$this->user_id,'type'=>701,'status'=>1])->where($gather_where)->count();
+            if($last_gather==0){
+                $data['msg']='已经完成喂养，请采蜜过后再来喂养';
+                exit(json_encode($data));
+            }
+        }
+
+        $where['worker_bee']=array('neq','0');
+        $bee = M('user_bee')->where(array('uid' => $this->user_id, 'status' => 1,'die_status'=>0))->where($where)->count();
+        if($bee >= 1){
+            //看看有没有之前喂养过的工蜂
+            $bee_number=0;//需要喂养的蜂王的个数
+            $bees = M('user_bee')->where(['uid'=>$this->user_id,'status'=>1,'die_status'=>0])->where('worker_bee','>','0')->where('depart_num','<','60')->select();
+            foreach($bees as $key=>$value){
+                $feed_times=M('bee_flow')->where(['uid'=>$value['uid'],'bid'=>$value['id'],'type'=>811])->where($feed_where)->order('create_time desc')->find();
+                if(isset($feed_times)){
+                    $honey_times=M('bee_flow')->where(['uid'=>$value['uid'],'bid'=>$value['id'],'type'=>701])->where('create_time','>',$feed_times['create_time'])->count();
+                    if($honey_times!=0){
+                        $bee_number++;
+                    }
+                }else{
+                    $bee_number++;
+                }
+            }
+            $bee_num=$bee_number;
+            $level = M('user_bee')->where(array('uid' => $this->user_id,'level' => 1, 'status' => 1,'die_status'=>0))->find();
+            $user_prop = M('user_bee_account')->where(array('uid' => $this->user_id))->find();
+
+            if($user_prop['gooey'] < $this->config['seven_gooey_days']*$bee_num){
+                $data['msg'] = '您的蜜糖不足'.$this->config['seven_gooey_days']*$bee_num.'克！';
+                exit(json_encode($data));
+            }
+            if($user_prop['sun_value']<$this->config['seven_sun_days']*$bee_num){
+                $data['msg'] = '您的阳光不足'.$this->config['seven_sun_days']*$bee_num;
+                exit(json_encode($data));
+            }
+            if($user_prop['water']<$this->config['seven_water_days']*$bee_num){
+                $data['msg'] = '您的露水不足'.$this->config['seven_water_days']*$bee_num.'滴！';
+                exit(json_encode($data));
+            }
+
+            //事务
+            Db::startTrans();
+            //20190328 变更需求为喂养工蜂消耗阳光和露水
+            $result3=M('user_bee_account')->where(['uid'=>$this->user_id])->setDec('sun_value',$this->config['seven_sun_days']*$bee_num);
+            $result4=M('user_bee_account')->where(['uid'=>$this->user_id])->setDec('water',$this->config['seven_water_days']*$bee_num);
+
+            $prop = [
+                'gooey' => $user_prop['gooey'] - $this->config['seven_gooey_days']*$bee_num, //蜜糖
+                'update_time' => time()
+            ];
+            $result1=M('user_bee_account')->where(array('uid' => $this->user_id))->save($prop);
+
+            //道具日志
+            $log = ['bid' => $level['id'],
+                    'uid' => $this->user_id,
+                    'type' => 811,
+                    'inc_or_dec' => 2,
+                    'num' => $this->config['seven_gooey_days']*$bee_num,
+                    'create_time' => time(),
+                    'note' => '喂养工蜂'];
+//                $this->prop_log($log);
+            $result2 = M('bee_flow')->insert($log);
+//            $result4 = M('bee_flow')->insert($data1);
+//            echo $result1."````".$result2;die;
+            if($result1 && $result2 && $result3 && $result4){
+                Db::commit();
+                $data = ['status' => 1, 'msg' => '喂养成功，消耗'.$this->config['seven_gooey_days']*$bee_num.'克蜜糖和'.$this->config['seven_sun_days']*$bee_num.'阳光和'.$this->config['seven_water_days']*$bee_num.'露水'];
+                exit(json_encode($data));
+            }else{
+                Db::rollback();
+                $data = ['status' => 1, 'msg' => '喂养失败'];
+                exit(json_encode($data));
+            }
+        }else{
+            $data['msg'] = '您暂时没有工蜂！';
+            exit(json_encode($data));
         }
     }
 }

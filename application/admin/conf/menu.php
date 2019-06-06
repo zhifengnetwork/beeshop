@@ -49,13 +49,13 @@ return	array(
 						array('name' => '模板设置', 'act'=>'templateList', 'op'=>'Template'),
 //						array('name' => '手机首页', 'act'=>'mobile_index', 'op'=>'Template'),
 				)),
-				array('name' => '数据','child'=>array(
-						array('name' => '数据备份', 'act'=>'index', 'op'=>'Tools'),
-						array('name' => '数据还原', 'act'=>'restore', 'op'=>'Tools'),
-						//array('name' => 'ecshop数据导入', 'act'=>'ecshop', 'op'=>'Tools'),
-						//array('name' => '淘宝csv导入', 'act'=>'taobao', 'op'=>'Tools'),
-						//array('name' => 'SQL查询', 'act'=>'log', 'op'=>'Admin'),
-				))
+//				array('name' => '数据','child'=>array(
+//						array('name' => '数据备份', 'act'=>'index', 'op'=>'Tools'),
+//						array('name' => '数据还原', 'act'=>'restore', 'op'=>'Tools'),
+//						//array('name' => 'ecshop数据导入', 'act'=>'ecshop', 'op'=>'Tools'),
+//						//array('name' => '淘宝csv导入', 'act'=>'taobao', 'op'=>'Tools'),
+//						//array('name' => 'SQL查询', 'act'=>'log', 'op'=>'Admin'),
+//				))
 	)),
 		
 	'shop'=>array('name'=>'商城','child'=>array(

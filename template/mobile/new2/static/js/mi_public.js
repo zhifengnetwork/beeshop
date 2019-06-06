@@ -1,43 +1,28 @@
-////弹框（一行文字）-确认按钮
-//$('.publicConfirmBut').on('click',function(){
-//	$('.publicWrap').hide();
-//})
-////弹框（一行文字）-关闭按钮
-//$('.publicCancelBut').on('click',function(){
-//	$('.publicWrap').hide();
-//})
-
-/*动态 添加背景音乐*/
-var strAudio = '';
+/*进入页面重新加载*/
+window.onpageshow=function(e){
+    if(e.persisted) {
+        window.location.reload() 
+    }
+};
 /*后台=> 传个状态,和背景音频*/
 $.ajax({
 	type: "post",
-	url: "/mobile/bee/music_type",
+	url: "/mobile/bee/type",
 	async: true,
-	data: {
-		type: 0,
-	},
+	data: null,
 	success: function(req){
 		console.log(req);
-		console.log($.parseJSON(req));
+		console.log($.parseJSON(req)['music_type']);
 		var judge = $.parseJSON(req)['music_type'];
-		if(judge == 1){
-			strAudio += '<audio id="musicAudio" autoplay="autoplay" loop="loop">';
-					strAudio += '<source src="/template/mobile/new2/static/images/imge/gequ.mp3" type="audio/mpeg">';
-				strAudio += '</audio>';
-			$('body').append(strAudio);
-			/*背景音乐*/
-			document.addEventListener('DOMContentLoaded', function() {
-				function audioAutoPlay() {
-					var audio = document.getElementById('musicAudio');
-					audio.play();
-					document.addEventListener("WeixinJSBridgeReady", function() {
-						audio.play();
-					}, false);
-				}
-				audioAutoPlay();
-			}); 
+		/*2是开启，1是关闭*/
+		if(judge == 2){
+			$('#musicAudio source').attr('src','/template/mobile/new2/static/images/imge/gequ.mp3');
+			var audioId = document.getElementById('musicAudio');
+			audioId.play();								
+			console.log('音乐开启');
+										
 		}else {
+			$('#musicAudio source').attr('src','')
 			console.log('音乐关闭');
 		}
 	},
@@ -46,3 +31,28 @@ $.ajax({
 	},
 });
 
+
+/**
+ * 背景音乐
+ * --创建页面监听，等待微信端页面加载完毕 触发音频播放
+ * **/
+document.addEventListener('DOMContentLoaded', function() {
+	function audioAutoPlay() {
+		var audio = document.getElementById('musicAudio');
+		audio.play();
+		document.addEventListener("WeixinJSBridgeReady", function() {
+			audio.play();
+		}, false);
+	}
+	audioAutoPlay();
+}); 
+/**
+ * --创建触摸监听，当浏览器打开页面时，触摸屏幕触发事件，进行音频播放
+ **/
+document.addEventListener('touchstart', function () {
+    function audioAutoPlay() {
+        var audio = document.getElementById('musicAudio');
+            audio.play();
+    }
+    audioAutoPlay();
+});

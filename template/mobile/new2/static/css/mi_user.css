@@ -9,10 +9,17 @@
 }
 #wrapper .head .userName {
 	position: absolute;
-	top: 20%;
-	right: 12%;
+	top: 10%;
+	left: 38%;
 	width: 18%;
 	font-size: .25rem;
+}
+.jiu_logo {
+	position: absolute;
+	top: 23%;
+	right: 9%;
+	width: 25%;
+	font-size: 0;
 }
 #wrapper .head .userName a {
 	display: block;
@@ -67,4 +74,20 @@ img {
 .noticeTWTitle {
 	font-size: .3rem;
 	text-align: center;
+}
+
+.down {
+	position: absolute;
+	top:41%;
+	left: 3%;
+	width: 55%;
+	height: 1.93rem;
+	background: url(/template/mobile/new2/static/images/imge/tianshu.png) no-repeat;
+	background-size: 100% 100%;
+}
+.down p {
+	margin: 29% 0 0 46%;
+	color: #a91bcd;
+	font-size: .56rem;
+	font-weight: 900;
 }

@@ -6,6 +6,7 @@
 	var xbtn = document.getElementsByClassName('x-btn');
 	var qbtn = document.getElementsByClassName('q-btn');
 	var Tbn = document.getElementById('qbtn');
+	var BeeBuy = document.getElementById('buy');
  	
 	var tank = document.getElementById('tank');
 	
@@ -81,8 +82,11 @@
 
 		//购买幼蜂
 		Tbn.onclick = function() {
-
         	$('#cart4_form').submit();
+		}
+		// 购买雄蜂
+		BeeBuy.onclick = function() {
+        	$('#cart5_form').submit();
 		}
 
 	    for(var i=0;i<xbtn.length;i++) {
@@ -137,16 +141,25 @@
 				success : function(data){
 					if(data.status == 1){
 	    				hintWrap02.style.display = 'none';
-						layer.msg(data.msg);
+                	
+						layer.msg(data.msg,{
+                            time:800,
+                            end:function () {
+                            location.href = "beeIndex"
+                            }
+                        })
+
 					}else{
 	    				hintWrap02.style.display = 'none';
 						layer.msg(data.msg);
 					}
+
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
 					layer.msg('网络异常，请稍后重试');
 				}
 			})
+
 	    }
 		// 喂养
 		qtn.addEventListener('click',function() {
@@ -157,7 +170,12 @@
 				success : function(data){
 					if(data.status == 1){
 						hintWrap.style.display = 'none';
-						layer.msg(data.msg);
+						layer.msg(data.msg,{
+                            time:800,
+                            end:function () {
+                            location.href = "beeIndex"
+                            }
+                        })
 					}else{
 						hintWrap.style.display = 'none';
 						layer.msg(data.msg);
@@ -169,12 +187,6 @@
 			})
 		})
 		
-//		tank.onclick = function() {
-//			hintWrap.style.display = 'block';
-//		}
-		// tank01.onclick = function() {
-		// 	hintWrap01.style.display = 'block';
-		// }
 		// 交配
 		qtn01.addEventListener('click',function() {
 			$.ajax({
@@ -184,7 +196,12 @@
 				success : function(data){
 					if(data.status == 1){
 						hintWrap01.style.display = 'none';
-						layer.msg(data.msg);
+						layer.msg(data.msg,{
+                            time:800,
+                            end:function () {
+                            location.href = "beeIndex"
+                            }
+                        })
 					}else{
 						hintWrap01.style.display = 'none';
 						layer.msg(data.msg);
@@ -252,14 +269,7 @@ $(document).ready(function(){
 		$('.event').show();
 		$('.view').show();
 	})
-	//打扫(引用公共的弹框)
-	// $('#sweep').on('click',function(){
-	// 	$('.tk').show();
-	// })
-	//守卫(引用公共的弹框)
-	// $('#guardBut').on('click',function(){
-	// 	$('.guardWrap').show();
-	// })
+
 	//弹框（一行文字）-确认按钮
 	$('.publicConfirmBut').on('click',function(){
 		$('.publicWrap').hide();
@@ -343,4 +353,24 @@ $(document).ready(function(){
 			$('.selectBox').hide();
 			$('.hint-wrap_2').show();
 		})
+		
+		//		互转弹框
+		$('.hz').on('click',function(){
+			$("#uid").val('')
+			$("#num").val('')
+			$('.t-box').show();
+			$('.v-vive').show();
+
+		})
+		$('.v-vive').on('click',function(){
+			$('.t-box').hide();
+			$('.v-vive').hide();
+			
+		})
+		
+		$('.show').on('click',function(){
+			$('.reminder').hide();
+			$('.show').hide();
+		})
+		
 })	

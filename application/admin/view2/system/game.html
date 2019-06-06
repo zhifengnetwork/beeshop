@@ -34,10 +34,14 @@
 						<label for="record_no">1.</label>
 					</dt>
 					<dd class="opt">
-						<input name="one_bee_money" value="99" type="text" /><span>元认养1只蜂王;
-							<p style="margin-top: 5px;">平台赠送<input name="one_give_hive" value="{$config.one_give_hive}" type="text" /><span>个(蜂箱)，</span></span><input name="one_bee_milk" value="{$config.one_bee_milk}" type="text" /><span>滴(蜂王浆)，</span>
-						<input name="one_water" value="{$config.one_water}" type="text" /><span>滴(水)</span>，
-						<input name="one_sum" value="{$config.one_sum}" type="text" /><span>克(阳光)</span></p>
+						<input name="one_bee_money" value="{$config.one_bee_money}" type="text" /><span>元认养1只蜂王;</span>
+							<p style="margin-top: 5px;">平台赠送
+								<input name="one_give_hive" value="{$config.one_give_hive}" type="text" /><span>个(蜂箱)，</span>
+								<input name="one_bee_milk" value="{$config.one_bee_milk}" type="text" /><span>滴(蜂王浆)，</span>
+								<input name="one_gooey" value="{$config.one_gooey}" type="text" /><span>克(蜜糖)，</span>
+								<input name="one_water" value="{$config.one_water}" type="text" /><span>滴(水)</span>，
+								<input name="one_sum" value="{$config.one_sum}" type="text" /><span>克(阳光)</span>
+							</p>
 					</dd>
 				</dl>
 				<dl class="row">
@@ -88,12 +92,22 @@
 						<label for="five_get_gooey">5.</label>
 					</dt>
 					<dd class="opt">
+						<span>一天最多可以操作</span>
+						<input name="five_can_num" value="{$config.five_can_num}" type="text" />
+						<span>天的游戏; </span>
+						<p style="margin-top: 5px;">
+							<span>每一天游戏冷却时间</span>
+							<input name="five_cooling_time" value="{$config.five_cooling_time}" type="text" />
+							<span>分钟; </span>
+						</p>
+						<p style="margin-top: 5px;">
 						<span>工蜂外出采蜜</span>
-						<input name="five_get_gooey" value="{$config.five_get_gooey}" type="text" />
-						<span>分钟,</span>
-						<span>工蜂回巢酿蜜</span>
-						<input name="five_get_make" value="{$config.five_get_make}" type="text" />
-						<span style="margin-right:5px;">分钟，一天酿蜜任务结束。</span>
+							<input name="five_get_gooey" value="{$config.five_get_gooey}" type="text" />
+							<span>分钟,</span>
+							<span>工蜂回巢酿蜜</span>
+							<input name="five_get_make" value="{$config.five_get_make}" type="text" />
+							<span style="margin-right:5px;">分钟，一天酿蜜任务结束。</span>
+						</p>
 					</dd>
 				</dl>
 				<dl class="row">
@@ -160,20 +174,20 @@
 						</p>
 					</dd>
 				</dl>
-				<dl class="row">
-					<dt class="tit">
-						<label for="nine_rec_player">9.</label>
-					</dt>
-					<dd class="opt">
-						<span>推荐</span>
-						<input name="nine_rec_player" value="{$config.nine_rec_player}" type="text" />
-						<span>名(玩家)可获得</span>
-						<input name="nine_give_bee_milk" value="{$config.nine_give_bee_milk}" type="text" />
-						<span style="margin-right: 20px;">滴(蜂王浆),</span>
-						并随机派发<input name="nine_random_sun" value="{$config.nine_random_sun}" type="text" />克(阳光值)和
-						<input name="nine_random_water" value="5" type="text" />滴(露水)
-					</dd>
-				</dl>
+				<!--<dl class="row">-->
+					<!--<dt class="tit">-->
+						<!--<label for="nine_rec_player">9.</label>-->
+					<!--</dt>-->
+					<!--<dd class="opt">-->
+						<!--<span>推荐</span>-->
+						<!--<input name="nine_rec_player" value="{$config.nine_rec_player}" type="text" />-->
+						<!--<span>名(玩家)可获得</span>-->
+						<!--<input name="nine_give_bee_milk" value="{$config.nine_give_bee_milk}" type="text" />-->
+						<!--<span style="margin-right: 20px;">滴(蜂王浆),</span>-->
+						<!--并随机派发<input name="nine_random_sun" value="{$config.nine_random_sun}" type="text" />克(阳光值)和-->
+						<!--<input name="nine_random_water" value="{$config.nine_random_water}" type="text" />滴(露水)-->
+					<!--</dd>-->
+				<!--</dl>-->
 				<dl class="row">
 					<dt class="tit">
 						<label for="nine_rec_player">10.</label>

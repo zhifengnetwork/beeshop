@@ -1,32 +1,41 @@
 #container {
 	width: 100%;
-	background: #92e0ec;
 }
 #container .wrap {
 	position: relative;
 	height: 13.34rem;
+	background: url(/template/mobile/new2/static/images/imge/code_bj_03.png) no-repeat;
+	background-size: 100% 100%;
 }
 
 /* 添加 */
 #container .wrap .code{
 	width: 100%;
 	text-align: center;
+	
 }
-#container .wrap .code label{
+/*#container .wrap .code .send{
+	margin-top: .95rem;
 	font-size: .35rem;
-}
+}*/
 #container .wrap .code input{
 	border:none;
 	outline: none;
 	background: none;
 	border-bottom:3px solid #000; 
 }
-#container .wrap .code img{
-	width:45%;
-	margin: 25% 0 15%;
+#container .wrap .code .img{
+	position: absolute;
+	bottom: 14%;
+	left: 13%;
+	width:2.65rem;
 }
-#container .wrap .code div:nth-child(2){
-	margin: 1.25rem 0;
+#container .wrap .code .send {
+	position: absolute;
+	bottom: 36%;
+	left: 17%;
+	font-size: .28rem;
+	color: #fff;
 }
 /* 添加 */
 #container .wrap .code p{
@@ -47,8 +56,11 @@
 }
 
 h2 {
-	float: left;
-	width: 75%;
+	text-align: center;
+	line-height: .65rem;
+	font-size: .36rem;
+	color: #fff;
+    letter-spacing: 5px;
 }
 #container .wrap .header .banner .back {
 	float: left;
@@ -68,7 +80,9 @@ h2 {
 	height: .45rem;
 }
 img {
-	width: 100%;
+	display: block;
+	max-width: 100%;
+	margin: 0 auto;
 }
 
 

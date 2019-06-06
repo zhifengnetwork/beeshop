@@ -128,22 +128,34 @@ class Payment extends MobileBase {
     {
         $user = session('user');
         $config = tpCache('game'); //配置信息
+        $a = I('post.');
+        if ($a['beeType'] == 'youngBee') {
+            //添加幼蜂
+            $bee = [
+                'uid' => $user['user_id'],
+                'order_sn' => 'Bee'.get_rand_str(10,0,1),
+                'money' => $config['one_bee_money']
+            ];
+            $row = M('user_bee')->insertGetId($bee);
 
-        //添加幼蜂
-        $bee = [
-            'uid' => $user['user_id'],
-            'order_sn' => 'Bee'.get_rand_str(10,0,1),
-            'money' => $config['one_bee_money']
-        ];
-        $row = M('user_bee')->insertGetId($bee);
+            if($row){
+                $order = M('user_bee')->where("id", $row)->find();
+                $order['order_amount'] = $config['one_bee_money'];
+                $code_str = $this->payment->getJSAPI($order);
+                exit($code_str);
+            }else{
+                $this->error('提交失败,参数有误!');
+            }
 
-        if($row){
-            $order = M('user_bee')->where("id", $row)->find();
+        } elseif ($a['beeType'] == 'maleBee') {
+            $order['order_sn'] = 'Male'.get_rand_str(10,0,1);
+            // 购买雄蜂
             $order['order_amount'] = $config['one_bee_money'];
             $code_str = $this->payment->getJSAPI($order);
             exit($code_str);
-        }else{
-            $this->error('提交失败,参数有误!');
+
+        } else {
+            $this->error('参数有误!');
         }
     }
 
