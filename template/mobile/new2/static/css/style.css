@@ -12159,3 +12159,24 @@ div.layui-m-layerbtn span {
 .share-bottom-wrap .bdsharebuttonbox>.ico-share-weibo {
 	background-image: url("../images/ico-share-weibo.png");
 }
+.banner_p1{
+ 
+	width:94%;
+	margin:0 auto
+
+}
+.banner_p1 img{
+
+	width:100%;
+	margin-top:20px
+
+}
+.banner_p1 p{
+
+	text-align:center;
+	width:100%;
+	padding: 15px 0 10px 0;
+	font-size:26px;
+	font-weight:bolder;
+	
+}
