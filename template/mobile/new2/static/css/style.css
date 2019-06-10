@@ -12161,7 +12161,7 @@ div.layui-m-layerbtn span {
 }
 .bbanner_ear{
 	width:100%;
-	padding-top:15px;
+	padding-top:.3rem;
 	}
 .banner_p1{
  
@@ -12179,8 +12179,8 @@ div.layui-m-layerbtn span {
 
 	text-align:center;
 	width:100%;
-	padding: 15px 0;
-	font-size:15px;
+	padding: .3rem 0;
+	font-size:.35rem;
 	font-weight:bolder;
 	
 }
