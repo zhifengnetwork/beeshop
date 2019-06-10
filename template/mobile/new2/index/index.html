@@ -154,56 +154,76 @@
     <!--秒杀-end-->
 
     <!--广告位-start-->
-    <div class="banner ma-to-20">
-        <adv limit="1" item="v" pid="400">
-            <a href="{$v.ad_link}">
-            <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}"/>
-            </a>
-        </adv>
-    </div>
-    <div class="floor advertisement">
-        <div class="content">
-            <div class="le lefhe fl">
-                <adv  limit="1" item="v" pid="301">
-                    <a href="{$v.ad_link}">
-                        <div class="td">
-                            <img src="{$v[ad_code]}">
-                        </div>
-                    </a>
-                </adv>
-                <adv  limit="1" item="v" pid="302">
-                    <a href="{$v.ad_link}">
-                        <div class="td">
-                            <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">
-                        </div>
-                    </a>
-                </adv>
-            </div>
-            <div class="le re fr">
-                <adv  limit="1" item="v" pid="300">
-                    <a href="{$v.ad_link}">
-                        <div class="td">
-                            <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">
-                        </div>
-                    </a>
-                </adv>
+    <!--<div class="banner ma-to-20">-->
+        <!--<adv limit="1" item="v" pid="400">-->
+            <!--<a href="{$v.ad_link}">-->
+            <!--<img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}"/>-->
+            <!--</a>-->
+        <!--</adv>-->
+    <!--</div>-->
+    <!--<div class="floor advertisement">-->
+        <!--<div class="content">-->
+            <!--<div class="le lefhe fl">-->
+                <!--<adv  limit="1" item="v" pid="301">-->
+                    <!--<a href="{$v.ad_link}">-->
+                        <!--<div class="td">-->
+                            <!--<img src="{$v[ad_code]}">-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</adv>-->
+                <!--<adv  limit="1" item="v" pid="302">-->
+                    <!--<a href="{$v.ad_link}">-->
+                        <!--<div class="td">-->
+                            <!--<img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</adv>-->
+            <!--</div>-->
+            <!--<div class="le re fr">-->
+                <!--<adv  limit="1" item="v" pid="300">-->
+                    <!--<a href="{$v.ad_link}">-->
+                        <!--<div class="td">-->
+                            <!--<img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</adv>-->
 
-            </div>
-        </div>
-    </div>
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
     <!-- banner -->
   <div class="bbanner_ear"> 
     <div class="banner_p1">
-        <img src="__STATIC__/images/p1.png"/>
-        <p>扶贫众筹</p>
+        <adv  limit="1" item="v" pid="301">
+            <a href="{$v.ad_link}">
+                <img src="{$v[ad_code]}">
+            </a>
+            <p>{$v[ad_name]}</p>
+        </adv>
     </div>
     <div class="banner_p1">
-        <img src="__STATIC__/images/p2.png"/>
-        <p>拼团版快</p>
+        <adv  limit="1" item="v" pid="302">
+            <a href="{$v.ad_link}">
+                <img src="{$v[ad_code]}" title="{$v[title]}">
+            </a>
+            <p>{$v[ad_name]}</p>
+        </adv>
     </div>
     <div class="banner_p1">
-        <img src="__STATIC__/images/p3.png"/>
-        <p>打折产品</p>
+        <adv  limit="1" item="v" pid="300">
+            <a href="{$v.ad_link}">
+                <img src="{$v[ad_code]}" title="{$v[title]}">
+            </a>
+            <p>{$v[ad_name]}</p>
+        </adv>
+    </div>
+    <div class="banner_p1">
+        <adv  limit="1" item="v" pid="400">
+            <a href="{$v.ad_link}">
+                <img src="{$v[ad_code]}" title="{$v[title]}">
+            </a>
+            <p>{$v[ad_name]}</p>
+        </adv>
     </div>
 </div> 
 
