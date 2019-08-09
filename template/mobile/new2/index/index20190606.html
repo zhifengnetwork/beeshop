@@ -154,87 +154,47 @@
     <!--秒杀-end-->
 
     <!--广告位-start-->
-    <!--<div class="banner ma-to-20">-->
-        <!--<adv limit="1" item="v" pid="400">-->
-            <!--<a href="{$v.ad_link}">-->
-            <!--<img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}"/>-->
-            <!--</a>-->
-        <!--</adv>-->
-    <!--</div>-->
-    <!--<div class="floor advertisement">-->
-        <!--<div class="content">-->
-            <!--<div class="le lefhe fl">-->
-                <!--<adv  limit="1" item="v" pid="301">-->
-                    <!--<a href="{$v.ad_link}">-->
-                        <!--<div class="td">-->
-                            <!--<img src="{$v[ad_code]}">-->
-                        <!--</div>-->
-                    <!--</a>-->
-                <!--</adv>-->
-                <!--<adv  limit="1" item="v" pid="302">-->
-                    <!--<a href="{$v.ad_link}">-->
-                        <!--<div class="td">-->
-                            <!--<img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">-->
-                        <!--</div>-->
-                    <!--</a>-->
-                <!--</adv>-->
-            <!--</div>-->
-            <!--<div class="le re fr">-->
-                <!--<adv  limit="1" item="v" pid="300">-->
-                    <!--<a href="{$v.ad_link}">-->
-                        <!--<div class="td">-->
-                            <!--<img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">-->
-                        <!--</div>-->
-                    <!--</a>-->
-                <!--</adv>-->
-
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!-- banner -->
-  <div class="bbanner_ear"> 
-    <div class="banner_p1">
-        <adv  limit="1" item="v" pid="301">
+    <div class="banner ma-to-20">
+        <adv limit="1" item="v" pid="400">
             <a href="{$v.ad_link}">
-                <img src="{$v[ad_code]}">
+            <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}"/>
             </a>
-            <p>{$v[ad_name]}</p>
         </adv>
     </div>
-    <div class="banner_p1">
-        <adv  limit="1" item="v" pid="302">
-            <a href="{$v.ad_link}">
-                <img src="{$v[ad_code]}" title="{$v[title]}">
-            </a>
-            <p>{$v[ad_name]}</p>
-        </adv>
+    <div class="floor advertisement">
+        <div class="content">
+            <div class="le lefhe fl">
+                <adv  limit="1" item="v" pid="301">
+                    <a href="{$v.ad_link}">
+                        <div class="td">
+                            <img src="{$v[ad_code]}">
+                        </div>
+                    </a>
+                </adv>
+                <adv  limit="1" item="v" pid="302">
+                    <a href="{$v.ad_link}">
+                        <div class="td">
+                            <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">
+                        </div>
+                    </a>
+                </adv>
+            </div>
+            <div class="le re fr">
+                <adv  limit="1" item="v" pid="300">
+                    <a href="{$v.ad_link}">
+                        <div class="td">
+                            <img src="{$v[ad_code]}" title="{$v[title]}" style="{$v[style]}">
+                        </div>
+                    </a>
+                </adv>
+
+            </div>
+        </div>
     </div>
-    <div class="banner_p1">
-        <adv  limit="1" item="v" pid="300">
-            <a href="{$v.ad_link}">
-                <img src="{$v[ad_code]}" title="{$v[title]}">
-            </a>
-            <p>{$v[ad_name]}</p>
-        </adv>
-    </div>
-    <div class="banner_p1">
-        <adv  limit="1" item="v" pid="400">
-            <a href="{$v.ad_link}">
-                <img src="{$v[ad_code]}" title="{$v[title]}">
-            </a>
-            <p>{$v[ad_name]}</p>
-        </adv>
-    </div>
-</div> 
-
-
-
-
-
-
     <!--广告位-end-->
+
     <!--新品上市-start-->
-    <!-- <div class="floor newshop">
+    <div class="floor newshop">
         <div class="banner">
             <img src="__STATIC__/images/ind_22.jpg" alt="新品上市"/>
         </div>
@@ -260,11 +220,11 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     <!--新品上市-end-->
 
     <!--热销商品-start-->
-    <!-- <div class="floor hotshop index_hot">
+    <div class="floor hotshop index_hot">
         <div class="banner">
             <img src="__STATIC__/images/ind_33.jpg" alt="热销商品"/>
         </div>
@@ -299,11 +259,11 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     <!--热销商品-end-->
 
     <!--猜您喜欢-start-->
-    <!-- <div class="floor guesslike">
+    <div class="floor guesslike">
         <div class="banner">
             <img src="__STATIC__/images/ind_52.jpg" alt="猜您喜欢"/>
         </div>
@@ -313,11 +273,11 @@
                 </ul>
             </div>
         </div>
-    </div> -->
+    </div>
     <!--猜您喜欢-end-->
 
     <!--底部-start-->
-    <!-- <include file="public/footer"/> -->
+    <include file="public/footer"/>
     <!--底部-end-->
 
     <!--底部导航-start-->
@@ -349,6 +309,7 @@
         }
     }
     setInterval(GetRTime2,1000);
+
     /**
      * 继续加载猜您喜欢
      * */
