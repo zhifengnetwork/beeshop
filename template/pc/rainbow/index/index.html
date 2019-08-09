@@ -49,7 +49,6 @@
 				//初始化 轮播图列表宽度和列表项宽度
 				$_banner.css({'width':windowWidth*(length+2),left:-windowWidth});
 				$_banner.find('.item').css('width',windowWidth);
-
 				var $_pagination=$_bannerWrap.find('.pagination');
 				for(var i=0;i<length;i++){  //自动增加白色索引点击点
 					$_pagination.append('<span class="pagination-item"></span>');
@@ -78,7 +77,6 @@
 					},4000)
 				}
 				bannerAutoRun();
-
 				//移动上面去停止，移动出来继续轮播
 				function hoverChangeRun(ele){
 					ele.hover(function(){
@@ -90,7 +88,6 @@
 				hoverChangeRun($_banner.find('.item-pic'));
 				hoverChangeRun($_pagination.find('.pagination-item'));
 				hoverChangeRun($_bannerWrap.find('.carousel-control'));
-
 				function hoverActive(index){ //切换时改变状态
 					$_banner.find('.item').eq(index).addClass('slide-active').siblings().removeClass('slide-active');
 					$_pagination.find('.pagination-item').eq(index-1).addClass('active').siblings().removeClass('active');
@@ -228,20 +225,15 @@
 function init(){  //初始化函数
     //首页商品分类显示
     $('.categorys .dd').show();
-
     //自动楼层居中设置
     $('#floor-nav').css('margin-top',(-41*$('#floor-nav').find('li').length+1)/2);
-
     //推荐列表自动滚动
     carouselList('.floor-recommend-wrap','.floor-recommend-list','.floor-recommend-item');
-
     //右侧边栏
     rightBar();
-
     //楼层导航切换
     sidebarRollChange();
 }
-
 function rightBar(){  //右侧边栏
     var $_slidebar4 = $('.ico-slidebar4');
     $(window).scroll(function(){
@@ -320,7 +312,6 @@ function sidebarRollChange() {  //楼层切换
         }
     })
 }
-
 init();
 </script>
 <script src="__STATIC__/js/common.js" type="text/javascript" charset="utf-8"></script>
